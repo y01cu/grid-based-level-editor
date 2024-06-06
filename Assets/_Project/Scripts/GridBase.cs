@@ -25,11 +25,12 @@ public class GridBase : MonoBehaviour
 
     private void Start()
     {
-        
-        GenerateCellObjects(CellBase.ObjectColor._Empty, 4, 0, 0, 0, 0);
-        GenerateCellObjects(CellBase.ObjectColor.Blue, 1, 1, 90,0,0);
-        GenerateCellObjects(CellBase.ObjectColor.Red, 2, 1, 90,0,0);
-        GenerateCellObjects(CellBase.ObjectColor.Green, 2, 2, 90,0,0);
+        GenerateCellObjects(CellBase.ObjectColor._Empty, 4, 0);
+        GenerateCellObjects(CellBase.ObjectColor.Blue, 1, 1);
+        GenerateCellObjects(CellBase.ObjectColor.Red, 2, 1);
+        GenerateCellObjects(CellBase.ObjectColor.Green, 2, 2);
+        // ---
+        GenerateCellObjects(CellBase.ObjectColor.Yellow, 3, 1);
 
     }
 
@@ -47,7 +48,7 @@ public class GridBase : MonoBehaviour
 
 
     [Command]
-    private async void GenerateCellObjects(CellBase.ObjectColor objectColor, int columnIndex, int layerIndex, float rotX, float rotY, float rotZ)
+    private async void GenerateCellObjects(CellBase.ObjectColor objectColor, int columnIndex, int layerIndex)
     {
         GameObject layerParentObject = new GameObject("L_" + layerIndex + "-C_" + objectColor);
 
@@ -86,7 +87,7 @@ public class GridBase : MonoBehaviour
                 var targetPosition = new Vector3(x, y, layerIndex * LayerZAxisIncrement);
                 var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
                 var cellBase = Instantiate(cellBases[(int)objectColor], targetPosition, targetRotation, layerParentObject.transform);
-                
+
                 // cellBase.CreateCellObject();
 
                 await Task.Delay(100);
