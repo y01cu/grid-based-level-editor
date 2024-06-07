@@ -147,9 +147,10 @@ MonoBehaviour:
   CellObjectPrefabs:
   - {fileID: 3713409775659699406, guid: eba6fd29cd9b8614c89795b8a7b790a2, type: 3}
   - {fileID: 6943560949676558025, guid: 435608f0a118d094bb76e514c07ceb25, type: 3}
-  - {fileID: 8404320618774999034, guid: f808072221b8b1c4d93e94c8f80636a2, type: 3}
+  - {fileID: 3282974889508013520, guid: f808072221b8b1c4d93e94c8f80636a2, type: 3}
   objectColor: 1
   objectType: 1
+  additionalRotationVector3: {x: 0, y: 0, z: 0}
   objectTargetTransformFromChild: {fileID: 4922415798540560065}
 --- !u!65 &7827871082722179817
 BoxCollider:

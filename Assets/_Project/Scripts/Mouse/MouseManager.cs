@@ -41,17 +41,17 @@ public class MouseManager : MonoBehaviour
             GameObject hitObject = hit.collider.gameObject;
             if (hitObject.CompareTag("Arrow"))
             {
-                hitObject.GetComponent<Clickable>().OnClickedOver();
+                Debug.Log("Arrow isn't clickable");
             }
 
             if (hitObject.CompareTag("Berry"))
             {
-                hitObject.GetComponent<Clickable>().OnClickedOver();
+                hitObject.GetComponent<Berry>().OnClickedOver();
             }
 
             if (hitObject.CompareTag("Frog"))
             {
-                hitObject.GetComponent<Clickable>().OnClickedOver();
+                hitObject.GetComponent<Frog>().OnClickedOver();
             }
         }
     }
