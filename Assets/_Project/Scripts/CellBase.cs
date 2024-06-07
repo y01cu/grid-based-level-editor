@@ -15,9 +15,11 @@ public class CellBase : MonoBehaviour
     public ObjectColor objectColor;
     public ObjectType objectType;
 
-    private const float InitialWaitingTime = 2f;
+    private const float InitialWaitingTime = 1f;
     private bool _isObjectSpawned;
     private float _timer;
+
+    public Vector3 additionalRotationVector3;
 
     [SerializeField] private Transform objectTargetTransformFromChild;
 
@@ -27,8 +29,14 @@ public class CellBase : MonoBehaviour
     {
         var cellObject = Instantiate(CellObjectPrefabs[(int)objectType]);
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
+        cellObject.transform.Rotate(additionalRotationVector3);
         // cellObject.transform.position = objectTargetTransformFromChild.position;
         Debug.Log("this cell created a cell obj", this);
+    }
+
+    public void ChangeCellObjectType(ObjectType newObjectType)
+    {
+        objectType = newObjectType;
     }
 
     private const float RayLength = 0.2f;

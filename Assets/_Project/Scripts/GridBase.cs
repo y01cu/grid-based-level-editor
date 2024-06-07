@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using QFSW.QC;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using VHierarchy.Libs;
@@ -11,44 +12,62 @@ public class GridBase : MonoBehaviour
 {
     // Attention! Everytime a grid layer is set the position of the next layer must increase for it to be placed on previous one.
 
-    [SerializeField] private int width;
-    [SerializeField] private int height;
+    public static readonly int width = 4;
+    public static readonly int height = 4;
 
     [SerializeField] private CellBase[] cellBases;
 
     [SerializeField] private Transform cellParentTransform;
 
-    private int _activeGridLayerCount;
     private const float LayerZAxisIncrement = -0.1f;
 
     private const float XAxisAngle = -90;
 
     private void Start()
     {
-        GenerateCellObjects(CellBase.ObjectColor._Empty, 4, 0);
-        GenerateCellObjects(CellBase.ObjectColor.Blue, 1, 1);
-        GenerateCellObjects(CellBase.ObjectColor.Red, 2, 1);
-        GenerateCellObjects(CellBase.ObjectColor.Green, 2, 2);
-        // ---
-        GenerateCellObjects(CellBase.ObjectColor.Yellow, 3, 1);
-
+        GenerateCellObjects(FrogPosition._NoFrog, CellBase.ObjectColor._Empty, 4, 0);
+        GenerateCellObjects(FrogPosition.ColumnBottomFrog, CellBase.ObjectColor.Blue, 1, 1);
+        GenerateCellObjects(FrogPosition.ColumnTopFrog, CellBase.ObjectColor.Red, 2, 1);
     }
 
-    private void GenerateGrid()
+    [Command]
+    private void GenerateCellObjects(FrogPosition frogPosition, CellBase.ObjectColor objectColor, int columnIndex, int layerIndex)
     {
-        for (int x = 0; x < width; x++)
+        switch (frogPosition)
         {
-            for (int y = 0; y < height; y++)
+            case FrogPosition._NoFrog:
             {
-                var cell = Instantiate(cellBases[0], new Vector3(x, y), Quaternion.Euler(XAxisAngle, 0, 0));
-                cell.name = $"Cell: {x} {y}";
+                GenerateCellObjectsWithoutFrog(columnIndex, layerIndex, objectColor);
+                break;
+            }
+
+            case FrogPosition.ColumnBottomFrog:
+            {
+                GenerateCellObjectsWithFrog(columnIndex, layerIndex, 0, OrderType.Column, objectColor);
+                break;
+            }
+
+            case FrogPosition.ColumnTopFrog:
+            {
+                GenerateCellObjectsWithFrog(columnIndex, layerIndex, height - 1, OrderType.Column, objectColor);
+                break;
+            }
+
+            case FrogPosition.RowLeftFrog:
+            {
+                GenerateCellObjectsWithFrog(columnIndex, layerIndex, 0, OrderType.Row, objectColor);
+                break;
+            }
+
+            case FrogPosition.RowRightFrog:
+            {
+                GenerateCellObjectsWithFrog(columnIndex, layerIndex, width - 1, OrderType.Row, objectColor);
+                break;
             }
         }
     }
 
-
-    [Command]
-    private async void GenerateCellObjects(CellBase.ObjectColor objectColor, int columnIndex, int layerIndex)
+    private void GenerateCellObjectsWithoutFrog(int columnIndex, int layerIndex, CellBase.ObjectColor objectColor)
     {
         GameObject layerParentObject = new GameObject("L_" + layerIndex + "-C_" + objectColor);
 
@@ -65,44 +84,60 @@ public class GridBase : MonoBehaviour
                     var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
                     var cellBase = Instantiate(cellBases[(int)objectColor], targetPosition, targetRotation);
                     cellBase.transform.SetParent(layerParentObject.transform);
-
-                    // Test comment out -----
-
-                    // var cellObject = cellBase.CreateCellObjectOfTypeInTransformOnParent(CellBase.ObjectType.Frog, new Vector3(x, y, -0.15f), Quaternion.Euler(rotX, rotY, rotZ));
-                    //
-
-                    // -----
-
-                    // cellObject.transform.SetParent(transform);
                 }
             }
         }
+    }
 
-        else
+    private async void GenerateCellObjectsWithFrog(int columnIndex, int layerIndex, int frogIndex, OrderType orderType, CellBase.ObjectColor objectColor)
+    {
+        GameObject layerParentObject = new GameObject("L_" + layerIndex + "-C_" + objectColor);
+
+        layerParentObject.transform.SetParent(cellParentTransform);
+
+        if (orderType == OrderType.Column)
         {
             int x = columnIndex;
 
             for (int y = 0; y < height; y++)
             {
-                var targetPosition = new Vector3(x, y, layerIndex * LayerZAxisIncrement);
+                var targetPosition = new Vector3(x, y + (layerIndex * 0.05f), layerIndex * LayerZAxisIncrement);
                 var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
                 var cellBase = Instantiate(cellBases[(int)objectColor], targetPosition, targetRotation, layerParentObject.transform);
+                if (y == frogIndex)
+                {
+                    cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                    if (frogIndex == 0)
+                    {
+                        cellBase.additionalRotationVector3 = new Vector3(0, 180, 0);
+                    }
+                }
 
                 // cellBase.CreateCellObject();
 
-                await Task.Delay(100);
+                await Task.Delay(50);
             }
         }
-
-        _activeGridLayerCount++;
     }
-
 
     [Command]
     private void DeleteTopLayer()
     {
         Destroy(cellParentTransform.GetChild(cellParentTransform.childCount - 1).gameObject);
+    }
 
-        _activeGridLayerCount--;
+    public enum FrogPosition
+    {
+        _NoFrog,
+        ColumnTopFrog,
+        ColumnBottomFrog,
+        RowRightFrog,
+        RowLeftFrog
+    }
+
+    public enum OrderType
+    {
+        Column,
+        Row
     }
 }
