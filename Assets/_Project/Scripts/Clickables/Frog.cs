@@ -64,7 +64,9 @@ public class Frog : Clickable
     private List<GameObject> _detectedObjects = new();
 
     // This function below can be made async
-    
+
+    private bool _isReachedEnd;
+
     private void TweenBetweenTwoPoints(Vector3 startPoint, Vector3 endPoint)
     {
         _isTongueOutside = true;
@@ -87,88 +89,49 @@ public class Frog : Clickable
                     worldPosition = transform.TransformPoint(x);
                     lineRenderer.SetPosition(lastPositionIndex, x);
                     hits = CheckCollision(startPoint, worldPosition);
+
+                    // for (int i = 0; i < lineRenderer.positionCount; i++)
+                    // {
+                    //     lineRenderer.SetPosition(i, x);
+                    // }   
+
+                    // if (!_isReachedEnd)
+                    // {
+                    // }
+
+                    // There could a check added here
+                    // for (int i = 0; i < _detectedObjects.Count; i++)
+                    // {
+                    //     _detectedObjects[i].transform.position = lineRenderer.GetPosition(i + 1);
+                    // }
                 }, endPoint, _tweenDuration)
             )
-            .AppendCallback(() =>
+            .AppendInterval(_interval).AppendCallback(() =>
             {
-                // DOTween.To(() => lineRenderer.GetPosition(lastPositionIndex), x =>
-                // {
-                //     worldPosition = transform.TransformPoint(x);
-                //     lineRenderer.SetPosition(lastPositionIndex, x);
-                //     hits = CheckCollision(startPoint, worldPosition);
-                // }, endPoint, _tweenDuration);
-
-                // for (int i = 0; i < hits.Length; i++)
-                // {
-                //     RaycastHit hit = hits[i];
-                //
-                //     if (!_detectedObjects.Contains(hit.collider.gameObject))
-                //     {
-                //         _detectedObjects.Add(hit.collider.gameObject);
-                //         
-                //         // DOTween.To( hit.collider.transform.position, x =>
-                //         // {
-                //         //     
-                //         // })
-                //         // AddPointToLine(hit.point);
-                //     }
-                //
-                //     hits[i].collider.isTrigger = false;
-                // }
-
-
-                // if (hits.Length > 0)
-                // {
-                //     Berry lastBerry = hits[hits.Length - 1].collider.GetComponent<Berry>();
-                //     if (lastBerry != null)
-                //     {
-                //         lastBerry.SetDirection(-(worldPosition - startPoint) * 20);
-                //         lastBerry.MoveToFrog();
-                //     }
-                // }
-                //
-                // Debug.Log("started callback 0");
-
-
-                // CheckCollision(startPoint, worldPosition);
+                Debug.Log("reached end");
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    hits[i].collider.isTrigger = false;
+                }
             })
-            // .AppendInterval(_interval).AppendCallback(() =>
+            // .Append(DOTween.To(()=> 0f, x =>
             // {
-            //     Debug.Log("started callback 1");
-            //
             //     for (int i = 0; i < lineRenderer.positionCount; i++)
             //     {
-            //         Vector3 targetPosition = startPoint;
-            //         int index = i;
-            //
-            //         DOTween.To(() => lineRenderer.GetPosition(index), x =>
-            //         {
-            //             lineRenderer.SetPosition(index, x);
-            //             if (index < _detectedObjects.Count)
-            //             {
-            //                 _detectedObjects[index].transform.position = x;
-            //             }
-            //         }, targetPosition, _tweenDuration);
+            //         Vector3 targetPosition = Vector3.Lerp(lineRenderer.GetPosition(i), startPoint, x);
+            //         lineRenderer.SetPosition(i, targetPosition);
+            //         
+            //         
             //     }
-            // })
-            .AppendInterval(_interval).SetLoops(2, LoopType.Yoyo).onComplete += () =>
+            // }, 1f, _tweenDuration))
+            .SetLoops(2, LoopType.Yoyo)
+            .onComplete += () =>
         {
             _isTongueOutside = false;
 
             FreeBerriesForFrog?.Invoke();
         };
     }
-
-    private void AddPointToLine(Vector3 point)
-    {
-        int currentCount = lineRenderer.positionCount;
-        lineRenderer.positionCount = currentCount + 1;
-        lineRenderer.SetPosition(currentCount, point);
-    }
-
-    // private void TweenBackToNormal()
-    // {
-    // }
 
     private RaycastHit[] JustCheckCollision(Vector3 startPoint, Vector3 endPoint)
     {
@@ -177,11 +140,11 @@ public class Frog : Clickable
         RaycastHit[] hits = Physics.RaycastAll(startPoint, direction, distance, collisionMask);
 
         Debug.Log("leeength: " + hits.Length);
-        
+
         Debug.DrawRay(startPoint, direction, Color.cyan, .5f);
 
-        lineRenderer.positionCount = hits.Length + 1;
-        
+        // lineRenderer.positionCount = hits.Length + 1;
+
         // for (int i = 0; i < hits.Length; i++)
         // {
         //     _detectedObjects.Add(hits[i].collider.gameObject);
@@ -199,11 +162,11 @@ public class Frog : Clickable
         float distance = direction.magnitude;
 
         // This detection process takes time.
-        
+
         RaycastHit[] hits = Physics.RaycastAll(startPoint, direction, distance, collisionMask);
 
         // Debug.Log("--- hits length: " + hits.Length);
-        
+
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].collider.gameObject.name[0] == properNaming.GetColor())
@@ -215,18 +178,19 @@ public class Frog : Clickable
 
                 // hitBerry.SetDirection(-(direction));
                 // MoveBerriesToFrog += hitBerry.MoveToFrog;
-                
+
                 if (!_detectedObjects.Contains(hitBerry.gameObject))
                 {
+                    // lineRenderer.SetPosition(_detectedObjects.Count + 1, new Vector3(0, 0, lineRenderer.GetPosition(lineRenderer.positionCount - 1).z));
+
                     _detectedObjects.Add(hitBerry.gameObject);
-                    
+                    hitBerry.SetLineRenderer(lineRenderer);
                     // DOTween.To( hit.collider.transform.position, x =>
                     // {
                     //     
                     // })
                     // AddPointToLine(hit.point);
                 }
-                
             }
         }
 
