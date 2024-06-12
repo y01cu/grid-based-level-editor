@@ -132,20 +132,20 @@ public class Berry : Clickable
             boxCollider.isTrigger = true;
             List<GameObject> detectedObjects = other.GetComponent<Frog>().GetDetectedObjects();
 
-            for (int i = 0; i < detectedObjects.Count; i++)
-            {
-                transform.DOScale(new Vector3(0, 0, 0), .15f).SetEase(Ease.Linear).onComplete += () =>
-                {
-                    Destroy(gameObject);
+            // for (int i = 0; i < detectedObjects.Count; i++)
+            // {
+            // }
 
-                    detectedObjects.Remove(gameObject);
-                    Debug.Log("detected obj count: " + detectedObjects.Count);
-                    if (detectedObjects.Count == 0)
-                    {
-                        Destroy(other.gameObject);
-                    }
-                };
-            }
+            transform.DOScale(new Vector3(0, 0, 0), .15f).SetEase(Ease.Linear).onComplete += () =>
+            {
+                Destroy(gameObject);
+
+                detectedObjects.Remove(gameObject);
+                if (detectedObjects.Count == 0)
+                {
+                    Destroy(other.gameObject);
+                }
+            };
 
             // yield return new WaitUntil(() => detectedObjects.Count == 0);
             // Destroy(other.gameObject);

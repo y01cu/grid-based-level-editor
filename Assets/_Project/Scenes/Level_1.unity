@@ -886,7 +886,7 @@ PrefabInstance:
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 0.00015258789
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
@@ -1437,8 +1437,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0487009a41ce4754790b8c7ca3e16e05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 4
-  height: 4
+  width: 12
+  height: 12
   cellBases:
   - {fileID: 3257195153420974243, guid: 2a328fd7f824fa94eb376a601ca850e8, type: 3}
   - {fileID: 6218630723515409759, guid: 8df29ced29487e74285d80fc41397d88, type: 3}

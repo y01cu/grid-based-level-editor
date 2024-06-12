@@ -58,7 +58,7 @@ public class Frog : Clickable
         Vector3 startPoint = transform.TransformPoint(lineRenderer.GetPosition(0));
         Vector3 endPoint = new Vector3(0, 0, 3);
 
-        TweenBetweenTwoPoints(startPoint, endPoint);
+        TweenBetweenTwoPoints(startPoint);
     }
 
     private bool _isTongueReachedEnd;
@@ -77,7 +77,7 @@ public class Frog : Clickable
 
     private bool _isReachedEnd;
 
-    private void TweenBetweenTwoPoints(Vector3 startPoint, Vector3 endPoint)
+    private void TweenBetweenTwoPoints(Vector3 startPoint)
     {
         _isTongueOutside = true;
 
@@ -88,7 +88,9 @@ public class Frog : Clickable
         Sequence mySequence = DOTween.Sequence();
 
         // Ray direction change condition must be considered here.
-        JustCheckCollision(startPoint, transform.TransformPoint(endPoint));
+        // JustCheckCollision(startPoint, transform.TransformPoint(endPoint));
+
+        Vector3 endPoint = JustCheckCollision(startPoint);
 
         int lastPositionIndex = lineRenderer.positionCount - 1;
 
@@ -98,8 +100,6 @@ public class Frog : Clickable
                     worldPosition = transform.TransformPoint(x);
                     lineRenderer.SetPosition(lastPositionIndex, x);
                     hits = CheckCollision(startPoint, worldPosition);
-
-                    // }
                 }, endPoint, _tweenDuration)
             )
             .AppendInterval(_interval).AppendCallback(() =>
@@ -131,15 +131,17 @@ public class Frog : Clickable
         };
     }
 
-    private Vector3[] JustCheckCollision(Vector3 startPoint, Vector3 endPoint)
+    private int collisionCounter = 1;
+
+    private Vector3 JustCheckCollision(Vector3 startPoint)
     {
-        Vector3 direction = endPoint - startPoint;
-        float distance = direction.magnitude;
-        RaycastHit[] hits = Physics.RaycastAll(startPoint, direction, distance, collisionMask);
+        // Vector3 direction = endPoint - startPoint;
+        float distance = Vector3.up.magnitude;
+        RaycastHit[] hits = Physics.RaycastAll(startPoint, Vector3.up, distance, collisionMask);
 
         Debug.Log("leeength: " + hits.Length);
 
-        Debug.DrawRay(startPoint, direction, Color.cyan, .5f);
+        Debug.DrawRay(startPoint, Vector3.up, Color.cyan, 2f);
 
         // lineRenderer.positionCount = hits.Length + 1;
 
@@ -148,11 +150,16 @@ public class Frog : Clickable
         //     _detectedObjects.Add(hits[i].collider.gameObject);
         // }
 
+        bool isAnyArrowHit = false;
+
         for (int i = 0; i < hits.Length; i++)
         {
             Collider currentCollider = hits[i].collider;
+
             if (currentCollider.CompareTag("Arrow"))
             {
+                isAnyArrowHit = true;
+
                 Arrow.Direction arrowDirection = currentCollider.GetComponent<Arrow>().direction;
 
                 switch (arrowDirection)
@@ -178,6 +185,7 @@ public class Frog : Clickable
 
             if (currentCollider.CompareTag("Berry"))
             {
+                collisionCounter++;
                 Berry berry = currentCollider.GetComponent<Berry>();
                 if (berry.isLastForFrog)
                 {
@@ -186,7 +194,17 @@ public class Frog : Clickable
             }
         }
 
-        return null;
+        if (hits.Length != 0 && !isAnyArrowHit && collisionCounter < CellGeneration.Instance.GetHeight())
+        {
+            JustCheckCollision(startPoint + Vector3.up);
+        }
+
+        else
+        {
+            Debug.Log("total detected obj count: " + collisionCounter);
+        }
+
+        return new Vector3(0,0,collisionCounter);
     }
 
     private RaycastHit[] CheckCollision(Vector3 startPoint, Vector3 endPoint)

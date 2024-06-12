@@ -10,6 +10,20 @@ using VHierarchy.Libs;
 
 public class CellGeneration : MonoBehaviour
 {
+    public static CellGeneration Instance;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     // Attention! Everytime a grid layer is set the position of the next layer must increase for it to be placed on previous one.
 
     [SerializeField] private int width;
@@ -31,13 +45,15 @@ public class CellGeneration : MonoBehaviour
         GenerateCellObjects(FrogPosition.ColumnTopFrog, CellBase.ObjectColor.Red, 3, 1, -1);
     }
 
-    
+    public int GetHeight()
+    {
+        return height;
+    }
+
     // TODO: Add how many cells will be created parameter
     [Command]
-    private void GenerateCellObjects(FrogPosition frogPosition, CellBase.ObjectColor objectColor, int columnIndex, int layerIndex,int stepCount)
+    private void GenerateCellObjects(FrogPosition frogPosition, CellBase.ObjectColor objectColor, int columnIndex, int layerIndex, int stepCount)
     {
-        
-        
         switch (frogPosition)
         {
             case FrogPosition._NoFrog:
@@ -104,7 +120,7 @@ public class CellGeneration : MonoBehaviour
         {
             stepCount = height;
         }
-        
+
         if (orderType == OrderType.Column)
         {
             int x = columnIndex;

@@ -30,6 +30,11 @@ public class CellBase : MonoBehaviour
         var cellObject = Instantiate(CellObjectPrefabs[(int)objectType]);
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
+
+        if (objectType == ObjectType.Frog)
+        {
+        }
+        
         // cellObject.transform.position = objectTargetTransformFromChild.position;
     }
 
