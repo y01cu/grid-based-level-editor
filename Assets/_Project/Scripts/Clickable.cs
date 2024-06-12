@@ -6,16 +6,26 @@ using UnityEngine;
 
 public class Clickable : MonoBehaviour
 {
-    private bool _isTweening;
-    public void OnClickedOver()
+    private bool _isTweenable = true;
+
+    [SerializeField] protected ProperNaming properNaming = new();
+
+    public virtual void OnClickedOver()
     {
-        if (!_isTweening)
+        ScaleUpAndDown();
+    }
+
+    private void ScaleUpAndDown()
+    {
+        if (_isTweenable)
         {
-            _isTweening = true;
-            transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.2f).SetEase(Ease.Linear).SetLoops(2, LoopType.Yoyo).onComplete += () =>
-            {
-                _isTweening = false;
-            };
+            _isTweenable = false;
+            transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.12f).SetEase(Ease.Linear).SetLoops(2, LoopType.Yoyo).onComplete += () => { _isTweenable = true; };
         }
+    }
+
+    public void ResetTweenState()
+    {
+        _isTweenable = false;
     }
 }

@@ -32,6 +32,11 @@ public class Frog : Clickable
 
     // private char _colorFirstLetter;
 
+    private void Start()
+    {
+        gameObject.name = properNaming.GetProperName();
+    }
+
     public override void OnClickedOver()
     {
         if (_isTongueOutside)
@@ -63,6 +68,11 @@ public class Frog : Clickable
 
     private List<GameObject> _detectedObjects = new();
 
+    public List<GameObject> GetDetectedObjects()
+    {
+        return _detectedObjects;
+    }
+
     // This function below can be made async
 
     private bool _isReachedEnd;
@@ -70,7 +80,6 @@ public class Frog : Clickable
     private void TweenBetweenTwoPoints(Vector3 startPoint, Vector3 endPoint)
     {
         _isTongueOutside = true;
-
 
         Vector3 worldPosition = Vector3.zero;
 
@@ -90,29 +99,18 @@ public class Frog : Clickable
                     lineRenderer.SetPosition(lastPositionIndex, x);
                     hits = CheckCollision(startPoint, worldPosition);
 
-                    // for (int i = 0; i < lineRenderer.positionCount; i++)
-                    // {
-                    //     lineRenderer.SetPosition(i, x);
-                    // }   
-
-                    // if (!_isReachedEnd)
-                    // {
-                    // }
-
-                    // There could a check added here
-                    // for (int i = 0; i < _detectedObjects.Count; i++)
-                    // {
-                    //     _detectedObjects[i].transform.position = lineRenderer.GetPosition(i + 1);
                     // }
                 }, endPoint, _tweenDuration)
             )
             .AppendInterval(_interval).AppendCallback(() =>
             {
                 Debug.Log("reached end");
-                for (int i = 0; i < hits.Length; i++)
-                {
-                    hits[i].collider.isTrigger = false;
-                }
+                // for (int i = 0; i < hits.Length; i++)
+                // {
+                //     hits[i].collider.isTrigger = false;
+                // }
+
+                _detectedObjects[^1].GetComponent<Berry>().SetLineRenderer(lineRenderer);
             })
             // .Append(DOTween.To(()=> 0f, x =>
             // {
@@ -133,7 +131,7 @@ public class Frog : Clickable
         };
     }
 
-    private RaycastHit[] JustCheckCollision(Vector3 startPoint, Vector3 endPoint)
+    private Vector3[] JustCheckCollision(Vector3 startPoint, Vector3 endPoint)
     {
         Vector3 direction = endPoint - startPoint;
         float distance = direction.magnitude;
@@ -150,7 +148,45 @@ public class Frog : Clickable
         //     _detectedObjects.Add(hits[i].collider.gameObject);
         // }
 
-        return hits;
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider currentCollider = hits[i].collider;
+            if (currentCollider.CompareTag("Arrow"))
+            {
+                Arrow.Direction arrowDirection = currentCollider.GetComponent<Arrow>().direction;
+
+                switch (arrowDirection)
+                {
+                    case Arrow.Direction.Left:
+                        Debug.Log("la");
+                        break;
+                    case Arrow.Direction.Right:
+                        Debug.Log("ra");
+                        break;
+                    case Arrow.Direction.Up:
+                        Debug.Log("ua");
+                        break;
+                    case Arrow.Direction.Down:
+                        Debug.Log("da");
+                        break;
+
+                    default:
+                        Debug.Log("la");
+                        break;
+                }
+            }
+
+            if (currentCollider.CompareTag("Berry"))
+            {
+                Berry berry = currentCollider.GetComponent<Berry>();
+                if (berry.isLastForFrog)
+                {
+                    // Stop tongue movement
+                }
+            }
+        }
+
+        return null;
     }
 
     private RaycastHit[] CheckCollision(Vector3 startPoint, Vector3 endPoint)
@@ -184,7 +220,6 @@ public class Frog : Clickable
                     // lineRenderer.SetPosition(_detectedObjects.Count + 1, new Vector3(0, 0, lineRenderer.GetPosition(lineRenderer.positionCount - 1).z));
 
                     _detectedObjects.Add(hitBerry.gameObject);
-                    hitBerry.SetLineRenderer(lineRenderer);
                     // DOTween.To( hit.collider.transform.position, x =>
                     // {
                     //     

@@ -31,7 +31,6 @@ public class CellBase : MonoBehaviour
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
         // cellObject.transform.position = objectTargetTransformFromChild.position;
-        Debug.Log("this cell created a cell obj", this);
     }
 
     public void ChangeCellObjectType(ObjectType newObjectType)
