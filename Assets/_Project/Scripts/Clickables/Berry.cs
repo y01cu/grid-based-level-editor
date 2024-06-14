@@ -20,8 +20,7 @@ public class Berry : Clickable
 
     private float _interpolationFactor; //
 
-    [FormerlySerializedAs("collider")] [SerializeField]
-    private BoxCollider boxCollider;
+    [SerializeField] private BoxCollider boxCollider;
 
     private Vector3 lineRendererVector3;
 
@@ -45,10 +44,11 @@ public class Berry : Clickable
             var position = transform.position;
             Vector3 currentPosition = position;
 
-            Vector3 targetPosition = _lineRenderer.GetPosition(0);
+            Vector3 targetPosition = _lineRenderer.transform.parent.position;
+            // Vector3 targetPosition = _lineRenderer.GetPosition(0);
 
             _interpolationFactor += Time.deltaTime / Vector3.Distance(currentPosition, targetPosition);
-            position = Vector3.Lerp(currentPosition, new Vector3(targetPosition.x, targetPosition.y, position.z), _interpolationFactor * 0.015f);
+            position = Vector3.Lerp(currentPosition, new Vector3(targetPosition.x, targetPosition.y, position.z), _interpolationFactor * 0.02f);
             transform.position = position;
         }
     }
@@ -95,17 +95,7 @@ public class Berry : Clickable
 
     private void OnCollisionEnter(Collision other)
     {
-        // Debug.Log(other.gameObject.name + " collided with us!");
-        // int lastCharIndex = other.gameObject.name.Length - 1;
-
-        // if (other.gameObject.CompareTag("Frog"))
-
-
-        // if (other.gameObject.CompareTag("Berry"))
-        // {
-        //     other.gameObject.GetComponent<Berry>().SetLineRenderer(lineRenderer);
-        // }
-
+        
         if (other.gameObject.CompareTag("Berry"))
         {
             Berry otherBerry = other.gameObject.GetComponent<Berry>();
@@ -136,14 +126,18 @@ public class Berry : Clickable
             // {
             // }
 
+            UnityEngine.Debug.Log("name of the other one: " + other.gameObject.name);
+
             transform.DOScale(new Vector3(0, 0, 0), .15f).SetEase(Ease.Linear).onComplete += () =>
             {
                 Destroy(gameObject);
+                Debug.Log("destroyed here");
 
                 detectedObjects.Remove(gameObject);
                 if (detectedObjects.Count == 0)
                 {
                     Destroy(other.gameObject);
+                    Debug.Log("destroyed there");
                 }
             };
 

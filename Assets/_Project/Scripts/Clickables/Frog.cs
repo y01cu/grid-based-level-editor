@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using UnityEditor.Build.Content;
+using QFSW.QC;
 using UnityEngine;
 
 
@@ -17,6 +17,9 @@ public class Frog : Clickable
     [SerializeField] private LayerMask collisionMask;
 
     private bool _isTongueOutside;
+
+    [SerializeField] private TongueNew newTongue;
+    
 
     // Objects are named as first with their color then with their type
     // Colors and namings are:
@@ -54,10 +57,14 @@ public class Frog : Clickable
         // ---
 
         // Check if path is clear
+        
+        // newTongue.OnMouseRightClick();
+        
+        // ---
 
         Vector3 startPoint = transform.TransformPoint(lineRenderer.GetPosition(0));
         Vector3 endPoint = new Vector3(0, 0, 3);
-
+        
         TweenBetweenTwoPoints(startPoint);
     }
 
@@ -89,8 +96,26 @@ public class Frog : Clickable
 
         // Ray direction change condition must be considered here.
         // JustCheckCollision(startPoint, transform.TransformPoint(endPoint));
+        
+        // Vector3 frogRotation = transform.parent.localRotation.eulerAngles 
+        //
+        // if (frogRotation.)
+        // {
+        //     
+        // }
 
-        Vector3 endPoint = JustCheckCollision(startPoint);
+        Vector3 rotation = transform.parent.localRotation.eulerAngles; 
+
+        // bool isUp = rotation.x == -90;
+        // bool isDown = rotation.x == 90;
+
+        Vector3 direction = rotation.x switch
+        {
+            90 => Vector3.down,
+            270 => Vector3.up,
+        };
+
+        Vector3 endPoint = JustCheckCollision(startPoint, direction);
 
         int lastPositionIndex = lineRenderer.positionCount - 1;
 
@@ -131,17 +156,16 @@ public class Frog : Clickable
         };
     }
 
-    private int collisionCounter = 1;
+    private int collisionCounter = 0;
 
-    private Vector3 JustCheckCollision(Vector3 startPoint)
+    private Vector3 JustCheckCollision(Vector3 startPoint, Vector3 direction)
     {
         // Vector3 direction = endPoint - startPoint;
-        float distance = Vector3.up.magnitude;
-        RaycastHit[] hits = Physics.RaycastAll(startPoint, Vector3.up, distance, collisionMask);
+        float distance = direction.magnitude;
+        RaycastHit[] hits = Physics.RaycastAll(startPoint, direction, distance, collisionMask);
 
-        Debug.Log("leeength: " + hits.Length);
 
-        Debug.DrawRay(startPoint, Vector3.up, Color.cyan, 2f);
+        Debug.DrawRay(startPoint, direction, Color.cyan, 2f);
 
         // lineRenderer.positionCount = hits.Length + 1;
 
@@ -158,6 +182,8 @@ public class Frog : Clickable
 
             if (currentCollider.CompareTag("Arrow"))
             {
+                // Debug.Log("arrow hit");
+
                 isAnyArrowHit = true;
 
                 Arrow.Direction arrowDirection = currentCollider.GetComponent<Arrow>().direction;
@@ -166,6 +192,7 @@ public class Frog : Clickable
                 {
                     case Arrow.Direction.Left:
                         Debug.Log("la");
+                        JustCheckCollision(currentCollider.transform.position, -Vector3.right);
                         break;
                     case Arrow.Direction.Right:
                         Debug.Log("ra");
@@ -185,6 +212,7 @@ public class Frog : Clickable
 
             if (currentCollider.CompareTag("Berry"))
             {
+                Debug.Log("berry collision");
                 collisionCounter++;
                 Berry berry = currentCollider.GetComponent<Berry>();
                 if (berry.isLastForFrog)
@@ -196,7 +224,7 @@ public class Frog : Clickable
 
         if (hits.Length != 0 && !isAnyArrowHit && collisionCounter < CellGeneration.Instance.GetHeight())
         {
-            JustCheckCollision(startPoint + Vector3.up);
+            JustCheckCollision(startPoint + direction, direction);
         }
 
         else
@@ -204,7 +232,7 @@ public class Frog : Clickable
             Debug.Log("total detected obj count: " + collisionCounter);
         }
 
-        return new Vector3(0,0,collisionCounter);
+        return new Vector3(0, 0, collisionCounter);
     }
 
     private RaycastHit[] CheckCollision(Vector3 startPoint, Vector3 endPoint)
@@ -223,6 +251,15 @@ public class Frog : Clickable
 
         for (int i = 0; i < hits.Length; i++)
         {
+            if (hits[i].collider.CompareTag("Arrow"))
+            {
+                Vector3 startPosition = hits[i].collider.transform.position;
+                lineRenderer.positionCount++;
+                // lineRenderer.SetPosition(lineRenderer.positionCount-1, );
+                
+                return CheckCollision(startPosition, new Vector3(startPosition.x -1, startPosition.y, startPosition.z));
+                
+            }
             if (hits[i].collider.gameObject.name[0] == properNaming.GetColor())
             {
                 Berry hitBerry = hits[i].collider.GetComponent<Berry>();

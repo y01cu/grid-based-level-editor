@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -16,8 +17,11 @@ public class CellBase : MonoBehaviour
     public ObjectType objectType;
 
     private const float InitialWaitingTime = 1f;
+    private const float DestructionWaitingTime = 2.5f;
     private bool _isObjectSpawned;
     private float _timer;
+
+    private bool isDeathOrderGiven;
 
     public Vector3 additionalRotationVector3;
 
@@ -28,13 +32,15 @@ public class CellBase : MonoBehaviour
     public void CreateCellObject()
     {
         var cellObject = Instantiate(CellObjectPrefabs[(int)objectType]);
+        cellObject.transform.position = new Vector3(0, 0, 0);
+        cellObject.transform.DOScale(Vector3.zero, 1f).From();
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
 
         if (objectType == ObjectType.Frog)
         {
         }
-        
+
         // cellObject.transform.position = objectTargetTransformFromChild.position;
     }
 
@@ -45,7 +51,7 @@ public class CellBase : MonoBehaviour
 
     private const float RayLength = 0.2f;
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (objectColor == ObjectColor._Empty)
         {
@@ -60,16 +66,34 @@ public class CellBase : MonoBehaviour
 
             if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hitInfo, RayLength) && hitInfo.collider.gameObject.CompareTag("Cell"))
             {
-                // Debug.DrawRay(transform.position, rayDirection * RayLength, Color.green);
+                Debug.DrawRay(transform.position, rayDirection * RayLength, Color.green);
             }
             else
             {
                 _isObjectSpawned = true;
                 CreateCellObject();
+                _timer = 0;
                 // Debug.DrawRay(transform.position, rayDirection * RayLength, Color.red);
             }
         }
+
+        if (_timer >= DestructionWaitingTime && _isObjectSpawned && !isDeathOrderGiven)
+        {
+            Vector3 rayDirection = transform.up;
+
+            if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hitInfo, RayLength * 2.75f) && (hitInfo.collider.CompareTag("Berry") || hitInfo.collider.CompareTag("Frog") || hitInfo.collider.CompareTag("Cell") || hitInfo.collider.CompareTag("Arrow")))
+            {
+                Debug.DrawRay(transform.position, rayDirection * RayLength * 2.75f, Color.green);
+            }
+            else
+            {
+                isDeathOrderGiven = true;
+                transform.DOScale(Vector3.zero, .5f).onComplete += () => { Destroy(gameObject); };
+            }
+        }
     }
+
+    // public 
 
     public enum ObjectColor
     {

@@ -6,7 +6,6 @@ using QFSW.QC;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
-using VHierarchy.Libs;
 
 public class CellGeneration : MonoBehaviour
 {
@@ -37,12 +36,27 @@ public class CellGeneration : MonoBehaviour
 
     private const float XAxisAngle = -90;
 
-    private void Start()
+    private Dictionary<Vector3, bool> Points = new();
+
+    private WaitForSeconds cellOrderDelay = new(.1f);
+
+    private IEnumerator Start()
     {
         // Fill base cells
-        GenerateCellObjects(FrogPosition._NoFrog, CellBase.ObjectColor._Empty, 4, 0, -1);
-        GenerateCellObjects(FrogPosition.ColumnBottomFrog, CellBase.ObjectColor.Blue, 0, 1, -1);
-        GenerateCellObjects(FrogPosition.ColumnTopFrog, CellBase.ObjectColor.Red, 3, 1, -1);
+        GenerateCellObjects(FrogPosition._NoFrog, CellBase.ObjectColor._Empty, 0, -1, false);
+        GenerateCellObjects(FrogPosition._NoFrog, CellBase.ObjectColor._Empty, 1, -1, false);
+        GenerateCellObjects(FrogPosition._NoFrog, CellBase.ObjectColor._Empty, 2, -1, false);
+        GenerateCellObjects(FrogPosition._NoFrog, CellBase.ObjectColor._Empty, 3, -1, false);
+        // ---
+        yield return cellOrderDelay;
+        GenerateCellObjects(FrogPosition.ColumnBottomFrog, CellBase.ObjectColor.Red, 1, -1, false);
+        yield return cellOrderDelay;
+        GenerateCellObjects(FrogPosition.ColumnTopFrog, CellBase.ObjectColor.Yellow, 2, -1, false);
+        // yield return cellOrderDelay;
+        // GenerateCellObjects(FrogPosition.ColumnBottomFrog, CellBase.ObjectColor.Blue, 1, -1, true);
+        // yield return cellOrderDelay;
+        // GenerateCellObjects(FrogPosition.ColumnBottomFrog, CellBase.ObjectColor.Green, 1, 3, false);
+        // yield return cellOrderDelay;
     }
 
     public int GetHeight()
@@ -52,67 +66,45 @@ public class CellGeneration : MonoBehaviour
 
     // TODO: Add how many cells will be created parameter
     [Command]
-    private void GenerateCellObjects(FrogPosition frogPosition, CellBase.ObjectColor objectColor, int columnIndex, int layerIndex, int stepCount)
+    private void GenerateCellObjects(FrogPosition frogPosition, CellBase.ObjectColor objectColor, int columnIndex, int stepCount, bool hasArrow)
     {
         switch (frogPosition)
         {
             case FrogPosition._NoFrog:
             {
-                GenerateCellObjectsWithoutFrog(columnIndex, layerIndex, stepCount, objectColor);
+                GenerateBaseCellObjects(columnIndex, stepCount, -1, hasArrow, OrderType.Column, objectColor);
                 break;
             }
 
             case FrogPosition.ColumnBottomFrog:
             {
-                GenerateCellObjectsWithFrog(columnIndex, layerIndex, stepCount, 0, OrderType.Column, objectColor);
+                GenerateBaseCellObjects(columnIndex, stepCount, 0, hasArrow, OrderType.Column, objectColor);
                 break;
             }
 
             case FrogPosition.ColumnTopFrog:
             {
-                GenerateCellObjectsWithFrog(columnIndex, layerIndex, stepCount, height - 1, OrderType.Column, objectColor);
+                GenerateBaseCellObjects(columnIndex, stepCount, height - 1, hasArrow, OrderType.Column, objectColor);
                 break;
             }
 
             case FrogPosition.RowLeftFrog:
             {
-                GenerateCellObjectsWithFrog(columnIndex, layerIndex, stepCount, 0, OrderType.Row, objectColor);
+                GenerateBaseCellObjects(columnIndex, stepCount, 0, hasArrow, OrderType.Row, objectColor);
                 break;
             }
 
             case FrogPosition.RowRightFrog:
             {
-                GenerateCellObjectsWithFrog(columnIndex, layerIndex, stepCount, width - 1, OrderType.Row, objectColor);
+                GenerateBaseCellObjects(columnIndex, stepCount, width - 1, hasArrow, OrderType.Row, objectColor);
                 break;
             }
         }
     }
 
-    private void GenerateCellObjectsWithoutFrog(int columnIndex, int layerIndex, int stepCount, CellBase.ObjectColor objectColor)
+    private async void GenerateBaseCellObjects(int columnIndex, int stepCount, int frogIndex, bool hasArrow, OrderType orderType, CellBase.ObjectColor objectColor)
     {
-        GameObject layerParentObject = new GameObject("L_" + layerIndex + "-C_" + objectColor);
-
-        layerParentObject.transform.SetParent(cellParentTransform);
-
-        if (columnIndex == width)
-        {
-            Debug.Log("column index = width");
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    var targetPosition = new Vector3(x, y, layerIndex * LayerZAxisIncrement);
-                    var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
-                    var cellBase = Instantiate(cellBases[(int)objectColor], targetPosition, targetRotation);
-                    cellBase.transform.SetParent(layerParentObject.transform);
-                }
-            }
-        }
-    }
-
-    private async void GenerateCellObjectsWithFrog(int columnIndex, int layerIndex, int stepCount, int frogIndex, OrderType orderType, CellBase.ObjectColor objectColor)
-    {
-        GameObject layerParentObject = new GameObject("L_" + layerIndex + "-C_" + objectColor);
+        GameObject layerParentObject = new GameObject("L_" + "-C_" + objectColor);
 
         layerParentObject.transform.SetParent(cellParentTransform);
 
@@ -127,9 +119,21 @@ public class CellGeneration : MonoBehaviour
 
             for (int y = 0; y < stepCount; y++)
             {
-                var targetPosition = new Vector3(x, y + (layerIndex * 0.05f), layerIndex * LayerZAxisIncrement);
+                var showingBelowTransformation = 0.05f;
+                // var targetPosition = new Vector3(x, y + (layerIndex * 0.05f), layerIndex * LayerZAxisIncrement);
+                var targetPosition = CheckAndUpdateUpwardsIfNecessary(new Vector3(x, y, LayerZAxisIncrement));
+
+                int layerValue = (int)(targetPosition.z / LayerZAxisIncrement);
+
+                var newPosition = targetPosition + new Vector3(0, layerValue * showingBelowTransformation, 0);
+
                 var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
-                var cellBase = Instantiate(cellBases[(int)objectColor], targetPosition, targetRotation, layerParentObject.transform);
+                var cellBase = Instantiate(cellBases[(int)objectColor], newPosition, targetRotation, layerParentObject.transform);
+
+                // Vector3 cellBasePosition = cellBase.transform.position - new Vector3(0, 0, -0.6f);
+                //
+                // cellBase.transform.position = cellBasePosition;
+
                 if (y == frogIndex)
                 {
                     cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
@@ -139,11 +143,33 @@ public class CellGeneration : MonoBehaviour
                     }
                 }
 
+                if (y == stepCount - 1)
+                {
+                    if (hasArrow)
+                    {
+                        cellBase.ChangeCellObjectType(CellBase.ObjectType.Arrow);
+                    }
+                }
+
+
                 // cellBase.CreateCellObject();
 
                 await Task.Delay(50);
             }
         }
+    }
+
+    // We can add the point the move it a bit forward to see what's below it.
+    private Vector3 CheckAndUpdateUpwardsIfNecessary(Vector3 point)
+    {
+        if (Points.ContainsKey(point))
+        {
+            point += new Vector3(0, 0, LayerZAxisIncrement);
+            return CheckAndUpdateUpwardsIfNecessary(point);
+        }
+
+        Points.Add(point, true);
+        return point;
     }
 
     [Command]
