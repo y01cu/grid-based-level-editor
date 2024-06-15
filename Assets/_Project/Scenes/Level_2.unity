@@ -122,6 +122,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &286882424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 286882426}
+  - component: {fileID: 286882425}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &286882425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286882424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04fcbc16c20749c42816f663b89d8ff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &286882426
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286882424}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &303778329
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,50 +382,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!1 &360245877
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 360245879}
-  - component: {fileID: 360245878}
-  m_Layer: 0
-  m_Name: LevelManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &360245878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360245877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04fcbc16c20749c42816f663b89d8ff8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &360245879
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360245877}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,7 +930,7 @@ PrefabInstance:
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: 0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
@@ -1481,7 +1481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0487009a41ce4754790b8c7ca3e16e05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orderLength: 6
+  orderLength: 0
   width: 4
   height: 4
   cellBases:
@@ -1498,63 +1498,42 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     hasArrow: 0
-    arrowDirection: 0
   - frogPosition: 0
     cellColor: 0
     columnIndex: 1
     rowIndex: 0
     stepCount: -1
     hasArrow: 0
-    arrowDirection: 0
   - frogPosition: 0
     cellColor: 0
     columnIndex: 2
     rowIndex: 0
     stepCount: -1
     hasArrow: 0
-    arrowDirection: 0
   - frogPosition: 0
     cellColor: 0
     columnIndex: 3
     rowIndex: 0
     stepCount: -1
     hasArrow: 0
-    arrowDirection: 0
   - frogPosition: 2
-    cellColor: 1
-    columnIndex: 1
-    rowIndex: 0
-    stepCount: -1
-    hasArrow: 1
-    arrowDirection: 4
-  - frogPosition: 1
-    cellColor: 2
-    columnIndex: 2
-    rowIndex: 0
-    stepCount: -1
-    hasArrow: 0
-    arrowDirection: 0
-  - frogPosition: 2
-    cellColor: 1
+    cellColor: 3
     columnIndex: 0
     rowIndex: 0
     stepCount: -1
-    hasArrow: 1
-    arrowDirection: 2
+    hasArrow: 0
   - frogPosition: 2
-    cellColor: 3
-    columnIndex: 2
-    rowIndex: 0
-    stepCount: -1
-    hasArrow: 1
-    arrowDirection: 3
-  - frogPosition: 2
-    cellColor: 1
+    cellColor: 4
     columnIndex: 3
     rowIndex: 0
+    stepCount: 2
+    hasArrow: 0
+  - frogPosition: 4
+    cellColor: 1
+    columnIndex: 0
+    rowIndex: 2
     stepCount: -1
-    hasArrow: 1
-    arrowDirection: 1
+    hasArrow: 0
 --- !u!4 &2001982932
 Transform:
   m_ObjectHideFlags: 0
@@ -1588,4 +1567,4 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 1231438833}
   - {fileID: 832575519}
-  - {fileID: 360245879}
+  - {fileID: 286882426}

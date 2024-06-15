@@ -21,6 +21,8 @@ public class CellBase : MonoBehaviour
     private bool _isObjectSpawned;
     private float _timer;
 
+    public Arrow.Direction arrowDirection;
+
     private bool isDeathOrderGiven;
 
     public Vector3 additionalRotationVector3;
@@ -28,6 +30,15 @@ public class CellBase : MonoBehaviour
     [SerializeField] private Transform objectTargetTransformFromChild;
 
     // [SerializeField] private Transform parentTransform;
+
+    private void Start()
+    {
+        if (objectColor != ObjectColor._Empty)
+        {
+            LevelManager.Instance.IncreaseActiveNonGrayCellCount();
+            LevelManager.Instance.LogActiveNonGrayCellCount();
+        }
+    }
 
     public void CreateCellObject()
     {
@@ -37,8 +48,9 @@ public class CellBase : MonoBehaviour
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
 
-        if (objectType == ObjectType.Frog)
+        if (objectType == ObjectType.Arrow)
         {
+            cellObject.GetComponent<Arrow>().direction = arrowDirection;
         }
 
         // cellObject.transform.position = objectTargetTransformFromChild.position;
@@ -88,7 +100,12 @@ public class CellBase : MonoBehaviour
             else
             {
                 isDeathOrderGiven = true;
-                transform.DOScale(Vector3.zero, .5f).onComplete += () => { Destroy(gameObject); };
+                transform.DOScale(Vector3.zero, .5f).onComplete += () =>
+                {
+                    LevelManager.Instance.DecreaseActiveNonGrayCellCount();
+                    LevelManager.Instance.LogActiveNonGrayCellCount();
+                    Destroy(gameObject);
+                };
             }
         }
     }

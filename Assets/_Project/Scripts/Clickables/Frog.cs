@@ -20,7 +20,9 @@ public class Frog : Clickable
 
     [SerializeField] private TongueNew newTongue;
     
-
+    
+    
+    
     // Objects are named as first with their color then with their type
     // Colors and namings are:
     // B:Blue
@@ -94,23 +96,11 @@ public class Frog : Clickable
 
         Sequence mySequence = DOTween.Sequence();
 
-        // Ray direction change condition must be considered here.
-        // JustCheckCollision(startPoint, transform.TransformPoint(endPoint));
-        
-        // Vector3 frogRotation = transform.parent.localRotation.eulerAngles 
-        //
-        // if (frogRotation.)
-        // {
-        //     
-        // }
-
         Vector3 rotation = transform.parent.localRotation.eulerAngles; 
-
-        // bool isUp = rotation.x == -90;
-        // bool isDown = rotation.x == 90;
 
         Vector3 direction = rotation.x switch
         {
+            0 => Vector3.right,
             90 => Vector3.down,
             270 => Vector3.up,
         };
@@ -130,10 +120,6 @@ public class Frog : Clickable
             .AppendInterval(_interval).AppendCallback(() =>
             {
                 Debug.Log("reached end");
-                // for (int i = 0; i < hits.Length; i++)
-                // {
-                //     hits[i].collider.isTrigger = false;
-                // }
 
                 _detectedObjects[^1].GetComponent<Berry>().SetLineRenderer(lineRenderer);
             })
@@ -195,12 +181,15 @@ public class Frog : Clickable
                         JustCheckCollision(currentCollider.transform.position, -Vector3.right);
                         break;
                     case Arrow.Direction.Right:
+                        JustCheckCollision(currentCollider.transform.position, Vector3.right);
                         Debug.Log("ra");
                         break;
                     case Arrow.Direction.Up:
+                        JustCheckCollision(currentCollider.transform.position, Vector3.up);
                         Debug.Log("ua");
                         break;
                     case Arrow.Direction.Down:
+                        JustCheckCollision(currentCollider.transform.position, Vector3.down);
                         Debug.Log("da");
                         break;
 
