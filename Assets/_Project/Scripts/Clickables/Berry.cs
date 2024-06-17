@@ -52,93 +52,48 @@ public class Berry : Clickable
                 return;
             }
 
-            transform.localPosition = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), .9f * Time.deltaTime); //  0.02f
 
-            // Debug.Log(targetBoxCollider + " target box collider");
+            if (!isLerping)
+            {
+                StartCoroutine(LerpPosition(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), lerpDuration));
+            }
 
-            // Vector3 targetPosition = transform.TransformPoint(targetBoxCollider.center);
-            // Vector3 targetPosition = _lineRenderer.GetPosition(_lineRenderer.positionCount - 1);
-
-
-            // if (!isLerping)
-            // {
-            //     StartCoroutine(LerpPosition());
-            // }
-
-
-            
-// -----
-
-            // Vector3 targetPosition = new Vector3(transform.position.x - _lineRenderer.GetPosition(_lineRenderer.positionCount - 1).x, transform.position.y - (transform.position.y - _lineRenderer.GetPosition(_lineRenderer.positionCount - 1).z), transform.position.z);
-            //
-            //
-            // _interpolationFactor = Time.deltaTime / (Vector3.Distance(currentPosition, targetPosition) * 3f);
-            //
-            // var newTargetPosition = _lineRenderer.GetPosition(_lineRenderer.positionCount - 2);
-            // //
-            // currentPosition = Vector3.Lerp(currentPosition, newTargetPosition, .001f); //  0.02f
-            //
-            // Debug.Log("tPos: " + transform.position + " | tLocPos: " + transform.localPosition + " | tar: " + newTargetPosition);
-            // transform.position = currentPosition;
-
-            // -----
-
-            // Vector3 targetPosition = _lineRenderer.transform.parent.position;
-
-            // Vector3 targetPosition = new Vector3(transform.position.x - _lineRenderer.transform.parent.parent.transform.position.x, transform.position.y, transform.position.z);
-            // Debug.Log("new target pos: " + newTargetPosition);
-
-            // currentPosition = Vector3.Lerp(currentPosition, new Vector3(targetPosition.x, targetPosition.y, currentPosition.z), _interpolationFactor); //  0.02f
+            // transform.localPosition = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), .9f * Time.deltaTime); //  0.02f
         }
     }
 
-    private float lerpDuration = 3f;
+    private float lerpDuration;
 
-    private IEnumerator LerpPosition()
+    private float timeLeft;
+
+
+    private IEnumerator LerpPosition(Vector3 start, Vector3 end, float duration)
     {
         isLerping = true;
-        float timeElapsed = 0f;
 
-        // Vector3 targetPosition = Vector3.zero;
-        while (timeElapsed < lerpDuration)
+
+        float time = 0;
+        while (time < duration)
         {
-            Debug.Log("lerping btw");
-            timeElapsed += Time.deltaTime;
+            transform.localPosition = Vector3.Lerp(start, end, time / duration);
+            time += Time.deltaTime;
 
-            var distance = transform.localPosition - _lineRenderer.GetPosition(_lineRenderer.positionCount - 2);
-            transform.localPosition = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), timeElapsed / lerpDuration*10); //  0.02f
+            Debug.Log("spent time: " + time / duration);
 
-
-            // transform.position = Vector3.Lerp(transform.position, new Vector3(targetPosition.x, targetPosition.y, transform.position.z), 3.5f / 20 * Time.deltaTime); //  0.02f
-            // transform.localPosition = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2),   .005f*(timeElapsed / lerpDuration)); //  0.02f
+            timeLeft = duration - time;
             yield return null;
         }
 
-        // transform.position = targetPosition;
+        transform.localPosition = end;
+
         isLerping = false;
-
-        // ---
-
-        // isLerping = true;
-        // float timeElapsed = 0f;
-        //
-        // Vector3 targetPosition = Vector3.zero;
-        // while (timeElapsed < lerpDuration)
-        // {
-        //     // targetPosition = new Vector3(transform.position.x - _lineRenderer.GetPosition(_lineRenderer.positionCount - 1).x, transform.position.y - (transform.position.y - _lineRenderer.GetPosition(_lineRenderer.positionCount - 1).z), transform.position.z);
-        //     timeElapsed += Time.deltaTime;
-        //     // transform.position = Vector3.Lerp(transform.position, new Vector3(targetPosition.x, targetPosition.y, transform.position.z), 3.5f / 20 * Time.deltaTime); //  0.02f
-        //     // transform.position = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), 3.5f / 20 * Time.deltaTime); //  0.02f
-        //     transform.position = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), timeElapsed); //  0.02f
-        //     yield return null;
-        // }
-        //
-        // transform.position = targetPosition;
-        // isLerping = false;
     }
 
-    public void SetLineRenderer(LineRenderer newLineRenderer)
+    public void SetLineRenderer(LineRenderer newLineRenderer, float newDuration)
     {
+        Debug.Log("berry started moving with time: " + newDuration, this);
+
+        lerpDuration = newDuration;
         _lineRenderer = newLineRenderer;
         transform.SetParent(_lineRenderer.transform);
         Debug.Log("line renderer is set", this);
@@ -148,7 +103,7 @@ public class Berry : Clickable
 
         var targetPosition = _lineRenderer.GetPosition(_lineRenderer.positionCount - 2);
         Debug.Log("current pos: " + currentPosition + " | target pos: " + targetPosition);
-        Vector3.Lerp(transform.localPosition, targetPosition, 1);
+        // Vector3.Lerp(transform.localPosition, targetPosition, 1);
     }
 
     public LineRenderer GetLineRenderer()
@@ -198,7 +153,7 @@ public class Berry : Clickable
 
             if (_lineRenderer != null && otherBerry.GetLineRenderer() == null)
             {
-                otherBerry.SetLineRenderer(_lineRenderer);
+                otherBerry.SetLineRenderer(_lineRenderer, timeLeft);
             }
         }
     }

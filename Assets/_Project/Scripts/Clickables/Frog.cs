@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Schema;
 using DG.Tweening;
 using QFSW.QC;
 using UnityEngine;
@@ -81,7 +82,6 @@ public class Frog : Clickable
             points.Add(berryPoints[berryPoints.Count - 1]);
         }
 
-
         // Debug.Log("berry point: " + berryPoints[berryPoints.Count - 1]);
 
         for (int i = 0; i < points.Count; i++)
@@ -96,10 +96,16 @@ public class Frog : Clickable
         AnimateLine();
     }
 
+
     void AnimateLine()
     {
         Sequence sequence = DOTween.Sequence();
 
+        float totalDuration = 4f;
+
+        segmentDuration = totalDuration / points.Count;
+
+        Debug.Log("segment duration: " + segmentDuration);
         // Animate forward
         lineRenderer.positionCount = 1;
         lineRenderer.SetPosition(0, points[0]);
@@ -112,6 +118,15 @@ public class Frog : Clickable
             Vector3 start = points[index - 1];
             Vector3 end = points[index];
 
+            var distance = (start - end);
+
+            int distanceValue = (int)MathF.Abs((distance.x + distance.y + distance.z));
+
+
+            Debug.Log("start: " + start + " - end: " + end);
+            Debug.Log("subs of start and end: " + distance);
+            Debug.Log("distance value: " + distanceValue);
+
             sequence.Append(DOTween.To(() => start, x =>
             {
                 // CheckCollision(x, Vector3.up);
@@ -121,14 +136,15 @@ public class Frog : Clickable
                 // boxCollider.
                 // Berry hitBerry = hits[i].collider.GetComponent<Berry>();
                 // FreeBerriesForFrog += hitBerry.SetAsHitable;
-            }, end, time / points.Count).SetEase(Ease.Linear));
+            }, end, segmentDuration).SetEase(Ease.Linear));
+            // }, end, time / points.Count).SetEase(Ease.Linear));
             //.AppendCallback(() => { detectedBerries[^1].SetLineRenderer(lineRenderer); });
         }
 
         sequence.AppendCallback(() =>
         {
             detectedBerries[^1].SetTargetBoxCollider(boxCollider);
-            detectedBerries[^1].SetLineRenderer(lineRenderer);
+            detectedBerries[^1].SetLineRenderer(lineRenderer, segmentDuration);
         });
 
 
@@ -139,11 +155,16 @@ public class Frog : Clickable
             Vector3 end = points[index - 1];
             Vector3 start = points[index];
 
+            var distance = (start - end);
+
+            int distanceValue = (int)MathF.Abs((distance.x + distance.y + distance.z));
+
+
             sequence.Append(DOTween.To(() => start, x =>
             {
                 boxCollider.center = x;
                 UpdateLine(index, x);
-            }, end, time / points.Count).SetEase(Ease.Linear).OnComplete(() =>
+            }, end, segmentDuration).SetEase(Ease.Linear).OnComplete(() =>
             {
                 lineRenderer.positionCount--;
                 if (index == 1)
@@ -187,64 +208,8 @@ public class Frog : Clickable
     private List<Vector3> points = new();
 
     private List<Vector3> berryPoints = new();
-
-    // private void TweenBetweenTwoPoints(Vector3 startPoint)
-    // {
-    //     _isTongueOutside = true;
-    //
-    //     Vector3 worldPosition = Vector3.zero;
-    //
-    //     RaycastHit[] hits = null;
-    //
-    //     Sequence mySequence = DOTween.Sequence();
-    //
-    //     Vector3 rotation = transform.parent.localRotation.eulerAngles;
-    //
-    //     Vector3 direction = rotation.x switch
-    //     {
-    //         0 => Vector3.right,
-    //         90 => Vector3.down,
-    //         270 => Vector3.up,
-    //     };
-    //
-    //     Vector3 endPoint = JustCheckCollision(startPoint, direction);
-    //
-    //     int lastPositionIndex = lineRenderer.positionCount - 1;
-    //
-    //     mySequence.Append(
-    //             DOTween.To(() => lineRenderer.GetPosition(lastPositionIndex), x =>
-    //             {
-    //                 worldPosition = transform.TransformPoint(x);
-    //                 lineRenderer.SetPosition(lastPositionIndex, x);
-    //                 hits = CheckCollision(startPoint, worldPosition);
-    //             }, endPoint, _tweenDuration)
-    //         )
-    //         .AppendInterval(_interval).AppendCallback(() =>
-    //         {
-    //             Debug.Log("reached end");
-    //
-    //             detectedBerries[^1].GetComponent<Berry>().SetLineRenderer(lineRenderer);
-    //         })
-    //         // .Append(DOTween.To(()=> 0f, x =>
-    //         // {
-    //         //     for (int i = 0; i < lineRenderer.positionCount; i++)
-    //         //     {
-    //         //         Vector3 targetPosition = Vector3.Lerp(lineRenderer.GetPosition(i), startPoint, x);
-    //         //         lineRenderer.SetPosition(i, targetPosition);
-    //         //         
-    //         //         
-    //         //     }
-    //         // }, 1f, _tweenDuration))
-    //         .SetLoops(2, LoopType.Yoyo)
-    //         .onComplete += () =>
-    //     {
-    //         _isTongueOutside = false;
-    //
-    //         FreeBerriesForFrog?.Invoke();
-    //     };
-    // }
-
     private int berryCounter = 0;
+    private float segmentDuration;
 
     private Vector3 JustCheckCollision(Vector3 startPoint, Vector3 direction)
     {
@@ -272,7 +237,7 @@ public class Frog : Clickable
                 // TODO: The multiplier must change based on arrow rotation
 
                 Debug.Log("arrow pos: " + currentCollider.transform.position);
-                points.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.y - currentCollider.transform.localPosition.y)));
+                points.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
 
 
                 isAnyArrowHit = true;
@@ -319,12 +284,12 @@ public class Frog : Clickable
                 if (xRotation == 90 || xRotation == -90 || xRotation == 270)
                 {
                     // Frog up or down
-                    berryPoints.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - currentCollider.transform.localPosition.y)));
+                    berryPoints.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
                     // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.y - currentCollider.transform.localPosition.y)));
                 }
                 else
                 {
-                    berryPoints.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.x - currentCollider.transform.localPosition.x)));
+                    berryPoints.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
                     // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.x - currentCollider.transform.localPosition.x)));
                 }
 
