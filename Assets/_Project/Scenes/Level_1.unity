@@ -930,7 +930,7 @@ PrefabInstance:
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
@@ -1525,7 +1525,7 @@ MonoBehaviour:
     columnIndex: 1
     rowIndex: 0
     stepCount: -1
-    hasArrow: 1
+    hasArrow: 0
     arrowDirection: 4
   - frogPosition: 1
     cellColor: 2
@@ -1534,27 +1534,6 @@ MonoBehaviour:
     stepCount: -1
     hasArrow: 0
     arrowDirection: 0
-  - frogPosition: 2
-    cellColor: 1
-    columnIndex: 0
-    rowIndex: 0
-    stepCount: -1
-    hasArrow: 1
-    arrowDirection: 2
-  - frogPosition: 2
-    cellColor: 3
-    columnIndex: 2
-    rowIndex: 0
-    stepCount: -1
-    hasArrow: 1
-    arrowDirection: 3
-  - frogPosition: 2
-    cellColor: 1
-    columnIndex: 3
-    rowIndex: 0
-    stepCount: -1
-    hasArrow: 1
-    arrowDirection: 1
 --- !u!4 &2001982932
 Transform:
   m_ObjectHideFlags: 0

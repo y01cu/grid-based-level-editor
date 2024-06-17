@@ -47,6 +47,7 @@ public class CellBase : MonoBehaviour
         cellObject.transform.DOScale(Vector3.zero, 1f).From();
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
+        Debug.Log("cell obj: " + cellObject.name, cellObject);
 
         if (objectType == ObjectType.Arrow)
         {

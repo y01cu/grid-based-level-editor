@@ -72,6 +72,7 @@ public class CellGeneration : MonoBehaviour
         {
             if (!cellOrders[i].hasArrow)
             {
+                Debug.Log("arrow set to none");
                 cellOrders[i].arrowDirection = Arrow.Direction._None;
             }
 
@@ -116,7 +117,7 @@ public class CellGeneration : MonoBehaviour
 
             case FrogPosition.RowLeftFrog:
             {
-                GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, -90), arrowDirection);
+                GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, 90), arrowDirection);
                 break;
             }
 
@@ -133,7 +134,7 @@ public class CellGeneration : MonoBehaviour
         GameObject layerParentObject = new GameObject("L_" + "-C_" + objectColor);
 
         layerParentObject.transform.SetParent(cellParentTransform);
-
+        
         if (stepCount == -1)
         {
             stepCount = height;
@@ -182,8 +183,8 @@ public class CellGeneration : MonoBehaviour
                             Arrow.Direction._None => Vector3.zero,
                             Arrow.Direction.Left => Vector3.zero,
                             Arrow.Direction.Right => new Vector3(0, 0, 180),
-                            Arrow.Direction.Up => new Vector3(0, 0, 90),
-                            Arrow.Direction.Down => new Vector3(0, 0, 270)
+                            Arrow.Direction.Up => new Vector3(0, 90, 180),
+                            Arrow.Direction.Down => new Vector3(0, 270, 0)
                         };
 
                         cellBase.additionalRotationVector3 = additionalRotation;
@@ -225,7 +226,12 @@ public class CellGeneration : MonoBehaviour
                     {
                         cellBase.additionalRotationVector3 = new Vector3(0, 270, 0);
                     }
+                    else
+                    {
+                        cellBase.additionalRotationVector3 = new Vector3(0, 90, 0);
+                    }
                 }
+
 
                 if (x == stepCount - 1)
                 {

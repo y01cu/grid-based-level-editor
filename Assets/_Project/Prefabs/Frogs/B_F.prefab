@@ -168,7 +168,7 @@ LineRenderer:
   m_MaskInteraction: 0
   m_UseWorldSpace: 0
   m_Loop: 0
-  m_ApplyActiveColorSpace: 1
+  m_ApplyActiveColorSpace: 0
 --- !u!65 &5644759591051127221
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -231,12 +231,12 @@ PrefabInstance:
     - target: {fileID: 1343093858538353406, guid: 3d3d12d25c4eb0244ad4a1503847d950,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.78587055
+      value: 0.7858706
       objectReference: {fileID: 0}
     - target: {fileID: 1343093858538353406, guid: 3d3d12d25c4eb0244ad4a1503847d950,
         type: 3}
       propertyPath: m_Size.z
-      value: 0.68296057
+      value: 0.6829606
       objectReference: {fileID: 0}
     - target: {fileID: 1343093858538353406, guid: 3d3d12d25c4eb0244ad4a1503847d950,
         type: 3}
@@ -246,7 +246,7 @@ PrefabInstance:
     - target: {fileID: 1343093858538353406, guid: 3d3d12d25c4eb0244ad4a1503847d950,
         type: 3}
       propertyPath: m_Center.y
-      value: 0.099999994
+      value: 0.09999999
       objectReference: {fileID: 0}
     - target: {fileID: 1343093858538353406, guid: 3d3d12d25c4eb0244ad4a1503847d950,
         type: 3}
@@ -371,6 +371,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 192
   newTongue: {fileID: 578790915285969788}
+  time: 10
+  boxCollider: {fileID: 5644759591051127221}
+  detectedBerries: []
 --- !u!54 &3793282005698674255
 Rigidbody:
   m_ObjectHideFlags: 0

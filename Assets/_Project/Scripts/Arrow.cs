@@ -18,6 +18,6 @@ public class Arrow : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("arrow z: " + (int)transform.rotation.eulerAngles.z, this);
+        Debug.Log("arrow z: " + (int)transform.rotation.eulerAngles.z  + " | dir: " + direction, this);
     }
 }

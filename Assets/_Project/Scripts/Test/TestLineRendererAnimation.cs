@@ -18,7 +18,7 @@ public class LineRendererAnimator : MonoBehaviour
         }
 
         // Reset the line renderer to have no points initially
-        lineRenderer.positionCount = 0;
+        lineRenderer.positionCount = 1;
 
         // Start the animation
         AnimateLine();
