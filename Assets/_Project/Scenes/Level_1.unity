@@ -992,7 +992,7 @@ MonoBehaviour:
     arrowDirection: 0
     columnIndex: 0
     rowIndex: 0
-    stepCount: -1
+    stepCount: 4
     orderType: 0
   - cellColor: 0
     frogIndex: 0
@@ -1000,7 +1000,7 @@ MonoBehaviour:
     arrowDirection: 0
     columnIndex: 1
     rowIndex: 0
-    stepCount: -1
+    stepCount: 4
     orderType: 0
   - cellColor: 0
     frogIndex: 0
@@ -1008,7 +1008,7 @@ MonoBehaviour:
     arrowDirection: 0
     columnIndex: 2
     rowIndex: 0
-    stepCount: -1
+    stepCount: 4
     orderType: 0
   - cellColor: 0
     frogIndex: 0
@@ -1016,22 +1016,22 @@ MonoBehaviour:
     arrowDirection: 0
     columnIndex: 3
     rowIndex: 0
-    stepCount: -1
+    stepCount: 4
     orderType: 0
-  - cellColor: 1
-    frogIndex: 1
-    arrowIndex: 2
+  - cellColor: 3
+    frogIndex: 2
+    arrowIndex: 1
     arrowDirection: 2
-    columnIndex: 3
+    columnIndex: 1
     rowIndex: 3
     stepCount: 2
     orderType: 1
-  - cellColor: 2
-    frogIndex: 1
-    arrowIndex: 2
-    arrowDirection: 2
-    columnIndex: 3
-    rowIndex: 2
+  - cellColor: 4
+    frogIndex: 2
+    arrowIndex: 1
+    arrowDirection: 1
+    columnIndex: 2
+    rowIndex: 1
     stepCount: 2
     orderType: 0
 --- !u!4 &2001982932

@@ -32,7 +32,7 @@ public class CellBase : MonoBehaviour
     // [SerializeField] private Transform parentTransform;
 
     [SerializeField] private LayerMask collisionLayers;
-    
+
     private void Start()
     {
         if (objectColor != ObjectColor._Empty)
@@ -91,7 +91,7 @@ public class CellBase : MonoBehaviour
             }
         }
 
-        
+
         if (_timer >= DestructionWaitingTime && _isObjectSpawned && !isDeathOrderGiven)
         {
             Vector3 rayDirection = transform.up;

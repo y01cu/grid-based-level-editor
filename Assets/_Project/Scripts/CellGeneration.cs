@@ -180,26 +180,45 @@ public class CellGeneration : MonoBehaviour
             stepCount = height;
         }
 
-        var arrowIndexValue = arrowIndex switch
-        {
-            SpecificIndex.None => -1,
-            SpecificIndex.First => 0,
-            SpecificIndex.Last => stepCount - 1,
-        };
-
-        var frogIndexValue = frogIndex switch
-        {
-            SpecificIndex.None => -1,
-            SpecificIndex.First => 0,
-            SpecificIndex.Last => stepCount - 1,
-        };
 
         var showingBelowTransformation = 0.05f;
         if (orderType == OrderType.Column)
         {
+            var arrowIndexValue = arrowIndex switch
+            {
+                SpecificIndex.None => -1,
+                // SpecificIndex.First => 0,<
+                SpecificIndex.First => rowIndex,
+                SpecificIndex.Last => (rowIndex + stepCount) - 1,
+                // SpecificIndex.Last => stepCount - 1,
+            };
+
+            var frogIndexValue = frogIndex switch
+            {
+                SpecificIndex.None => -1,
+                // SpecificIndex.First => 0,
+                SpecificIndex.First => rowIndex,
+                SpecificIndex.Last => (rowIndex + stepCount) - 1,
+                // SpecificIndex.Last => stepCount - 1,
+            };
+
+            // var arrowIndexValue = arrowIndex switch
+            // {
+            //     SpecificIndex.None => -1,
+            //     SpecificIndex.First => 0,
+            //     SpecificIndex.Last => stepCount - 1,
+            // };
+            //
+            // var frogIndexValue = frogIndex switch
+            // {
+            //     SpecificIndex.None => -1,
+            //     SpecificIndex.First => 0,
+            //     SpecificIndex.Last => stepCount - 1,
+            // };
+
             int x = columnIndex;
 
-            for (int y = 0; y < stepCount; y++)
+            for (int y = rowIndex; y < rowIndex + stepCount; y++)
             {
                 // var targetPosition = new Vector3(x, y + (layerIndex * 0.05f), layerIndex * LayerZAxisIncrement);
                 var targetPosition = CheckAndUpdateUpwardsIfNecessary(new Vector3(x, y, LayerZAxisIncrement));
@@ -221,21 +240,21 @@ public class CellGeneration : MonoBehaviour
 
                         case SpecificIndex.First:
 
-                            if (y == 0)
-                            {
+                            // if (y == 0)
+                            // {
+                            // }
                                 cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
                                 cellBase.additionalRotationVector3 = new Vector3(0, 180, 0);
-                            }
 
                             break;
 
                         case SpecificIndex.Last:
 
-                            if (y == stepCount - 1)
-                            {
+                            // if (y == stepCount - 1)
+                            // {
+                            // }
                                 cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
                                 cellBase.additionalRotationVector3 = new Vector3(0, 0, 0);
-                            }
 
 
                             break;
@@ -275,7 +294,27 @@ public class CellGeneration : MonoBehaviour
         {
             int y = rowIndex;
 
-            for (int x = 0; x < stepCount; x++)
+            var arrowIndexValue = arrowIndex switch
+            {
+                SpecificIndex.None => -1,
+                // SpecificIndex.First => 0,
+                SpecificIndex.First => columnIndex,
+                SpecificIndex.Last => (columnIndex + stepCount) - 1,
+                // SpecificIndex.Last => stepCount - 1,
+            };
+
+            var frogIndexValue = frogIndex switch
+            {
+                SpecificIndex.None => -1,
+                // SpecificIndex.First => 0,
+                SpecificIndex.First => columnIndex,
+                SpecificIndex.Last => (columnIndex + stepCount) - 1,
+                // SpecificIndex.Last => stepCount - 1,
+            };
+
+            int counter = 0;
+            // for (int x = 0; x < stepCount; x++)
+            for (int x = columnIndex; x < columnIndex + stepCount; x++)
             {
                 // var targetPosition = new Vector3(x, y + (layerIndex * 0.05f), layerIndex * LayerZAxisIncrement);
                 var targetPosition = CheckAndUpdateUpwardsIfNecessary(new Vector3(x, y, LayerZAxisIncrement));
@@ -287,33 +326,6 @@ public class CellGeneration : MonoBehaviour
                 var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
                 var cellBase = Instantiate(cellBases[(int)objectColor], newPosition, targetRotation, layerParentObject.transform);
 
-                // Vector3 cellBasePosition = cellBase.transform.position - new Vector3(0, 0, -0.6f);
-                //
-                // cellBase.transform.position = cellBasePosition;
-
-                // if (x == frogIndex)
-                // if (frogIndex != SpecificIndex.None)
-                // {
-                //     cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
-                //     if (frogIndex == 0)
-                //     {
-                //         cellBase.additionalRotationVector3 = new Vector3(0, 270, 0);
-                //     }
-                //     else
-                //     {
-                //         cellBase.additionalRotationVector3 = new Vector3(0, 90, 0);
-                //     }
-                // }
-
-
-                // if (x == stepCount - 1)
-                // {
-                //     if (arrowIndex != SpecificIndex.None)
-                //     {
-                //         cellBase.ChangeCellObjectType(CellBase.ObjectType.Arrow);
-                //     }
-                // }
-
 
                 if (x == frogIndexValue)
                 {
@@ -324,20 +336,20 @@ public class CellGeneration : MonoBehaviour
 
                         case SpecificIndex.First:
 
-                            if (y == 0)
-                            {
-                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
-                                cellBase.additionalRotationVector3 = new Vector3(0, 270, 0);
-                            }
+                            // if (y == 0)
+                            // {
+                            // }
+                            cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                            cellBase.additionalRotationVector3 = new Vector3(0, 270, 0);
 
                             break;
 
                         case SpecificIndex.Last:
 
+                            cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                            cellBase.additionalRotationVector3 = new Vector3(0, 90, 0);
                             if (x == stepCount - 1)
                             {
-                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
-                                cellBase.additionalRotationVector3 = new Vector3(0, 90, 0);
                             }
 
 
