@@ -1026,7 +1026,7 @@ MonoBehaviour:
     columnIndex: 2
     rowIndex: 1
     stepCount: -1
-    hasArrow: 0
+    hasArrow: 1
     arrowDirection: 2
 --- !u!4 &2001982932
 Transform:

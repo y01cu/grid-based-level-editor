@@ -100,15 +100,18 @@ public class Frog : Clickable
     void AnimateLine()
     {
         Sequence sequence = DOTween.Sequence();
-
-        float totalDuration = 4f;
+        _isTongueOutside = true;
+        float totalDuration = 1.5f;
 
         segmentDuration = totalDuration / points.Count;
 
         Debug.Log("segment duration: " + segmentDuration);
         // Animate forward
-        lineRenderer.positionCount = 1;
-        lineRenderer.SetPosition(0, points[0]);
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 1;
+            lineRenderer.SetPosition(0, points[0]);
+        }
 
         RaycastHit[] hits = null;
 
@@ -131,7 +134,10 @@ public class Frog : Clickable
             {
                 // CheckCollision(x, Vector3.up);
                 UpdateLine(index, x);
-                boxCollider.center = x;
+                if (boxCollider != null)
+                {
+                    boxCollider.center = x;
+                }
 
                 // boxCollider.
                 // Berry hitBerry = hits[i].collider.GetComponent<Berry>();
@@ -143,8 +149,15 @@ public class Frog : Clickable
 
         sequence.AppendCallback(() =>
         {
-            detectedBerries[^1].SetTargetBoxCollider(boxCollider);
-            detectedBerries[^1].SetLineRenderer(lineRenderer, segmentDuration);
+            if (boxCollider != null)
+            {
+                detectedBerries[^1].SetTargetBoxCollider(boxCollider);
+            }
+
+            if (lineRenderer != null)
+            {
+                detectedBerries[^1].SetLineRenderer(lineRenderer, segmentDuration);
+            }
         });
 
 
@@ -162,31 +175,48 @@ public class Frog : Clickable
 
             sequence.Append(DOTween.To(() => start, x =>
             {
-                boxCollider.center = x;
+                if (boxCollider != null)
+                {
+                    boxCollider.center = x;
+                }
+
                 UpdateLine(index, x);
             }, end, segmentDuration).SetEase(Ease.Linear).OnComplete(() =>
             {
-                lineRenderer.positionCount--;
-                if (index == 1)
+                if (lineRenderer != null)
                 {
-                    lineRenderer.positionCount = 1; // Reset to one point to complete the backward animation
+                    lineRenderer.positionCount--;
+                    if (index == 1)
+                    {
+                        lineRenderer.positionCount = 1; // Reset to one point to complete the backward animation
+                    }
                 }
             }));
         }
 
-        sequence.AppendCallback(() => lineRenderer.positionCount = 0); // Reset to no points
+        sequence.AppendCallback(() =>
+        {
+            if (lineRenderer != null)
+            {
+                lineRenderer.positionCount = 0;
+                _isTongueOutside = false;
+            }
+        }); // Reset to no points
     }
 
     void UpdateLine(int index, Vector3 position)
     {
-        if (lineRenderer.positionCount < index + 1)
+        if (lineRenderer != null)
         {
-            lineRenderer.positionCount = index + 1;
+            if (lineRenderer.positionCount < index + 1)
+            {
+                lineRenderer.positionCount = index + 1;
+            }
+
+            var newPosition = position;
+
+            lineRenderer.SetPosition(index, newPosition);
         }
-
-        var newPosition = position;
-
-        lineRenderer.SetPosition(index, newPosition);
     }
 
     private bool _isTongueReachedEnd;
@@ -219,13 +249,6 @@ public class Frog : Clickable
 
         Debug.DrawRay(startPoint, direction, Color.cyan, 2f);
 
-        // lineRenderer.positionCount = hits.Length + 1;
-
-        // for (int i = 0; i < hits.Length; i++)
-        // {
-        //     _detectedObjects.Add(hits[i].collider.gameObject);
-        // }
-
         bool isAnyArrowHit = false;
 
         for (int i = 0; i < hits.Length; i++)
@@ -234,31 +257,36 @@ public class Frog : Clickable
 
             if (currentCollider.CompareTag("Arrow"))
             {
+                
+                // currentCollider.transform.SetParent(lineRenderer.transform);
+                berryCounter = 0;
+
                 // TODO: The multiplier must change based on arrow rotation
 
-                Debug.Log("arrow pos: " + currentCollider.transform.position);
-                points.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
+                // Try adding the point here:
 
+                Debug.Log("arrow pos: " + currentCollider.transform.position);
+                points.Add(new Vector3(currentCollider.transform.localPosition.x - transform.parent.position.x, 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
 
                 isAnyArrowHit = true;
 
-                Arrow.Direction arrowDirection = currentCollider.GetComponent<Arrow>().direction;
+                Direction arrowDirection = currentCollider.GetComponent<Arrow>().direction;
 
                 switch (arrowDirection)
                 {
-                    case Arrow.Direction.Left:
+                    case Direction.Left:
                         Debug.Log("la");
-                        JustCheckCollision(currentCollider.transform.position, -Vector3.right);
+                        JustCheckCollision(currentCollider.transform.position, Vector3.left);
                         break;
-                    case Arrow.Direction.Right:
+                    case Direction.Right:
                         JustCheckCollision(currentCollider.transform.position, Vector3.right);
-                        Debug.Log("ra");
+                        Debug.Log("ra hit");
                         break;
-                    case Arrow.Direction.Up:
+                    case Direction.Up:
                         JustCheckCollision(currentCollider.transform.position, Vector3.up);
                         Debug.Log("ua");
                         break;
-                    case Arrow.Direction.Down:
+                    case Direction.Down:
                         JustCheckCollision(currentCollider.transform.position, Vector3.down);
                         Debug.Log("da");
                         break;
@@ -273,12 +301,7 @@ public class Frog : Clickable
             {
                 // currentCollider.transform.SetParent(transform);
 
-                Vector3 relativePosition = transform.parent.TransformPoint(currentCollider.transform.position);
-                Debug.Log("this pos: " + transform.parent.position + "| child pos: " + transform.position + " | relative position: " + relativePosition + " | current pos: " + currentCollider.transform.position + "current loc pos: " + currentCollider.transform.localPosition, currentCollider);
-
-                // berryPoints.Add(new Vector3(currentCollider.transform.localPosition.x - transform.parent.position.x, 0, (int)currentCollider.transform.localPosition.y));
-                // berryPoints.Add(new Vector3(currentCollider.transform.localPosition.x - transform.parent.position.x, 0, MathF.Abs((int)transform.position.y - currentCollider.transform.localPosition.y)));
-
+                // Vector3 relativePosition = transform.parent.TransformPoint(currentCollider.transform.position);
 
                 var xRotation = transform.parent.localRotation.eulerAngles.x;
                 if (xRotation == 90 || xRotation == -90 || xRotation == 270)
@@ -289,12 +312,10 @@ public class Frog : Clickable
                 }
                 else
                 {
-                    berryPoints.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
+                    berryPoints.Add(new Vector3(0, 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
                     // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.x - currentCollider.transform.localPosition.x)));
                 }
 
-
-                Debug.Log("berry collision", currentCollider);
                 berryCounter++;
                 Berry berry = currentCollider.GetComponent<Berry>();
                 if (berry.isLastForFrog)
@@ -304,7 +325,7 @@ public class Frog : Clickable
             }
         }
 
-        if (hits.Length != 0 && !isAnyArrowHit && berryCounter < CellGeneration.Instance.GetHeight())
+        if (hits.Length != 0 && !isAnyArrowHit && berryCounter < CellGeneration.Instance.GetHeight() + 2)
         {
             JustCheckCollision(startPoint + direction, direction);
         }
@@ -314,6 +335,7 @@ public class Frog : Clickable
             Debug.Log("total detected berry count: " + berryCounter);
         }
 
+        Debug.Log("hits length: " + hits.Length);
 
         return new Vector3(0, 0, berryCounter);
     }

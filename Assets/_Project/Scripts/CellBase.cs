@@ -21,7 +21,7 @@ public class CellBase : MonoBehaviour
     private bool _isObjectSpawned;
     private float _timer;
 
-    public Arrow.Direction arrowDirection;
+    public Direction arrowDirection;
 
     private bool isDeathOrderGiven;
 
@@ -31,6 +31,8 @@ public class CellBase : MonoBehaviour
 
     // [SerializeField] private Transform parentTransform;
 
+    [SerializeField] private LayerMask collisionLayers;
+    
     private void Start()
     {
         if (objectColor != ObjectColor._Empty)
@@ -47,7 +49,6 @@ public class CellBase : MonoBehaviour
         cellObject.transform.DOScale(Vector3.zero, 1f).From();
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
-        Debug.Log("cell obj: " + cellObject.name, cellObject);
 
         if (objectType == ObjectType.Arrow)
         {
@@ -90,11 +91,12 @@ public class CellBase : MonoBehaviour
             }
         }
 
+        
         if (_timer >= DestructionWaitingTime && _isObjectSpawned && !isDeathOrderGiven)
         {
             Vector3 rayDirection = transform.up;
 
-            if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hitInfo, RayLength * 2.75f) && (hitInfo.collider.CompareTag("Berry") || hitInfo.collider.CompareTag("Frog") || hitInfo.collider.CompareTag("Cell") || hitInfo.collider.CompareTag("Arrow")))
+            if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hitInfo, RayLength * 2.75f, collisionLayers))
             {
                 Debug.DrawRay(transform.position, rayDirection * RayLength * 2.75f, Color.green);
             }

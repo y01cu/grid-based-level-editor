@@ -57,26 +57,31 @@ public class CellGeneration : MonoBehaviour
     [Serializable]
     public class CellOrder
     {
-        public FrogPosition frogPosition;
         public CellBase.ObjectColor cellColor;
+        public SpecificIndex frogIndex;
+        public SpecificIndex arrowIndex;
+        public Direction arrowDirection;
         public int columnIndex;
         public int rowIndex;
         public int stepCount;
-        public bool hasArrow;
-        public Arrow.Direction arrowDirection;
+        public OrderType orderType;
     }
 
     private IEnumerator Start()
     {
         for (int i = 0; i < cellOrders.Length; i++)
         {
-            if (!cellOrders[i].hasArrow)
+            if (cellOrders[i].frogIndex == SpecificIndex.None && cellOrders[i].frogIndex == cellOrders[i].arrowIndex)
             {
-                Debug.Log("arrow set to none");
-                cellOrders[i].arrowDirection = Arrow.Direction._None;
+                Debug.LogError("ERROR: TWO OBJS IN THE SAME INDEX!");
             }
 
-            GenerateCellObjects(cellOrders[i].frogPosition, cellOrders[i].cellColor, cellOrders[i].columnIndex, cellOrders[i].rowIndex, cellOrders[i].stepCount, cellOrders[i].hasArrow, cellOrders[i].arrowDirection);
+            if (cellOrders[i].arrowIndex == SpecificIndex.None)
+            {
+                cellOrders[i].arrowDirection = Direction._None;
+            }
+
+            GenerateCellObjects(cellOrders[i].orderType, cellOrders[i].frogIndex, cellOrders[i].cellColor, cellOrders[i].columnIndex, cellOrders[i].rowIndex, cellOrders[i].stepCount, cellOrders[i].arrowIndex, cellOrders[i].arrowDirection);
             yield return cellOrderDelay;
         }
     }
@@ -88,57 +93,106 @@ public class CellGeneration : MonoBehaviour
 
     // TODO: Add how many cells will be created parameter
     [Command]
-    private void GenerateCellObjects(FrogPosition frogPosition, CellBase.ObjectColor objectColor, int columnIndex, int rowIndex, int stepCount, bool hasArrow, Arrow.Direction arrowDirection)
+    private void GenerateCellObjects(OrderType orderType, SpecificIndex frogIndex, CellBase.ObjectColor objectColor, int columnIndex, int rowIndex, int stepCount, SpecificIndex arrowIndex, Direction arrowDirection)
     {
         if (stepCount == -1)
         {
             stepCount = height;
         }
 
-        switch (frogPosition)
+        switch (orderType)
         {
-            case FrogPosition._NoFrog:
-            {
-                GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, -1, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
-                break;
-            }
+            case OrderType.Column:
+                switch (frogIndex)
+                {
+                    case SpecificIndex.None:
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        break;
+                    case SpecificIndex.First:
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        break;
+                    case SpecificIndex.Last:
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        break;
+                }
 
-            case FrogPosition.ColumnBottomFrog:
-            {
-                GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
                 break;
-            }
 
-            case FrogPosition.ColumnTopFrog:
-            {
-                GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, stepCount - 1, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
-                break;
-            }
+            case OrderType.Row:
+                switch (frogIndex)
+                {
+                    case SpecificIndex.None:
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        break;
+                    case SpecificIndex.First:
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, new Vector3(0, 90, -90), arrowDirection);
+                        break;
+                    case SpecificIndex.Last:
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        break;
+                }
 
-            case FrogPosition.RowLeftFrog:
-            {
-                GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, 90), arrowDirection);
                 break;
-            }
-
-            case FrogPosition.RowRightFrog:
-            {
-                GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, stepCount - 1, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, -90), arrowDirection);
-                break;
-            }
         }
+
+        // switch (frogIndex)
+        // {
+        // case FrogIndex.None:
+        // {
+        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, -1, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
+        //     break;
+        // }
+        //
+        // case FrogIndex.First:
+        // {
+        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
+        //     break;
+        // }
+        //
+        // case FrogIndex.Last:
+        // {
+        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, stepCount - 1, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
+        //     break;
+        // }
+
+        // case FrogIndex.RowLeftFrog:
+        // {
+        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, 90), arrowDirection);
+        //     break;
+        // }
+        //
+        // case FrogIndex.RowRightFrog:
+        // {
+        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, stepCount - 1, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, -90), arrowDirection);
+        //     break;
+        // }
+        // }
     }
 
-    private async void GenerateBaseCellObjects(int columnIndex, int rowIndex, int stepCount, int frogIndex, bool hasArrow, OrderType orderType, CellBase.ObjectColor objectColor, Vector3 rotation, Arrow.Direction arrowDirection)
+    private async void GenerateBaseCellObjects(int columnIndex, int rowIndex, int stepCount, SpecificIndex frogIndex, SpecificIndex arrowIndex, OrderType orderType, CellBase.ObjectColor objectColor, Vector3 rotation, Direction arrowDirection)
     {
         GameObject layerParentObject = new GameObject("L_" + "-C_" + objectColor);
 
         layerParentObject.transform.SetParent(cellParentTransform);
-        
+
         if (stepCount == -1)
         {
             stepCount = height;
         }
+
+        var arrowIndexValue = arrowIndex switch
+        {
+            SpecificIndex.None => -1,
+            SpecificIndex.First => 0,
+            SpecificIndex.Last => stepCount - 1,
+        };
+
+        var frogIndexValue = frogIndex switch
+        {
+            SpecificIndex.None => -1,
+            SpecificIndex.First => 0,
+            SpecificIndex.Last => stepCount - 1,
+        };
 
         var showingBelowTransformation = 0.05f;
         if (orderType == OrderType.Column)
@@ -158,41 +212,59 @@ public class CellGeneration : MonoBehaviour
                 // var targetRotation = Quaternion.Euler(rotation);
                 var cellBase = Instantiate(cellBases[(int)objectColor], newPosition, targetRotation, layerParentObject.transform);
 
-                // Vector3 cellBasePosition = cellBase.transform.position - new Vector3(0, 0, -0.6f);
+                if (y == frogIndexValue)
+                {
+                    switch (frogIndex)
+                    {
+                        case SpecificIndex.None:
+                            break;
+
+                        case SpecificIndex.First:
+
+                            if (y == 0)
+                            {
+                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                                cellBase.additionalRotationVector3 = new Vector3(0, 180, 0);
+                            }
+
+                            break;
+
+                        case SpecificIndex.Last:
+
+                            if (y == stepCount - 1)
+                            {
+                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                                cellBase.additionalRotationVector3 = new Vector3(0, 0, 0);
+                            }
+
+
+                            break;
+                    }
+                }
+
+                if (y == arrowIndexValue)
+                {
+                    cellBase.ChangeCellObjectType(CellBase.ObjectType.Arrow);
+
+                    Vector3 additionalRotation = arrowDirection switch
+                    {
+                        Direction._None => Vector3.zero,
+                        Direction.Left => Vector3.zero,
+                        Direction.Right => new Vector3(0, 0, 180),
+                        Direction.Up => new Vector3(0, 0, 90),
+                        Direction.Down => new Vector3(0, 0, 270)
+                    };
+
+                    cellBase.additionalRotationVector3 = additionalRotation;
+
+                    cellBase.arrowDirection = arrowDirection;
+                }
+
                 //
-                // cellBase.transform.position = cellBasePosition;
-
-                if (y == frogIndex)
-                {
-                    cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
-                    if (frogIndex == 0)
-                    {
-                        cellBase.additionalRotationVector3 = new Vector3(0, 180, 0);
-                        // cellBase.additionalRotationVector3 = new Vector3(0, 180, 0);
-                    }
-                }
-
-                if (y == stepCount - 1)
-                {
-                    if (hasArrow)
-                    {
-                        cellBase.ChangeCellObjectType(CellBase.ObjectType.Arrow);
-
-                        Vector3 additionalRotation = arrowDirection switch
-                        {
-                            Arrow.Direction._None => Vector3.zero,
-                            Arrow.Direction.Left => Vector3.zero,
-                            Arrow.Direction.Right => new Vector3(0, 0, 180),
-                            Arrow.Direction.Up => new Vector3(0, 90, 180),
-                            Arrow.Direction.Down => new Vector3(0, 270, 0)
-                        };
-
-                        cellBase.additionalRotationVector3 = additionalRotation;
-
-                        cellBase.arrowDirection = arrowDirection;
-                    }
-                }
-
+                // if (y == frogIndexValue)
+                // {
+                //     cellBase.ChangeCellObjectType();
+                // }
 
                 // cellBase.CreateCellObject();
 
@@ -219,28 +291,77 @@ public class CellGeneration : MonoBehaviour
                 //
                 // cellBase.transform.position = cellBasePosition;
 
-                if (x == frogIndex)
+                // if (x == frogIndex)
+                // if (frogIndex != SpecificIndex.None)
+                // {
+                //     cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                //     if (frogIndex == 0)
+                //     {
+                //         cellBase.additionalRotationVector3 = new Vector3(0, 270, 0);
+                //     }
+                //     else
+                //     {
+                //         cellBase.additionalRotationVector3 = new Vector3(0, 90, 0);
+                //     }
+                // }
+
+
+                // if (x == stepCount - 1)
+                // {
+                //     if (arrowIndex != SpecificIndex.None)
+                //     {
+                //         cellBase.ChangeCellObjectType(CellBase.ObjectType.Arrow);
+                //     }
+                // }
+
+
+                if (x == frogIndexValue)
                 {
-                    cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
-                    if (frogIndex == 0)
+                    switch (frogIndex)
                     {
-                        cellBase.additionalRotationVector3 = new Vector3(0, 270, 0);
-                    }
-                    else
-                    {
-                        cellBase.additionalRotationVector3 = new Vector3(0, 90, 0);
+                        case SpecificIndex.None:
+                            break;
+
+                        case SpecificIndex.First:
+
+                            if (y == 0)
+                            {
+                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                                cellBase.additionalRotationVector3 = new Vector3(0, 270, 0);
+                            }
+
+                            break;
+
+                        case SpecificIndex.Last:
+
+                            if (x == stepCount - 1)
+                            {
+                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                                cellBase.additionalRotationVector3 = new Vector3(0, 90, 0);
+                            }
+
+
+                            break;
                     }
                 }
 
-
-                if (x == stepCount - 1)
+                if (x == arrowIndexValue)
                 {
-                    if (hasArrow)
-                    {
-                        cellBase.ChangeCellObjectType(CellBase.ObjectType.Arrow);
-                    }
-                }
+                    cellBase.ChangeCellObjectType(CellBase.ObjectType.Arrow);
 
+                    Vector3 additionalRotation = arrowDirection switch
+                    {
+                        Direction._None => Vector3.zero,
+                        Direction.Left => Vector3.zero,
+                        Direction.Right => new Vector3(0, 0, 180),
+                        Direction.Up => new Vector3(0, 0, 90),
+                        Direction.Down => new Vector3(0, 0, 270)
+                    };
+
+                    cellBase.additionalRotationVector3 = additionalRotation;
+
+                    cellBase.arrowDirection = arrowDirection;
+                }
 
                 // cellBase.CreateCellObject();
 
@@ -268,13 +389,11 @@ public class CellGeneration : MonoBehaviour
         Destroy(cellParentTransform.GetChild(cellParentTransform.childCount - 1).gameObject);
     }
 
-    public enum FrogPosition
+    public enum SpecificIndex
     {
-        _NoFrog,
-        ColumnTopFrog,
-        ColumnBottomFrog,
-        RowRightFrog,
-        RowLeftFrog
+        None,
+        Last,
+        First,
     }
 
     public enum OrderType
@@ -282,4 +401,13 @@ public class CellGeneration : MonoBehaviour
         Column,
         Row
     }
+}
+
+public enum Direction
+{
+    _None,
+    Up,
+    Down,
+    Right,
+    Left,
 }

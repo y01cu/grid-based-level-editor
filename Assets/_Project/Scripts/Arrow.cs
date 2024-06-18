@@ -7,15 +7,6 @@ public class Arrow : MonoBehaviour
 {
     public Direction direction;
 
-    public enum Direction
-    {
-        _None,
-        Up,
-        Down,
-        Right,
-        Left,
-    }
-
     private void Start()
     {
         Debug.Log("arrow z: " + (int)transform.rotation.eulerAngles.z  + " | dir: " + direction, this);

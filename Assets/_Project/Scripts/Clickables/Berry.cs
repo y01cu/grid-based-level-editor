@@ -29,6 +29,7 @@ public class Berry : Clickable
 
     [SerializeField] private BoxCollider targetBoxCollider;
 
+
     public void SetTargetBoxCollider(BoxCollider givenTargetBoxCollider)
     {
         targetBoxCollider = givenTargetBoxCollider;
@@ -51,7 +52,6 @@ public class Berry : Clickable
             {
                 return;
             }
-
 
             if (!isLerping)
             {
@@ -77,8 +77,6 @@ public class Berry : Clickable
         {
             transform.localPosition = Vector3.Lerp(start, end, time / duration);
             time += Time.deltaTime;
-
-            Debug.Log("spent time: " + time / duration);
 
             timeLeft = duration - time;
             yield return null;
@@ -135,6 +133,11 @@ public class Berry : Clickable
         _forceDirection = forceDirection;
     }
 
+    public void SetRigidbody(Rigidbody rb)
+    {
+        rigidbody = rb;
+    }
+
     public void MoveToFrog()
     {
         rigidbody.AddForce(_forceDirection);
@@ -155,6 +158,16 @@ public class Berry : Clickable
             {
                 otherBerry.SetLineRenderer(_lineRenderer, timeLeft);
             }
+
+            // var direction = _lineRenderer.GetPosition(_lineRenderer.positionCount - 2) - transform.localPosition;
+            
+            // -----
+
+            // Debug.Log("dir: " + direction);
+
+            // otherBerry.GetComponent<Rigidbody>().velocity *=2;
+
+            // otherBerry.SetRigidbody(rigidbody);
         }
     }
 
@@ -170,22 +183,21 @@ public class Berry : Clickable
             boxCollider.isTrigger = true;
             List<Berry> detectedBerries = other.GetComponent<Frog>().GetDetectedObjects();
 
+            transform.SetParent(null);
+
             // for (int i = 0; i < detectedObjects.Count; i++)
             // {
             // }
 
-            UnityEngine.Debug.Log("name of the other one: " + other.gameObject.name);
-
-            transform.DOScale(new Vector3(0, 0, 0), .15f).SetEase(Ease.Linear).onComplete += () =>
+            transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () =>
             {
                 Destroy(gameObject);
-                Debug.Log("destroyed here");
 
                 detectedBerries.Remove(this);
                 if (detectedBerries.Count == 0)
                 {
+                    Destroy(other.gameObject.transform.parent.gameObject);
                     Destroy(other.gameObject);
-                    Debug.Log("destroyed there");
                 }
             };
 
@@ -196,8 +208,6 @@ public class Berry : Clickable
 
         if (other.CompareTag("Tongue"))
         {
-            Debug.Log("Tongue entered.");
-
             if (!_isTongueHit)
             {
                 OnClickedOver();
@@ -207,6 +217,18 @@ public class Berry : Clickable
                 frog.detectedBerries.Add(this);
                 _isTongueHit = true;
             }
+        }
+
+        if (other.CompareTag("Arrow"))
+        {
+            // Create a general method for destroying / tweening objects out
+
+            Debug.Log("berry hit arrow", this);
+
+            other.transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () =>
+            {
+                Destroy(other.gameObject);
+            };
         }
     }
 }

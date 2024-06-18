@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5cbb0a21ec573b546917cf2c9decf8e0,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5cbb0a21ec573b546917cf2c9decf8e0,
         type: 3}
@@ -131,7 +131,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.032864265, y: 0.02108672, z: 0.0136801675}
+  m_Size: {x: 0.03286427, y: 0.02108672, z: 0.01368017}
   m_Center: {x: -0.002481844, y: -0.000008711592, z: -0.000002950023}
 --- !u!114 &-1775235063929729066
 MonoBehaviour:

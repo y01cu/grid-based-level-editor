@@ -9,6 +9,10 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance;
     private int sceneBuildIndex;
 
+    private float timer;
+    private float activationInitialDelay = 3;
+    private int activeNonGrayCellCount;
+
     private void Awake()
     {
         if (Instance != null)
@@ -26,16 +30,12 @@ public class LevelManager : MonoBehaviour
         sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
-    private float timer;
-    private float activationInitialDelay = 3;
-    private int activeNonGrayCellCount;
-
     private void Update()
     {
         timer += Time.deltaTime;
         if (timer >= activationInitialDelay)
         {
-            if (activeNonGrayCellCount == 0 && sceneBuildIndex != 2)
+            if (activeNonGrayCellCount == 0 && sceneBuildIndex != SceneManager.sceneCountInBuildSettings - 1)
             {
                 SceneManager.LoadSceneAsync(sceneBuildIndex + 1);
             }
@@ -54,6 +54,6 @@ public class LevelManager : MonoBehaviour
 
     public void LogActiveNonGrayCellCount()
     {
-        Debug.Log("non gray cell count: " + activeNonGrayCellCount);
+        Debug.Log("active non gray cell count: " + activeNonGrayCellCount);
     }
 }
