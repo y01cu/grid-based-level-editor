@@ -115,14 +115,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f8c5ff0882ed894b9a64e0e9f2830ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CellObjectPrefabs:
-  - {fileID: 3713409775659699406, guid: eba6fd29cd9b8614c89795b8a7b790a2, type: 3}
-  - {fileID: 6943560949676558025, guid: 435608f0a118d094bb76e514c07ceb25, type: 3}
-  - {fileID: 8404320618774999034, guid: f808072221b8b1c4d93e94c8f80636a2, type: 3}
+  CellObjectPrefabs: []
   objectColor: 0
   objectType: 1
   arrowDirection: 0
   additionalRotationVector3: {x: 0, y: 0, z: 0}
+  orderType: 0
   objectTargetTransformFromChild: {fileID: 0}
   collisionLayers:
     serializedVersion: 2

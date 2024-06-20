@@ -1597,6 +1597,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 0
     frogIndex: 0
     arrowIndex: 0
@@ -1605,6 +1606,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 0
     frogIndex: 0
     arrowIndex: 0
@@ -1613,6 +1615,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 0
     frogIndex: 0
     arrowIndex: 0
@@ -1621,6 +1624,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 4
     frogIndex: 2
     arrowIndex: 1
@@ -1629,6 +1633,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 4
     frogIndex: 0
     arrowIndex: 2
@@ -1637,6 +1642,7 @@ MonoBehaviour:
     rowIndex: 3
     stepCount: 3
     orderType: 1
+    finalBerryIndex: 0
   - cellColor: 4
     frogIndex: 0
     arrowIndex: 0
@@ -1645,6 +1651,7 @@ MonoBehaviour:
     rowIndex: 1
     stepCount: 2
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 4
     frogIndex: 0
     arrowIndex: 2
@@ -1653,6 +1660,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: 3
     orderType: 1
+    finalBerryIndex: 1
   - cellColor: 3
     frogIndex: 2
     arrowIndex: 1
@@ -1661,6 +1669,7 @@ MonoBehaviour:
     rowIndex: 2
     stepCount: 2
     orderType: 1
+    finalBerryIndex: 0
   - cellColor: 3
     frogIndex: 0
     arrowIndex: 1
@@ -1669,6 +1678,7 @@ MonoBehaviour:
     rowIndex: 1
     stepCount: 2
     orderType: 1
+    finalBerryIndex: 2
 --- !u!4 &2001982932
 Transform:
   m_ObjectHideFlags: 0

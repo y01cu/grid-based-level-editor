@@ -63,6 +63,7 @@ public class CellGeneration : MonoBehaviour
         public int rowIndex;
         public int stepCount;
         public OrderType orderType;
+        public SpecificIndex finalBerryIndex;
     }
 
     private IEnumerator Start()
@@ -79,7 +80,7 @@ public class CellGeneration : MonoBehaviour
                 cellOrders[i].arrowDirection = Direction._None;
             }
 
-            GenerateCellObjects(cellOrders[i].orderType, cellOrders[i].frogIndex, cellOrders[i].cellColor, cellOrders[i].columnIndex, cellOrders[i].rowIndex, cellOrders[i].stepCount, cellOrders[i].arrowIndex, cellOrders[i].arrowDirection);
+            GenerateCellObjects(cellOrders[i].orderType, cellOrders[i].frogIndex, cellOrders[i].cellColor, cellOrders[i].columnIndex, cellOrders[i].rowIndex, cellOrders[i].stepCount, cellOrders[i].arrowIndex, cellOrders[i].arrowDirection, cellOrders[i].finalBerryIndex);
             yield return cellOrderDelay;
         }
     }
@@ -90,7 +91,7 @@ public class CellGeneration : MonoBehaviour
     }
 
     // TODO: Add how many cells will be created parameter
-    private void GenerateCellObjects(OrderType orderType, SpecificIndex frogIndex, CellBase.ObjectColor objectColor, int columnIndex, int rowIndex, int stepCount, SpecificIndex arrowIndex, Direction arrowDirection)
+    private void GenerateCellObjects(OrderType orderType, SpecificIndex frogIndex, CellBase.ObjectColor objectColor, int columnIndex, int rowIndex, int stepCount, SpecificIndex arrowIndex, Direction arrowDirection, SpecificIndex finalBerryIndex)
     {
         if (stepCount == -1)
         {
@@ -103,13 +104,13 @@ public class CellGeneration : MonoBehaviour
                 switch (frogIndex)
                 {
                     case SpecificIndex.None:
-                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection, finalBerryIndex);
                         break;
                     case SpecificIndex.First:
-                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection, finalBerryIndex);
                         break;
                     case SpecificIndex.Last:
-                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection, finalBerryIndex);
                         break;
                 }
 
@@ -119,54 +120,21 @@ public class CellGeneration : MonoBehaviour
                 switch (frogIndex)
                 {
                     case SpecificIndex.None:
-                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection, finalBerryIndex);
                         break;
                     case SpecificIndex.First:
-                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, new Vector3(0, 90, -90), arrowDirection);
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, new Vector3(0, 90, -90), arrowDirection, finalBerryIndex);
                         break;
                     case SpecificIndex.Last:
-                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection);
+                        GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, frogIndex, arrowIndex, orderType, objectColor, Vector3.zero, arrowDirection, finalBerryIndex);
                         break;
                 }
 
                 break;
         }
-
-        // switch (frogIndex)
-        // {
-        // case FrogIndex.None:
-        // {
-        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, -1, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
-        //     break;
-        // }
-        //
-        // case FrogIndex.First:
-        // {
-        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
-        //     break;
-        // }
-        //
-        // case FrogIndex.Last:
-        // {
-        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, stepCount - 1, hasArrow, OrderType.Column, objectColor, new Vector3(0, 90, -90), arrowDirection);
-        //     break;
-        // }
-
-        // case FrogIndex.RowLeftFrog:
-        // {
-        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, 0, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, 90), arrowDirection);
-        //     break;
-        // }
-        //
-        // case FrogIndex.RowRightFrog:
-        // {
-        //     GenerateBaseCellObjects(columnIndex, rowIndex, stepCount, stepCount - 1, hasArrow, OrderType.Row, objectColor, new Vector3(0, 90, -90), arrowDirection);
-        //     break;
-        // }
-        // }
     }
 
-    private async void GenerateBaseCellObjects(int columnIndex, int rowIndex, int stepCount, SpecificIndex frogIndex, SpecificIndex arrowIndex, OrderType orderType, CellBase.ObjectColor objectColor, Vector3 rotation, Direction arrowDirection)
+    private async void GenerateBaseCellObjects(int columnIndex, int rowIndex, int stepCount, SpecificIndex frogIndex, SpecificIndex arrowIndex, OrderType orderType, CellBase.ObjectColor objectColor, Vector3 rotation, Direction arrowDirection, SpecificIndex finalBerryIndex)
     {
         GameObject layerParentObject = new GameObject("L_" + "-C_" + objectColor);
 
@@ -193,7 +161,7 @@ public class CellGeneration : MonoBehaviour
                 SpecificIndex.None => -1,
                 // SpecificIndex.First => 0,<
                 SpecificIndex.First => rowIndex,
-                SpecificIndex.Last => (rowIndex + stepCount) - 1,
+                SpecificIndex.Last => rowIndex + stepCount - 1,
                 // SpecificIndex.Last => stepCount - 1,
             };
 
@@ -202,8 +170,15 @@ public class CellGeneration : MonoBehaviour
                 SpecificIndex.None => -1,
                 // SpecificIndex.First => 0,
                 SpecificIndex.First => rowIndex,
-                SpecificIndex.Last => (rowIndex + stepCount) - 1,
+                SpecificIndex.Last => rowIndex + stepCount - 1,
                 // SpecificIndex.Last => stepCount - 1,
+            };
+
+            var finalBerryIndexValue = finalBerryIndex switch
+            {
+                SpecificIndex.None => -1,
+                SpecificIndex.First => rowIndex,
+                SpecificIndex.Last => rowIndex + stepCount - 1
             };
 
             int x = columnIndex;
@@ -273,6 +248,11 @@ public class CellGeneration : MonoBehaviour
                     cellBase.arrowDirection = arrowDirection;
                 }
 
+                if (y == finalBerryIndexValue)
+                {
+                    cellBase.SetAsSpawningFinalBerryForFrog();
+                }
+
                 //
                 // if (y == frogIndexValue)
                 // {
@@ -288,7 +268,7 @@ public class CellGeneration : MonoBehaviour
         {
             // OrderType: Row
             int y = rowIndex;
-            
+
             if (columnIndex + stepCount > height)
             {
                 Debug.LogError("improper index: column fulled");
@@ -299,19 +279,22 @@ public class CellGeneration : MonoBehaviour
             var arrowIndexValue = arrowIndex switch
             {
                 SpecificIndex.None => -1,
-                // SpecificIndex.First => 0,
                 SpecificIndex.First => columnIndex,
-                SpecificIndex.Last => (columnIndex + stepCount) - 1,
-                // SpecificIndex.Last => stepCount - 1,
+                SpecificIndex.Last => columnIndex + stepCount - 1,
             };
 
             var frogIndexValue = frogIndex switch
             {
                 SpecificIndex.None => -1,
-                // SpecificIndex.First => 0,
                 SpecificIndex.First => columnIndex,
-                SpecificIndex.Last => (columnIndex + stepCount) - 1,
-                // SpecificIndex.Last => stepCount - 1,
+                SpecificIndex.Last => columnIndex + stepCount - 1,
+            };
+
+            var finalBerryIndexValue = finalBerryIndex switch
+            {
+                SpecificIndex.None => -1,
+                SpecificIndex.First => columnIndex,
+                SpecificIndex.Last => columnIndex + stepCount - 1,
             };
 
             int counter = 0;
@@ -377,6 +360,11 @@ public class CellGeneration : MonoBehaviour
                     cellBase.additionalRotationVector3 = additionalRotation;
 
                     cellBase.arrowDirection = arrowDirection;
+                }
+
+                if (x == finalBerryIndexValue)
+                {
+                    cellBase.SetAsSpawningFinalBerryForFrog();
                 }
 
                 // cellBase.CreateCellObject();

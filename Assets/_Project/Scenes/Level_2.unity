@@ -502,7 +502,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.043246232, y: -0.13040201, z: 0.0056934766, w: 0.9905012}
+  m_LocalRotation: {x: 0.04324623, y: -0.130402, z: 0.005693477, w: 0.9905012}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1590,6 +1590,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 0
     frogIndex: 0
     arrowIndex: 0
@@ -1598,6 +1599,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 0
     frogIndex: 0
     arrowIndex: 0
@@ -1606,6 +1608,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 0
     frogIndex: 0
     arrowIndex: 0
@@ -1614,6 +1617,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 4
     frogIndex: 1
     arrowIndex: 2
@@ -1622,6 +1626,7 @@ MonoBehaviour:
     rowIndex: 3
     stepCount: 4
     orderType: 1
+    finalBerryIndex: 0
   - cellColor: 4
     frogIndex: 0
     arrowIndex: 2
@@ -1630,6 +1635,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: 3
     orderType: 0
+    finalBerryIndex: 0
   - cellColor: 4
     frogIndex: 0
     arrowIndex: 2
@@ -1638,6 +1644,7 @@ MonoBehaviour:
     rowIndex: 0
     stepCount: 2
     orderType: 0
+    finalBerryIndex: 1
   - cellColor: 1
     frogIndex: 1
     arrowIndex: 0
@@ -1646,6 +1653,7 @@ MonoBehaviour:
     rowIndex: 1
     stepCount: -1
     orderType: 0
+    finalBerryIndex: 2
 --- !u!4 &2001982932
 Transform:
   m_ObjectHideFlags: 0

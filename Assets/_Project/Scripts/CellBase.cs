@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CellBase : MonoBehaviour
 {
@@ -34,6 +35,18 @@ public class CellBase : MonoBehaviour
     // [SerializeField] private Transform parentTransform;
 
     [SerializeField] private LayerMask collisionLayers;
+
+    private bool isSpawningFinalBerryForFrog;
+
+    public bool IsSpawningFinalBerryForFrog()
+    {
+        return isSpawningFinalBerryForFrog;
+    }
+
+    public void SetAsSpawningFinalBerryForFrog()
+    {
+        isSpawningFinalBerryForFrog = true;
+    }
 
     private void Start()
     {
@@ -97,6 +110,12 @@ public class CellBase : MonoBehaviour
                 _isObjectSpawned = true;
                 var cellObject = CreateCellObject();
                 _timer = 0;
+
+                if (isSpawningFinalBerryForFrog)
+                {
+                    cellObject.GetComponent<Berry>().SetAsLastBerryForFrog();
+                    Debug.Log("spawned final berry", this);
+                }
 
 
                 // Debug.DrawRay(transform.position, rayDirection * RayLength, Color.red);

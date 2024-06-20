@@ -15,15 +15,12 @@ using UnityEngine.Serialization;
 public class Frog : Clickable
 {
     public event Action FreeBerriesForFrog;
-    public event Action MoveBerriesToFrog;
 
     [SerializeField] private LineRenderer lineRenderer;
 
     [SerializeField] private LayerMask collisionMask;
 
     private bool _isTongueOutside;
-
-    [SerializeField] private TongueNew newTongue;
 
     [SerializeField] private float time;
 
@@ -557,17 +554,8 @@ public class Frog : Clickable
 
             if (currentCollider.CompareTag("Berry"))
             {
-                // currentCollider.transform.SetParent(transform);
-
-                // Vector3 relativePosition = transform.parent.TransformPoint(currentCollider.transform.position);
-
-
                 berryCounter++;
                 Berry berry = currentCollider.GetComponent<Berry>();
-                if (berry.isLastForFrog)
-                {
-                    // Stop tongue movement
-                }
 
                 if (berry.gameObject.name[0] == gameObject.name[0] && !berry.IsDetected())
                 {
@@ -578,67 +566,11 @@ public class Frog : Clickable
                     berries.Add(berry);
                 }
 
-
-                // Debug.Log("berry's relative pos: " + transform.p);
-
-
-                // var xRotation = transform.parent.localRotation.eulerAngles.x;
-                // if (xRotation == 90 || xRotation == -90 || xRotation == 270)
-                // {
-                //     // Frog up or down
-                //     berries.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
-                //     // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.y - currentCollider.transform.localPosition.y)));
-                // }
-                // else
-                // {
-                //     if (orderType == CellGeneration.OrderType.Column)
-                //     {
-                //         var isBerryOnLeftSide = berry.transform.position.x - transform.parent.position.x < 0;
-                //     }
-                //     else
-                //     {
-                //         // Is order type row:
-                //
-                //         var isBerryOnLeftSide = berry.transform.position.x - transform.parent.position.x < 0;
-                //     }
-                //
-                //     Debug.Log("hi | berry pos: " + berry.transform.position);
-                //
-                //
-                //     if (isBerryOnLeftSide)
-                //     {
-                //         if (orderType == CellGeneration.OrderType.Column)
-                //         {
-                //             berries.Add(new Vector3((int)transform.parent.position.x - (int)berry.transform.localPosition.x, 0, (int)berry.transform.localPosition.y - (int)transform.parent.localPosition.y));
-                //         }
-                //         else
-                //         {
-                //             berries.Add(new Vector3((int)berry.transform.localPosition.y - (int)transform.parent.localPosition.y, 0, MathF.Abs((int)transform.parent.position.x - (int)berry.transform.localPosition.x)));
-                //         }
-                //     }
-                //     else
-                //     {
-                //         if (orderType == CellGeneration.OrderType.Column)
-                //         {
-                //             berries.Add(new Vector3((int)transform.parent.localPosition.y - (int)berry.transform.localPosition.y, 0, MathF.Abs((int)berry.transform.localPosition.x - (int)transform.parent.position.x)));
-                //         }
-                //         else
-                //         {
-                //             berries.Add(new Vector3((int)transform.parent.localPosition.y - (int)berry.transform.localPosition.y, 0, MathF.Abs((int)berry.transform.localPosition.x - (int)transform.parent.position.x)));
-                //
-                //
-                //             // berryPoints.Add(new Vector3(MathF.Abs((int)berry.transform.localPosition.x - (int)transform.parent.position.x), 0, (int)transform.parent.localPosition.y - (int)berry.transform.localPosition.y));
-                //         }
-                //     }
-
-
-                // berryPoints.Add(new Vector3(0, 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
-
-
-                // berryPoints.Add(new Vector3(0, 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
-
-                //---
-                // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.x - currentCollider.transform.localPosition.x)));
+                if (berry.IsLastBerryForFrog())
+                {
+                    Debug.Log("found last berry for frog");
+                    return;
+                }
             }
         }
 

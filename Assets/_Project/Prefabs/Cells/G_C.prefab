@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8651935919913808508}
   m_Layer: 8
-  m_Name: GameObject
+  m_Name: Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,6 +163,7 @@ MonoBehaviour:
   objectType: 1
   arrowDirection: 0
   additionalRotationVector3: {x: 0, y: 0, z: 0}
+  orderType: 0
   objectTargetTransformFromChild: {fileID: 8651935919913808508}
   collisionLayers:
     serializedVersion: 2

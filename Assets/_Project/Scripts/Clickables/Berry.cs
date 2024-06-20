@@ -26,8 +26,17 @@ public class Berry : Clickable
 
     private bool _isDetected;
 
+    private bool isLastBerryForFrog;
 
-    public bool isLastForFrog;
+    public bool IsLastBerryForFrog()
+    {
+        return isLastBerryForFrog;
+    }
+
+    public void SetAsLastBerryForFrog()
+    {
+        isLastBerryForFrog = true;
+    }
 
     [SerializeField] private BoxCollider targetBoxCollider;
 
