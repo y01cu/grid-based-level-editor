@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MouseManager : MonoBehaviour, ISubscriber
+public class MouseManager : Subscriber
 {
     public static event Action OnRightMouseButtonClicked;
 
@@ -20,7 +20,10 @@ public class MouseManager : MonoBehaviour, ISubscriber
     {
         playerInput.onActionTriggered += context => RightClickInteract(context);
 
-        SubscribeToEvents();
+        if (!isSubscribed)
+        {
+            SubscribeToEvents();
+        }
     }
 
     private void RightClickInteract(InputAction.CallbackContext context)
@@ -28,6 +31,7 @@ public class MouseManager : MonoBehaviour, ISubscriber
         if (context.performed)
         {
             OnRightMouseButtonClicked?.Invoke();
+            Debug.Log("checking rmb");
         }
     }
 
@@ -56,27 +60,36 @@ public class MouseManager : MonoBehaviour, ISubscriber
 
             if (hitObject.CompareTag("Frog"))
             {
-                Debug.Log("hit frog");
+                Debug.Log("hit frog", hitObject);
                 hitObject.GetComponent<Frog>().OnClickedOver();
                 OnMoveUsed?.Invoke();
             }
         }
     }
 
-    public void SubscribeToEvents()
+    protected override void SubscribeToEvents()
     {
         OnRightMouseButtonClicked += DetectObjectUnderMouse;
         OnClearEvents += UnsubscribeFromEvents;
+
+        isSubscribed = true;
     }
 
-    public void UnsubscribeFromEvents()
+    protected override void UnsubscribeFromEvents()
     {
         OnRightMouseButtonClicked -= DetectObjectUnderMouse;
         OnClearEvents -= UnsubscribeFromEvents;
+
+        isSubscribed = false;
     }
 
     public static void TriggerClearingEvents()
     {
         OnClearEvents?.Invoke();
+    }
+
+    protected override void OnDestroy()
+    {
+        UnsubscribeFromEvents();
     }
 }

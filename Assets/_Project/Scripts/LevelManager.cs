@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
-public class LevelManager : MonoBehaviour, ISubscriber
+public class LevelManager : Subscriber
 {
     public static LevelManager Instance;
     private int sceneBuildIndex;
@@ -52,19 +52,31 @@ public class LevelManager : MonoBehaviour, ISubscriber
 
         levelNumber = sceneBuildIndex + 1;
 
-        SubscribeToEvent();
+        if (!isSubscribed)
+        {
+            SubscribeToEvents();
+        }
     }
 
-    private void SubscribeToEvent()
+    protected override void SubscribeToEvents()
     {
         MouseManager.OnMoveUsed += DecreaseMoveCount;
-        MouseManager.OnClearEvents -= UnsubscribeFromEvents;
+        MouseManager.OnClearEvents += UnsubscribeFromEvents;
+
+        isSubscribed = true;
     }
 
-    public void UnsubscribeFromEvent()
+    protected override void UnsubscribeFromEvents()
     {
         MouseManager.OnMoveUsed -= DecreaseMoveCount;
         MouseManager.OnClearEvents -= UnsubscribeFromEvents;
+
+        isSubscribed = false;
+    }
+
+    protected override void OnDestroy()
+    {
+        UnsubscribeFromEvents();
     }
 
     private void Update()
@@ -75,7 +87,7 @@ public class LevelManager : MonoBehaviour, ISubscriber
             if (activeNonGrayCellCount == 0 && sceneBuildIndex != SceneManager.sceneCountInBuildSettings - 1)
             {
                 MouseManager.TriggerClearingEvents();
-                SceneManager.LoadSceneAsync(sceneBuildIndex + 1);
+                SceneManager.LoadSceneAsync(levelNumber);
             }
         }
     }
@@ -88,15 +100,5 @@ public class LevelManager : MonoBehaviour, ISubscriber
     public void DecreaseActiveNonGrayCellCount()
     {
         activeNonGrayCellCount--;
-    }
-
-    public void SubscribeToEvents()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void UnsubscribeFromEvents()
-    {
-        throw new NotImplementedException();
     }
 }

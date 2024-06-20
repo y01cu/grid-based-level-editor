@@ -8,7 +8,7 @@ using UnityEngine.PlayerLoop;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour, ISubscriber
+public class UIManager : Subscriber
 {
     [SerializeField] private TextMeshProUGUI movesTMP;
     [SerializeField] private TextMeshProUGUI levelTMP;
@@ -22,7 +22,10 @@ public class UIManager : MonoBehaviour, ISubscriber
     {
         yield return initialDelayForSetup;
 
-        SubscribeToEvents();
+        if (!isSubscribed)
+        {
+            SubscribeToEvents();
+        }
 
         stringBuilder = new StringBuilder();
 
@@ -59,15 +62,24 @@ public class UIManager : MonoBehaviour, ISubscriber
         return stringBuilder.ToString();
     }
 
-    public void SubscribeToEvents()
+    protected override void SubscribeToEvents()
     {
         MouseManager.OnMoveUsed += DecreaseMovesText;
         MouseManager.OnClearEvents += UnsubscribeFromEvents;
+
+        isSubscribed = true;
     }
 
-    public void UnsubscribeFromEvents()
+    protected override void UnsubscribeFromEvents()
     {
         MouseManager.OnMoveUsed -= DecreaseMovesText;
         MouseManager.OnClearEvents -= UnsubscribeFromEvents;
+
+        isSubscribed = false;
+    }
+
+    protected override void OnDestroy()
+    {
+        UnsubscribeFromEvents();
     }
 }
