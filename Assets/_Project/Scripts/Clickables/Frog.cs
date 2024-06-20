@@ -102,8 +102,11 @@ public class Frog : Clickable
 
             // Debug.Log("last berry: " + berries[^1].transform.localPosition);
 
-            points.Add(transform.parent.InverseTransformPoint(berries[^1].transform.localPosition));
-            Debug.Log("added last berry point: " + points[^1]);
+            if (!isObstacleHit)
+            {
+                points.Add(transform.parent.InverseTransformPoint(berries[^1].transform.localPosition));
+                Debug.Log("added last berry point: " + points[^1]);
+            }
         }
 
         // Debug.Log("berry point: " + berryPoints[berryPoints.Count - 1]);
@@ -152,14 +155,14 @@ public class Frog : Clickable
 
             sequence.Append(DOTween.To(() => start, x =>
             {
-                if (!isObstacleHit)
+                // if (!isObstacleHit)
+                // {
+                // }
+                // CheckCollision(x, Vector3.up);
+                UpdateLine(index, x);
+                if (boxCollider != null)
                 {
-                    // CheckCollision(x, Vector3.up);
-                    UpdateLine(index, x);
-                    if (boxCollider != null)
-                    {
-                        boxCollider.center = x;
-                    }
+                    boxCollider.center = x;
                 }
 
                 // boxCollider.
@@ -227,7 +230,12 @@ public class Frog : Clickable
                 lineRenderer.positionCount = 0;
                 _isTongueOutside = false;
             }
-        }).onComplete += () => { _isTongueOutside = false; }; // Reset to no points
+        }).onComplete += () =>
+        {
+            _isTongueOutside = false;
+
+            isObstacleHit = false;
+        }; // Reset to no points
     }
 
     private void AnimateBackward(Sequence sequence)
@@ -311,6 +319,7 @@ public class Frog : Clickable
     private int berryCounter = 0;
     private float segmentDuration;
 
+
     private void JustCheckCollision(Vector3 startPoint, Vector3 direction)
     {
         // Vector3 direction = endPoint - startPoint;
@@ -329,6 +338,11 @@ public class Frog : Clickable
             else
             {
                 Debug.Log("first letters are not same", hits[0].collider);
+
+                var obstaclePoint = transform.parent.InverseTransformPoint(hits[0].collider.transform.parent.transform.localPosition);
+                points.Add(obstaclePoint);
+                Debug.Log("added obstacle point: " + obstaclePoint);
+                isObstacleHit = true;
                 return;
             }
 
