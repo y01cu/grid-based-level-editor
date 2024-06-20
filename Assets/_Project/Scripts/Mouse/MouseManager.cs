@@ -1,38 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class MouseManager : MonoBehaviour
+public class MouseManager : MonoBehaviour, ISubscriber
 {
+    public static event Action OnRightMouseButtonClicked;
+
+    public static event Action OnMoveUsed;
+
+    public static event Action OnClearEvents;
+
+    [SerializeField] private PlayerInput playerInput;
+
     private bool isClicked;
 
     private void Start()
     {
-        Subscribe();
+        playerInput.onActionTriggered += context => RightClickInteract(context);
+
+        SubscribeToEvents();
     }
 
-
-    private void RightClickInteract()
+    private void RightClickInteract(InputAction.CallbackContext context)
     {
-        DetectObjectUnderMouse();
-        // Debug.Log("right clicked on me", this);
+        if (context.performed)
+        {
+            OnRightMouseButtonClicked?.Invoke();
+        }
     }
 
     // Subscribe
 
-    private void Subscribe()
-    {
-        TestingEvents.OnRightMouseButtonClicked += RightClickInteract;
-    }
-
-    private void UnSubscribe()
-    {
-        TestingEvents.OnRightMouseButtonClicked -= RightClickInteract;
-    }
-
-
     private void DetectObjectUnderMouse()
     {
+        Debug.Log("started detecting obj under the mouse");
+
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -51,8 +56,27 @@ public class MouseManager : MonoBehaviour
 
             if (hitObject.CompareTag("Frog"))
             {
+                Debug.Log("hit frog");
                 hitObject.GetComponent<Frog>().OnClickedOver();
+                OnMoveUsed?.Invoke();
             }
         }
+    }
+
+    public void SubscribeToEvents()
+    {
+        OnRightMouseButtonClicked += DetectObjectUnderMouse;
+        OnClearEvents += UnsubscribeFromEvents;
+    }
+
+    public void UnsubscribeFromEvents()
+    {
+        OnRightMouseButtonClicked -= DetectObjectUnderMouse;
+        OnClearEvents -= UnsubscribeFromEvents;
+    }
+
+    public static void TriggerClearingEvents()
+    {
+        OnClearEvents?.Invoke();
     }
 }

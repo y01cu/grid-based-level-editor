@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using QFSW.QC;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -92,7 +90,6 @@ public class CellGeneration : MonoBehaviour
     }
 
     // TODO: Add how many cells will be created parameter
-    [Command]
     private void GenerateCellObjects(OrderType orderType, SpecificIndex frogIndex, CellBase.ObjectColor objectColor, int columnIndex, int rowIndex, int stepCount, SpecificIndex arrowIndex, Direction arrowDirection)
     {
         if (stepCount == -1)
@@ -184,6 +181,13 @@ public class CellGeneration : MonoBehaviour
         var showingBelowTransformation = 0.05f;
         if (orderType == OrderType.Column)
         {
+            if (rowIndex + stepCount > height)
+            {
+                Debug.LogError("improper index: column fulled");
+                rowIndex = 0;
+                stepCount = 4;
+            }
+
             var arrowIndexValue = arrowIndex switch
             {
                 SpecificIndex.None => -1,
@@ -202,21 +206,8 @@ public class CellGeneration : MonoBehaviour
                 // SpecificIndex.Last => stepCount - 1,
             };
 
-            // var arrowIndexValue = arrowIndex switch
-            // {
-            //     SpecificIndex.None => -1,
-            //     SpecificIndex.First => 0,
-            //     SpecificIndex.Last => stepCount - 1,
-            // };
-            //
-            // var frogIndexValue = frogIndex switch
-            // {
-            //     SpecificIndex.None => -1,
-            //     SpecificIndex.First => 0,
-            //     SpecificIndex.Last => stepCount - 1,
-            // };
-
             int x = columnIndex;
+
 
             for (int y = rowIndex; y < rowIndex + stepCount; y++)
             {
@@ -231,6 +222,9 @@ public class CellGeneration : MonoBehaviour
                 // var targetRotation = Quaternion.Euler(rotation);
                 var cellBase = Instantiate(cellBases[(int)objectColor], newPosition, targetRotation, layerParentObject.transform);
 
+                cellBase.orderType = orderType;
+
+
                 if (y == frogIndexValue)
                 {
                     switch (frogIndex)
@@ -243,8 +237,8 @@ public class CellGeneration : MonoBehaviour
                             // if (y == 0)
                             // {
                             // }
-                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
-                                cellBase.additionalRotationVector3 = new Vector3(0, 180, 0);
+                            cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                            cellBase.additionalRotationVector3 = new Vector3(0, 180, 0);
 
                             break;
 
@@ -253,8 +247,8 @@ public class CellGeneration : MonoBehaviour
                             // if (y == stepCount - 1)
                             // {
                             // }
-                                cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
-                                cellBase.additionalRotationVector3 = new Vector3(0, 0, 0);
+                            cellBase.ChangeCellObjectType(CellBase.ObjectType.Frog);
+                            cellBase.additionalRotationVector3 = new Vector3(0, 0, 0);
 
 
                             break;
@@ -292,7 +286,15 @@ public class CellGeneration : MonoBehaviour
         }
         else
         {
+            // OrderType: Row
             int y = rowIndex;
+            
+            if (columnIndex + stepCount > height)
+            {
+                Debug.LogError("improper index: column fulled");
+                columnIndex = 0;
+                stepCount = 4;
+            }
 
             var arrowIndexValue = arrowIndex switch
             {
@@ -325,6 +327,8 @@ public class CellGeneration : MonoBehaviour
 
                 var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
                 var cellBase = Instantiate(cellBases[(int)objectColor], newPosition, targetRotation, layerParentObject.transform);
+
+                cellBase.orderType = orderType;
 
 
                 if (x == frogIndexValue)
@@ -395,7 +399,6 @@ public class CellGeneration : MonoBehaviour
         return point;
     }
 
-    [Command]
     private void DeleteTopLayer()
     {
         Destroy(cellParentTransform.GetChild(cellParentTransform.childCount - 1).gameObject);

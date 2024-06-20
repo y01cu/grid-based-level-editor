@@ -8,20 +8,13 @@ using UnityEngine.Serialization;
 
 public class TestingEvents : MonoBehaviour
 {
-    public static event Action OnRightMouseButtonClicked;
 
-    [SerializeField] private PlayerInput playerInput;
 
-    private void Start()
-    {
-        playerInput.onActionTriggered += context => LogMessage(context);
-    }
-
-    public void LogMessage(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            OnRightMouseButtonClicked?.Invoke();
-        }
-    }
+    // public static void TriggerMoveUsed(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         OnMoveUsed?.Invoke();
+    //     }
+    // }
 }

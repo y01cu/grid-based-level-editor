@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Xml.Schema;
 using DG.Tweening;
 using QFSW.QC;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -26,6 +29,10 @@ public class Frog : Clickable
 
     [SerializeField] private BoxCollider boxCollider;
 
+    private CellGeneration.OrderType orderType;
+
+    [SerializeField] private bool isObstacleHit;
+
     // Objects are named as first with their color then with their type
     // Colors and namings are:
     // B:Blue
@@ -40,6 +47,8 @@ public class Frog : Clickable
 
     // private char _colorFirstLetter;
 
+    private Sequence sequence;
+
     private void Start()
     {
         gameObject.name = properNaming.GetProperName();
@@ -50,7 +59,12 @@ public class Frog : Clickable
         points.Add(lineRenderer.GetPosition(0));
     }
 
-    public override void OnClickedOver()
+    public void SetOrderType(CellGeneration.OrderType newOrderType)
+    {
+        orderType = newOrderType;
+    }
+
+    public override async void OnClickedOver()
     {
         if (_isTongueOutside)
         {
@@ -68,8 +82,8 @@ public class Frog : Clickable
         Vector3 direction = (int)rotation.y switch
         {
             0 => Vector3.up,
-            180 => Vector3.down,
             90 => Vector3.right,
+            180 => Vector3.down,
             270 => Vector3.left,
         };
 
@@ -77,18 +91,20 @@ public class Frog : Clickable
 
         JustCheckCollision(startPoint, direction);
 
-        if (berryPoints.Count > 0)
+        if (berries.Count > 0)
         {
-            points.Add(berryPoints[berryPoints.Count - 1]);
+            // Vector3 relativePosition = cube2.transform.InverseTransformPoint(worldPosition);
+
+
+            // berries[^1].transform.SetParent(lineRenderer.transform);
+
+            // Debug.Log("last berry: " + berries[^1].transform.localPosition);
+
+            points.Add(transform.parent.InverseTransformPoint(berries[^1].transform.localPosition));
+            Debug.Log("added last berry point: " + points[^1]);
         }
 
         // Debug.Log("berry point: " + berryPoints[berryPoints.Count - 1]);
-
-        for (int i = 0; i < points.Count; i++)
-        {
-            // points[i] = transform.TransformPoint(points[i]);
-            Debug.Log("point val: " + points[i]);
-        }
 
         // TweenBetweenTwoPoints(startPoint);
 
@@ -99,7 +115,9 @@ public class Frog : Clickable
 
     void AnimateLine()
     {
-        Sequence sequence = DOTween.Sequence();
+        sequence = DOTween.Sequence();
+
+        // Sequence sequence = DOTween.Sequence();
         _isTongueOutside = true;
         float totalDuration = 1.5f;
 
@@ -126,17 +144,20 @@ public class Frog : Clickable
             int distanceValue = (int)MathF.Abs((distance.x + distance.y + distance.z));
 
 
-            Debug.Log("start: " + start + " - end: " + end);
-            Debug.Log("subs of start and end: " + distance);
-            Debug.Log("distance value: " + distanceValue);
+            // Debug.Log("start: " + start + " - end: " + end);
+            // Debug.Log("subs of start and end: " + distance);
+            // Debug.Log("distance value: " + distanceValue);
 
             sequence.Append(DOTween.To(() => start, x =>
             {
-                // CheckCollision(x, Vector3.up);
-                UpdateLine(index, x);
-                if (boxCollider != null)
+                if (!isObstacleHit)
                 {
-                    boxCollider.center = x;
+                    // CheckCollision(x, Vector3.up);
+                    UpdateLine(index, x);
+                    if (boxCollider != null)
+                    {
+                        boxCollider.center = x;
+                    }
                 }
 
                 // boxCollider.
@@ -149,14 +170,17 @@ public class Frog : Clickable
 
         sequence.AppendCallback(() =>
         {
-            if (boxCollider != null)
+            if (!isObstacleHit)
             {
-                detectedBerries[^1].SetTargetBoxCollider(boxCollider);
-            }
+                if (boxCollider != null)
+                {
+                    detectedBerries[^1].SetTargetBoxCollider(boxCollider);
+                }
 
-            if (lineRenderer != null)
-            {
-                detectedBerries[^1].SetLineRenderer(lineRenderer, segmentDuration);
+                if (lineRenderer != null)
+                {
+                    detectedBerries[^1].SetLineRenderer(lineRenderer, segmentDuration);
+                }
             }
         });
 
@@ -204,6 +228,50 @@ public class Frog : Clickable
         }); // Reset to no points
     }
 
+    private void AnimateBackward(Sequence sequence)
+    {
+        for (int i = points.Count - 1; i > 0; i--)
+        {
+            int index = i;
+            Vector3 end = points[index - 1];
+            Vector3 start = points[index];
+
+            var distance = (start - end);
+
+            int distanceValue = (int)MathF.Abs((distance.x + distance.y + distance.z));
+
+
+            sequence.Append(DOTween.To(() => start, x =>
+            {
+                if (boxCollider != null)
+                {
+                    boxCollider.center = x;
+                }
+
+                UpdateLine(index, x);
+            }, end, segmentDuration).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                if (lineRenderer != null)
+                {
+                    lineRenderer.positionCount--;
+                    if (index == 1)
+                    {
+                        lineRenderer.positionCount = 1; // Reset to one point to complete the backward animation
+                    }
+                }
+            }));
+        }
+
+        sequence.AppendCallback(() =>
+        {
+            if (lineRenderer != null)
+            {
+                lineRenderer.positionCount = 0;
+                _isTongueOutside = false;
+            }
+        });
+    }
+
     void UpdateLine(int index, Vector3 position)
     {
         if (lineRenderer != null)
@@ -237,15 +305,36 @@ public class Frog : Clickable
 
     private List<Vector3> points = new();
 
-    private List<Vector3> berryPoints = new();
+    private List<Berry> berries = new();
     private int berryCounter = 0;
     private float segmentDuration;
 
-    private Vector3 JustCheckCollision(Vector3 startPoint, Vector3 direction)
+    private void JustCheckCollision(Vector3 startPoint, Vector3 direction)
     {
         // Vector3 direction = endPoint - startPoint;
         float distance = direction.magnitude;
         RaycastHit[] hits = Physics.RaycastAll(startPoint, direction, distance, collisionMask);
+
+        if (hits.Length > 0)
+        {
+            bool isSameColor = hits[0].collider.gameObject.name[0] == gameObject.name[0];
+            bool isCollidedWithFrog = hits[0].collider.gameObject.name[2] == 'F';
+
+            if (isSameColor)
+            {
+                Debug.Log("first letters are same");
+            }
+            else
+            {
+                Debug.Log("first letters are not same", hits[0].collider);
+                return;
+            }
+
+            if (isCollidedWithFrog)
+            {
+                return;
+            }
+        }
 
         Debug.DrawRay(startPoint, direction, Color.cyan, 2f);
 
@@ -255,44 +344,208 @@ public class Frog : Clickable
         {
             Collider currentCollider = hits[i].collider;
 
+            // if (currentCollider.gameObject.name[0] == gameObject.name[0])
+            // {
+            //     continue;
+            // }
+
             if (currentCollider.CompareTag("Arrow"))
             {
-                
-                // currentCollider.transform.SetParent(lineRenderer.transform);
                 berryCounter = 0;
 
                 // TODO: The multiplier must change based on arrow rotation
 
                 // Try adding the point here:
 
-                Debug.Log("arrow pos: " + currentCollider.transform.position);
-                points.Add(new Vector3(currentCollider.transform.localPosition.x - transform.parent.position.x, 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
-
                 isAnyArrowHit = true;
 
                 Direction arrowDirection = currentCollider.GetComponent<Arrow>().direction;
 
+                var newPoint = Vector3.zero;
+
                 switch (arrowDirection)
                 {
                     case Direction.Left:
-                        Debug.Log("la");
+
+                        if (orderType == CellGeneration.OrderType.Column)
+                        {
+                            Debug.Log("parent y rotation: " + (int)transform.parent.localRotation.eulerAngles.y);
+                            // TODO: Handle specific index
+
+                            // 0-> up
+                            // 90-> right
+
+                            switch ((int)transform.parent.localRotation.eulerAngles.y)
+                            {
+                                case 0:
+                                    // up
+                                    Debug.Log("upp--: " + (currentCollider.transform.position.x - transform.parent.position.x));
+                                    newPoint = new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y));
+
+
+                                    Debug.Log("new point of it: " + newPoint);
+
+                                    break;
+                                case 90:
+                                    newPoint = new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y));
+
+
+                                    Debug.Log("rightt");
+                                    //right
+                                    break;
+                                case 180:
+                                    newPoint = new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y));
+
+
+                                    Debug.Log("down");
+                                    // down
+                                    break;
+                                case 270:
+                                    newPoint = new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y));
+
+
+                                    Debug.Log("left");
+                                    // left
+                                    break;
+                            }
+
+
+                            // newPoint = new Vector3((int)currentCollider.transform.position.x - (int)transform.parent.transform.position.x, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+                        }
+
+
+                        else
+                        {
+                            Debug.Log("parent y rotation(row): " + (int)transform.parent.localRotation.eulerAngles.y);
+                            // TODO: Handle specific index
+
+                            // 0-> up
+                            // 90-> right
+
+                            switch ((int)transform.parent.localRotation.eulerAngles.y)
+                            {
+                                case 0:
+                                    newPoint = new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y));
+
+                                    break;
+                                case 90:
+                                    newPoint = new Vector3((int)transform.parent.position.y - (int)currentCollider.transform.position.y, 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x));
+                                    //right
+                                    break;
+                                case 180:
+                                    newPoint = new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y));
+                                    // down
+                                    break;
+                                case 270:
+                                    newPoint = new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y));
+                                    // left
+                                    break;
+                            }
+                        }
+
+                        points.Add(newPoint);
+
                         JustCheckCollision(currentCollider.transform.position, Vector3.left);
+
                         break;
                     case Direction.Right:
+                        if (orderType == CellGeneration.OrderType.Column)
+                        {
+                            // TODO: Handle specific index
+
+                            // 0-> up
+                            // 90-> right
+
+                            switch ((int)transform.parent.localRotation.eulerAngles.y)
+                            {
+                                case 0:
+                                    // up
+                                    newPoint = new Vector3(currentCollider.transform.position.x - transform.parent.position.x, 0, MathF.Abs((int)transform.parent.position.y - (int)currentCollider.transform.localPosition.y));
+
+
+                                    break;
+                                case 90:
+                                    newPoint = new Vector3(currentCollider.transform.position.y - transform.parent.position.y, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+
+
+                                    //right
+                                    break;
+                                case 180:
+                                    newPoint = new Vector3(currentCollider.transform.position.y - transform.parent.position.y, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+
+
+                                    // down
+                                    break;
+                                case 270:
+                                    newPoint = new Vector3(currentCollider.transform.position.y - transform.parent.position.y, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+
+
+                                    // left
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            newPoint = new Vector3(currentCollider.transform.position.y - transform.parent.position.y, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+                        }
+
+                        points.Add(newPoint);
                         JustCheckCollision(currentCollider.transform.position, Vector3.right);
-                        Debug.Log("ra hit");
+
                         break;
                     case Direction.Up:
+                        newPoint = new Vector3((int)currentCollider.transform.localPosition.y - (int)transform.parent.position.y, 0, MathF.Abs(currentCollider.transform.position.x - transform.parent.position.x));
+                        points.Add(newPoint);
                         JustCheckCollision(currentCollider.transform.position, Vector3.up);
-                        Debug.Log("ua");
+
                         break;
                     case Direction.Down:
-                        JustCheckCollision(currentCollider.transform.position, Vector3.down);
-                        Debug.Log("da");
-                        break;
 
-                    default:
-                        Debug.Log("la");
+                        if (orderType == CellGeneration.OrderType.Column)
+                        {
+                            Debug.Log("parent y rotation: " + (int)transform.parent.localRotation.eulerAngles.y);
+                            // TODO: Handle specific index
+
+                            // 0-> up
+                            // 90-> right
+
+                            switch ((int)transform.parent.localRotation.eulerAngles.y)
+                            {
+                                case 0:
+                                    // up
+                                    Debug.Log("upp");
+                                    newPoint = new Vector3((int)currentCollider.transform.position.x - (int)transform.parent.transform.position.x, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+                                    Debug.Log("new point of it: " + newPoint);
+
+                                    break;
+                                case 90:
+                                    newPoint = new Vector3((int)currentCollider.transform.position.x - (int)transform.parent.transform.position.x, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+
+                                    Debug.Log("rightt");
+                                    //right
+                                    break;
+                                case 180:
+                                    newPoint = new Vector3((int)currentCollider.transform.position.x - (int)transform.parent.transform.position.x, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+
+                                    Debug.Log("down");
+                                    // down
+                                    break;
+                                case 270:
+                                    newPoint = new Vector3((int)currentCollider.transform.position.x - (int)transform.parent.transform.position.x, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+
+                                    Debug.Log("left");
+                                    // left
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            newPoint = new Vector3(0, 0, MathF.Abs((int)transform.parent.position.x - (int)currentCollider.transform.localPosition.x));
+                        }
+
+                        points.Add(newPoint);
+                        JustCheckCollision(currentCollider.transform.position, Vector3.down);
+
                         break;
                 }
             }
@@ -303,18 +556,6 @@ public class Frog : Clickable
 
                 // Vector3 relativePosition = transform.parent.TransformPoint(currentCollider.transform.position);
 
-                var xRotation = transform.parent.localRotation.eulerAngles.x;
-                if (xRotation == 90 || xRotation == -90 || xRotation == 270)
-                {
-                    // Frog up or down
-                    berryPoints.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
-                    // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.y - currentCollider.transform.localPosition.y)));
-                }
-                else
-                {
-                    berryPoints.Add(new Vector3(0, 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
-                    // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.x - currentCollider.transform.localPosition.x)));
-                }
 
                 berryCounter++;
                 Berry berry = currentCollider.GetComponent<Berry>();
@@ -322,6 +563,77 @@ public class Frog : Clickable
                 {
                     // Stop tongue movement
                 }
+
+                if (berry.gameObject.name[0] == gameObject.name[0] && !berry.IsDetected())
+                {
+                    berry.SetAsDetected();
+
+                    Debug.Log("this berry's tongue hit state: " + berry.IsTongueHit(), berry);
+
+                    berries.Add(berry);
+                }
+
+
+                // Debug.Log("berry's relative pos: " + transform.p);
+
+
+                // var xRotation = transform.parent.localRotation.eulerAngles.x;
+                // if (xRotation == 90 || xRotation == -90 || xRotation == 270)
+                // {
+                //     // Frog up or down
+                //     berries.Add(new Vector3(Mathf.Abs(transform.parent.position.x - currentCollider.transform.position.x), 0, MathF.Abs((int)transform.position.y - (int)currentCollider.transform.localPosition.y)));
+                //     // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.y - currentCollider.transform.localPosition.y)));
+                // }
+                // else
+                // {
+                //     if (orderType == CellGeneration.OrderType.Column)
+                //     {
+                //         var isBerryOnLeftSide = berry.transform.position.x - transform.parent.position.x < 0;
+                //     }
+                //     else
+                //     {
+                //         // Is order type row:
+                //
+                //         var isBerryOnLeftSide = berry.transform.position.x - transform.parent.position.x < 0;
+                //     }
+                //
+                //     Debug.Log("hi | berry pos: " + berry.transform.position);
+                //
+                //
+                //     if (isBerryOnLeftSide)
+                //     {
+                //         if (orderType == CellGeneration.OrderType.Column)
+                //         {
+                //             berries.Add(new Vector3((int)transform.parent.position.x - (int)berry.transform.localPosition.x, 0, (int)berry.transform.localPosition.y - (int)transform.parent.localPosition.y));
+                //         }
+                //         else
+                //         {
+                //             berries.Add(new Vector3((int)berry.transform.localPosition.y - (int)transform.parent.localPosition.y, 0, MathF.Abs((int)transform.parent.position.x - (int)berry.transform.localPosition.x)));
+                //         }
+                //     }
+                //     else
+                //     {
+                //         if (orderType == CellGeneration.OrderType.Column)
+                //         {
+                //             berries.Add(new Vector3((int)transform.parent.localPosition.y - (int)berry.transform.localPosition.y, 0, MathF.Abs((int)berry.transform.localPosition.x - (int)transform.parent.position.x)));
+                //         }
+                //         else
+                //         {
+                //             berries.Add(new Vector3((int)transform.parent.localPosition.y - (int)berry.transform.localPosition.y, 0, MathF.Abs((int)berry.transform.localPosition.x - (int)transform.parent.position.x)));
+                //
+                //
+                //             // berryPoints.Add(new Vector3(MathF.Abs((int)berry.transform.localPosition.x - (int)transform.parent.position.x), 0, (int)transform.parent.localPosition.y - (int)berry.transform.localPosition.y));
+                //         }
+                //     }
+
+
+                // berryPoints.Add(new Vector3(0, 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
+
+
+                // berryPoints.Add(new Vector3(0, 0, MathF.Abs((int)transform.position.x - (int)currentCollider.transform.localPosition.x)));
+
+                //---
+                // berryPoints.Add(new Vector3(transform.localPosition.x, 0, MathF.Abs((int)transform.position.x - currentCollider.transform.localPosition.x)));
             }
         }
 
@@ -330,14 +642,8 @@ public class Frog : Clickable
             JustCheckCollision(startPoint + direction, direction);
         }
 
-        else
-        {
-            Debug.Log("total detected berry count: " + berryCounter);
-        }
 
-        Debug.Log("hits length: " + hits.Length);
-
-        return new Vector3(0, 0, berryCounter);
+        // return new Vector3(0, 0, berryCounter);
     }
 
     // private RaycastHit[] CheckCollision(Vector3 startPoint, Vector3 dir)

@@ -27,6 +27,8 @@ public class CellBase : MonoBehaviour
 
     public Vector3 additionalRotationVector3;
 
+    public CellGeneration.OrderType orderType;
+
     [SerializeField] private Transform objectTargetTransformFromChild;
 
     // [SerializeField] private Transform parentTransform;
@@ -38,11 +40,10 @@ public class CellBase : MonoBehaviour
         if (objectColor != ObjectColor._Empty)
         {
             LevelManager.Instance.IncreaseActiveNonGrayCellCount();
-            LevelManager.Instance.LogActiveNonGrayCellCount();
         }
     }
 
-    public void CreateCellObject()
+    public GameObject CreateCellObject()
     {
         var cellObject = Instantiate(CellObjectPrefabs[(int)objectType]);
         cellObject.transform.position = new Vector3(0, 0, 0);
@@ -50,10 +51,19 @@ public class CellBase : MonoBehaviour
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
 
+        // cellObject.GetComponent<Frog>().SetOrderType(orderType);
+
         if (objectType == ObjectType.Arrow)
         {
             cellObject.GetComponent<Arrow>().direction = arrowDirection;
         }
+
+        if (objectType == ObjectType.Frog)
+        {
+            cellObject.GetComponentInChildren<Frog>().SetOrderType(orderType);
+        }
+
+        return cellObject;
 
         // cellObject.transform.position = objectTargetTransformFromChild.position;
     }
@@ -85,8 +95,10 @@ public class CellBase : MonoBehaviour
             else
             {
                 _isObjectSpawned = true;
-                CreateCellObject();
+                var cellObject = CreateCellObject();
                 _timer = 0;
+
+
                 // Debug.DrawRay(transform.position, rayDirection * RayLength, Color.red);
             }
         }
@@ -106,7 +118,6 @@ public class CellBase : MonoBehaviour
                 transform.DOScale(Vector3.zero, .5f).onComplete += () =>
                 {
                     LevelManager.Instance.DecreaseActiveNonGrayCellCount();
-                    LevelManager.Instance.LogActiveNonGrayCellCount();
                     Destroy(gameObject);
                 };
             }

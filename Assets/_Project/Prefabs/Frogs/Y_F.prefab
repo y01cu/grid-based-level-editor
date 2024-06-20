@@ -109,7 +109,6 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -308,6 +307,21 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 2336913757417360780, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: 0.0003245641
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336913757417360780, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.004330143
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336913757417360780, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.003160743
+      objectReference: {fileID: 0}
     - target: {fileID: 2354992683963910536, guid: 624b7a459e9032244bd409313ac14675,
         type: 3}
       propertyPath: m_Layer
@@ -452,6 +466,21 @@ PrefabInstance:
         type: 3}
       propertyPath: collisionMask.m_Bits
       value: 320
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198115591858679316, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.00008961774
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198115591858679316, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01860455
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198115591858679316, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0399683
       objectReference: {fileID: 0}
     - target: {fileID: 5358258599593177484, guid: 624b7a459e9032244bd409313ac14675,
         type: 3}
@@ -666,12 +695,17 @@ PrefabInstance:
     - target: {fileID: 9069586547805746988, guid: 624b7a459e9032244bd409313ac14675,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.78587055
+      value: 0.7858706
       objectReference: {fileID: 0}
     - target: {fileID: 9069586547805746988, guid: 624b7a459e9032244bd409313ac14675,
         type: 3}
       propertyPath: m_Size.z
-      value: 0.68296057
+      value: 0.6829606
+      objectReference: {fileID: 0}
+    - target: {fileID: 9069586547805746988, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.09999999
       objectReference: {fileID: 0}
     - target: {fileID: 9069586547805746988, guid: 624b7a459e9032244bd409313ac14675,
         type: 3}

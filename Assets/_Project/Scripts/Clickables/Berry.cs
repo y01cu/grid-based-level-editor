@@ -24,11 +24,22 @@ public class Berry : Clickable
 
     private Vector3 lineRendererVector3;
 
+    private bool _isDetected;
+
 
     public bool isLastForFrog;
 
     [SerializeField] private BoxCollider targetBoxCollider;
 
+    public void SetAsDetected()
+    {
+        _isDetected = true;
+    }
+
+    public bool IsDetected()
+    {
+        return _isDetected;
+    }
 
     public void SetTargetBoxCollider(BoxCollider givenTargetBoxCollider)
     {
@@ -43,6 +54,11 @@ public class Berry : Clickable
     }
 
     private bool isMovingHorizontally;
+
+    public bool IsTongueHit()
+    {
+        return _isTongueHit;
+    }
 
     private void Update()
     {
@@ -89,18 +105,14 @@ public class Berry : Clickable
 
     public void SetLineRenderer(LineRenderer newLineRenderer, float newDuration)
     {
-        Debug.Log("berry started moving with time: " + newDuration, this);
-
         lerpDuration = newDuration;
         _lineRenderer = newLineRenderer;
         transform.SetParent(_lineRenderer.transform);
-        Debug.Log("line renderer is set", this);
         isMoving = true;
 
         var currentPosition = transform.localPosition;
 
         var targetPosition = _lineRenderer.GetPosition(_lineRenderer.positionCount - 2);
-        Debug.Log("current pos: " + currentPosition + " | target pos: " + targetPosition);
         // Vector3.Lerp(transform.localPosition, targetPosition, 1);
     }
 
@@ -121,6 +133,8 @@ public class Berry : Clickable
     {
         _isTongueHit = true;
         _isHitable = false;
+
+        Debug.Log("this one is hit by tongue", this);
     }
 
     public void SetAsHitable()
@@ -151,7 +165,6 @@ public class Berry : Clickable
 
             if (isMoving && !otherBerry.isMoving)
             {
-                Debug.Log("collided with a stopped berry");
             }
 
             if (_lineRenderer != null && otherBerry.GetLineRenderer() == null)
@@ -160,7 +173,7 @@ public class Berry : Clickable
             }
 
             // var direction = _lineRenderer.GetPosition(_lineRenderer.positionCount - 2) - transform.localPosition;
-            
+
             // -----
 
             // Debug.Log("dir: " + direction);
@@ -223,12 +236,7 @@ public class Berry : Clickable
         {
             // Create a general method for destroying / tweening objects out
 
-            Debug.Log("berry hit arrow", this);
-
-            other.transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () =>
-            {
-                Destroy(other.gameObject);
-            };
+            other.transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () => { Destroy(other.gameObject); };
         }
     }
 }
