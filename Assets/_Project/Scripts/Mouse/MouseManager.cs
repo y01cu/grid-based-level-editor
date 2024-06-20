@@ -7,14 +7,9 @@ using UnityEngine.InputSystem;
 public class MouseManager : Subscriber
 {
     public static event Action OnRightMouseButtonClicked;
-
     public static event Action OnMoveUsed;
 
-    public static event Action OnClearEvents;
-
     [SerializeField] private PlayerInput playerInput;
-
-    private bool isClicked;
 
     private void Start()
     {
@@ -61,8 +56,13 @@ public class MouseManager : Subscriber
             if (hitObject.CompareTag("Frog"))
             {
                 Debug.Log("hit frog", hitObject);
-                hitObject.GetComponent<Frog>().OnClickedOver();
-                OnMoveUsed?.Invoke();
+                Frog frog = hitObject.GetComponent<Frog>();
+
+                if (!frog.IsTongueOutside())
+                {
+                    OnMoveUsed?.Invoke();
+                }
+                frog.OnClickedOver();
             }
         }
     }
@@ -70,7 +70,6 @@ public class MouseManager : Subscriber
     protected override void SubscribeToEvents()
     {
         OnRightMouseButtonClicked += DetectObjectUnderMouse;
-        OnClearEvents += UnsubscribeFromEvents;
 
         isSubscribed = true;
     }
@@ -78,15 +77,10 @@ public class MouseManager : Subscriber
     protected override void UnsubscribeFromEvents()
     {
         OnRightMouseButtonClicked -= DetectObjectUnderMouse;
-        OnClearEvents -= UnsubscribeFromEvents;
 
         isSubscribed = false;
     }
 
-    public static void TriggerClearingEvents()
-    {
-        OnClearEvents?.Invoke();
-    }
 
     protected override void OnDestroy()
     {

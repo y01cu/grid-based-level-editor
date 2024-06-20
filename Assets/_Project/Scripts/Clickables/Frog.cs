@@ -49,6 +49,11 @@ public class Frog : Clickable
 
     private Sequence sequence;
 
+    public bool IsTongueOutside()
+    {
+        return _isTongueOutside;
+    }
+
     private void Start()
     {
         gameObject.name = properNaming.GetProperName();
@@ -225,7 +230,7 @@ public class Frog : Clickable
                 lineRenderer.positionCount = 0;
                 _isTongueOutside = false;
             }
-        }); // Reset to no points
+        }).onComplete += () => { _isTongueOutside = false; }; // Reset to no points
     }
 
     private void AnimateBackward(Sequence sequence)

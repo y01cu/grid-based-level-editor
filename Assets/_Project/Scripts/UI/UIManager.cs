@@ -65,7 +65,6 @@ public class UIManager : Subscriber
     protected override void SubscribeToEvents()
     {
         MouseManager.OnMoveUsed += DecreaseMovesText;
-        MouseManager.OnClearEvents += UnsubscribeFromEvents;
 
         isSubscribed = true;
     }
@@ -73,7 +72,6 @@ public class UIManager : Subscriber
     protected override void UnsubscribeFromEvents()
     {
         MouseManager.OnMoveUsed -= DecreaseMovesText;
-        MouseManager.OnClearEvents -= UnsubscribeFromEvents;
 
         isSubscribed = false;
     }

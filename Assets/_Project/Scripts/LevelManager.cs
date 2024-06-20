@@ -61,7 +61,6 @@ public class LevelManager : Subscriber
     protected override void SubscribeToEvents()
     {
         MouseManager.OnMoveUsed += DecreaseMoveCount;
-        MouseManager.OnClearEvents += UnsubscribeFromEvents;
 
         isSubscribed = true;
     }
@@ -69,7 +68,6 @@ public class LevelManager : Subscriber
     protected override void UnsubscribeFromEvents()
     {
         MouseManager.OnMoveUsed -= DecreaseMoveCount;
-        MouseManager.OnClearEvents -= UnsubscribeFromEvents;
 
         isSubscribed = false;
     }
@@ -86,7 +84,6 @@ public class LevelManager : Subscriber
         {
             if (activeNonGrayCellCount == 0 && sceneBuildIndex != SceneManager.sceneCountInBuildSettings - 1)
             {
-                MouseManager.TriggerClearingEvents();
                 SceneManager.LoadSceneAsync(levelNumber);
             }
         }
