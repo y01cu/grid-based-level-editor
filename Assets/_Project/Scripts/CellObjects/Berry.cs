@@ -10,40 +10,19 @@ public class Berry : Clickable
 
     [SerializeField] private BoxCollider boxCollider;
 
+    [SerializeField] private MeshRenderer meshRenderer;
+
     private LineRenderer lineRenderer;
 
     private bool isHitable;
     private bool isTongueHit;
     private bool isDetected;
     private bool isLastBerryForFrog;
+    private bool isLerping;
 
-    public bool IsLastBerryForFrog()
-    {
-        return isLastBerryForFrog;
-    }
+    private float lerpDuration;
+    private float timeLeft;
 
-    public void SetAsLastBerryForFrog()
-    {
-        isLastBerryForFrog = true;
-    }
-
-    [SerializeField] private BoxCollider targetBoxCollider;
-
-    public void SetAsDetected()
-    {
-        isDetected = true;
-    }
-
-    public bool IsDetected()
-    {
-        return isDetected;
-    }
-
-    public void SetTargetBoxCollider(BoxCollider givenTargetBoxCollider)
-    {
-        targetBoxCollider = givenTargetBoxCollider;
-        transform.SetParent(givenTargetBoxCollider.transform);
-    }
 
     private void Start()
     {
@@ -63,67 +42,13 @@ public class Berry : Clickable
             {
                 StartCoroutine(LerpPosition(transform.localPosition, lineRenderer.GetPosition(lineRenderer.positionCount - 2), lerpDuration));
             }
-
-            // transform.localPosition = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), .9f * Time.deltaTime); //  0.02f
         }
-    }
-
-    private float lerpDuration;
-
-    private float timeLeft;
-
-
-    private IEnumerator LerpPosition(Vector3 start, Vector3 end, float duration)
-    {
-        isLerping = true;
-
-
-        float time = 0;
-        while (time < duration)
-        {
-            transform.localPosition = Vector3.Lerp(start, end, time / duration);
-            time += Time.deltaTime;
-
-            timeLeft = duration - time;
-            yield return null;
-        }
-
-        transform.localPosition = end;
-
-        isLerping = false;
-    }
-
-    public void SetLineRenderer(LineRenderer newLineRenderer, float newDuration)
-    {
-        lerpDuration = newDuration;
-        lineRenderer = newLineRenderer;
-        transform.SetParent(lineRenderer.transform);
-    }
-
-    public LineRenderer GetLineRenderer()
-    {
-        return lineRenderer;
-    }
-
-    public void SetTongueHit()
-    {
-        isTongueHit = true;
-        isHitable = false;
-
-        Debug.Log("this one is hit by tongue", this);
-    }
-
-    public void SetAsHitable()
-    {
-        isHitable = true;
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Berry"))
         {
-            Debug.Log("berry entered");
-
             Berry otherBerry = other.gameObject.GetComponent<Berry>();
 
             if (lineRenderer != null && otherBerry.GetLineRenderer() == null)
@@ -132,9 +57,6 @@ public class Berry : Clickable
             }
         }
     }
-
-    private bool isLerping;
-    private bool _lineRendererNotNull;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -179,6 +101,25 @@ public class Berry : Clickable
         }
     }
 
+    private IEnumerator LerpPosition(Vector3 start, Vector3 end, float duration)
+    {
+        isLerping = true;
+
+        float time = 0;
+        while (time < duration)
+        {
+            transform.localPosition = Vector3.Lerp(start, end, time / duration);
+            time += Time.deltaTime;
+
+            timeLeft = duration - time;
+            yield return null;
+        }
+
+        transform.localPosition = end;
+
+        isLerping = false;
+    }
+
     public override void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
         if (!isTongueHit || isHitable)
@@ -189,9 +130,6 @@ public class Berry : Clickable
         }
     }
 
-
-    [SerializeField] private MeshRenderer meshRenderer;
-
     public override async void HandleBeingObstacle()
     {
         AudioManager.Instance.PlayAudioClip(obstacleStateClip);
@@ -201,13 +139,59 @@ public class Berry : Clickable
         await Task.Delay(1000);
 
         meshRenderer.material = normalMaterial;
-
-        CleanObstacleState();
     }
 
     public void TurnBackToNormalState()
     {
         isDetected = false;
         isTongueHit = false;
+    }
+
+    public void SetLineRenderer(LineRenderer newLineRenderer, float newDuration)
+    {
+        lerpDuration = newDuration;
+        lineRenderer = newLineRenderer;
+        transform.SetParent(lineRenderer.transform);
+    }
+
+    public void SetTargetBoxCollider(BoxCollider givenTargetBoxCollider)
+    {
+        transform.SetParent(givenTargetBoxCollider.transform);
+    }
+
+    public void SetTongueHit()
+    {
+        isTongueHit = true;
+        isHitable = false;
+    }
+
+    public void SetAsLastBerryForFrog()
+    {
+        isLastBerryForFrog = true;
+    }
+
+    public void SetAsDetected()
+    {
+        isDetected = true;
+    }
+
+    public void SetAsHitable()
+    {
+        isHitable = true;
+    }
+
+    public bool IsLastBerryForFrog()
+    {
+        return isLastBerryForFrog;
+    }
+
+    public bool IsDetected()
+    {
+        return isDetected;
+    }
+
+    public LineRenderer GetLineRenderer()
+    {
+        return lineRenderer;
     }
 }

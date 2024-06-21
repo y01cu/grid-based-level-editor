@@ -17,10 +17,10 @@ public class CellBase : MonoBehaviour
     public ObjectColor objectColor;
     public ObjectType objectType;
 
-    private const float InitialWaitingTime = 1f;
-    private const float DestructionWaitingTime = 2.5f;
-    private bool _isObjectSpawned;
-    private float _timer;
+    private const float InitialWaitingTime = 2f;
+    private const float DestructionWaitingTime = 3.5f;
+    private bool isObjectSpawned;
+    private float timer;
 
     public Direction arrowDirection;
 
@@ -60,7 +60,7 @@ public class CellBase : MonoBehaviour
     {
         var cellObject = Instantiate(CellObjectPrefabs[(int)objectType]);
         cellObject.transform.position = new Vector3(0, 0, 0);
-        cellObject.transform.DOScale(Vector3.zero, 1f).From();
+        cellObject.transform.DOScale(Vector3.zero, 2f).From();
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
 
@@ -68,7 +68,7 @@ public class CellBase : MonoBehaviour
 
         if (objectType == ObjectType.Arrow)
         {
-            cellObject.GetComponent<Arrow>().direction = arrowDirection;
+            cellObject.GetComponent<Arrow>().SetDirection(arrowDirection);
         }
 
         if (objectType == ObjectType.Frog)
@@ -95,9 +95,9 @@ public class CellBase : MonoBehaviour
             return;
         }
 
-        _timer += Time.deltaTime;
+        timer += Time.deltaTime;
 
-        if (_timer >= InitialWaitingTime && !_isObjectSpawned)
+        if (timer >= InitialWaitingTime && !isObjectSpawned)
         {
             Vector3 rayDirection = transform.up;
 
@@ -107,9 +107,9 @@ public class CellBase : MonoBehaviour
             }
             else
             {
-                _isObjectSpawned = true;
+                isObjectSpawned = true;
                 var cellObject = CreateCellObject();
-                _timer = 0;
+                timer = 0;
 
                 if (isSpawningFinalBerryForFrog)
                 {
@@ -121,7 +121,7 @@ public class CellBase : MonoBehaviour
             }
         }
 
-        if (_timer >= DestructionWaitingTime && _isObjectSpawned && !isDeathOrderGiven)
+        if (timer >= DestructionWaitingTime && isObjectSpawned && !isDeathOrderGiven)
         {
             Vector3 rayDirection = transform.up;
 
@@ -132,7 +132,7 @@ public class CellBase : MonoBehaviour
             else
             {
                 isDeathOrderGiven = true;
-                transform.DOScale(Vector3.zero, .5f).onComplete += () =>
+                transform.DOScale(Vector3.zero, 1f).onComplete += () =>
                 {
                     LevelManager.Instance.DecreaseActiveNonGrayCellCount();
                     Destroy(gameObject);

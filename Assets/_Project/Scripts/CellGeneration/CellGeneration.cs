@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class CellGeneration : MonoBehaviour
 {
@@ -19,16 +18,6 @@ public class CellGeneration : MonoBehaviour
         {
             Instance = this;
         }
-
-
-        // if (cellOrders == null || cellOrders.Length == 0)
-        // {
-        //     cellOrders = new CellOrder[cellOrders.Length];
-        //     for (int i = 0; i < cellOrders.Length; i++)
-        //     {
-        //         cellOrders[i] = new CellOrder();
-        //     }
-        // }
     }
 
     [SerializeField] private int orderLength;
@@ -83,11 +72,6 @@ public class CellGeneration : MonoBehaviour
             GenerateCellObjects(cellOrders[i].orderType, cellOrders[i].frogIndex, cellOrders[i].cellColor, cellOrders[i].columnIndex, cellOrders[i].rowIndex, cellOrders[i].stepCount, cellOrders[i].arrowIndex, cellOrders[i].arrowDirection, cellOrders[i].finalBerryIndex);
             yield return cellOrderDelay;
         }
-    }
-
-    public int GetHeight()
-    {
-        return height;
     }
 
     // TODO: Add how many cells will be created parameter
@@ -372,6 +356,11 @@ public class CellGeneration : MonoBehaviour
                 await Task.Delay(50);
             }
         }
+    }
+
+    public int GetHeight()
+    {
+        return height;
     }
 
     // We can add the point the move it a bit forward to see what's below it.

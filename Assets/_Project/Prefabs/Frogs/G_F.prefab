@@ -699,10 +699,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4963891033145671559}
-    - targetCorrespondingSourceObject: {fileID: 6838142932757061478, guid: 3d3d12d25c4eb0244ad4a1503847d950,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1830602515127278272}
   m_SourcePrefab: {fileID: 100100000, guid: 3d3d12d25c4eb0244ad4a1503847d950, type: 3}
 --- !u!1 &3690198542991136994 stripped
 GameObject:
@@ -737,20 +733,6 @@ MonoBehaviour:
   isObstacleHit: 0
   detectedBerries: []
   skinnedMeshRenderer: {fileID: 5170343470221918315}
---- !u!114 &1830602515127278272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3690198542991136994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48a100d067735104aae9d99883ad6231, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 399699268847440103}
-  tongueSpeed: 5
 --- !u!4 &4070665452422349400 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6173914371398649308, guid: 3d3d12d25c4eb0244ad4a1503847d950,

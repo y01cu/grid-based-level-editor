@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Arrow : CellObject
 {
-    public Direction direction;
+    private Direction direction;
 
     [SerializeField] private MeshRenderer meshRenderer;
 
@@ -14,10 +15,18 @@ public class Arrow : CellObject
 
         meshRenderer.material = obstacleMaterial;
 
-        await Task.Delay(1000);
+        await Task.Delay(500);
 
         meshRenderer.material = normalMaterial;
+    }
 
-        CleanObstacleState();
+    public void SetDirection(Direction newDirection)
+    {
+        direction = newDirection;
+    }
+
+    public Direction GetDirection()
+    {
+        return direction;
     }
 }

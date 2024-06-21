@@ -279,11 +279,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
         type: 3}
-      propertyPath: newTongue
-      value: 
-      objectReference: {fileID: 751432656844875069}
-    - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
-        type: 3}
       propertyPath: boxCollider
       value: 
       objectReference: {fileID: 7393006813975784102}
@@ -704,11 +699,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2298564973544776468}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 841971963266506440, guid: c8a8204cf82de384dbb2ff0f18e03e36,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 751432656844875069}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8a8204cf82de384dbb2ff0f18e03e36, type: 3}
 --- !u!137 &99253460817961770 stripped
 SkinnedMeshRenderer:
@@ -716,26 +707,6 @@ SkinnedMeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 9095389497082701163}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8472987806996134819 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 841971963266506440, guid: c8a8204cf82de384dbb2ff0f18e03e36,
-    type: 3}
-  m_PrefabInstance: {fileID: 9095389497082701163}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &751432656844875069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8472987806996134819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48a100d067735104aae9d99883ad6231, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 9162882333646823005}
-  tongueSpeed: 5
 --- !u!4 &9141683993820274969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 64345236153222258, guid: c8a8204cf82de384dbb2ff0f18e03e36,

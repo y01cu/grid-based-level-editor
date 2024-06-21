@@ -7,6 +7,10 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
+    [SerializeField] private AudioSource audioSource;
+
+    #region Singleton
+
     private void Awake()
     {
         if (Instance != null)
@@ -19,7 +23,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private AudioSource audioSource;
+    #endregion
 
     public void PlayAudioClip(AudioClip audioClip)
     {

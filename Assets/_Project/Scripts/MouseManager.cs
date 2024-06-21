@@ -29,23 +29,14 @@ public class MouseManager : Subscriber
         }
     }
 
-    // Subscribe
-
     private void DetectObjectUnderMouse()
     {
-        Debug.Log("started detecting obj under the mouse");
-
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
             GameObject hitObject = hit.collider.gameObject;
-            if (hitObject.CompareTag("Arrow"))
-            {
-                Debug.Log("Arrow isn't clickable");
-            }
 
             if (hitObject.CompareTag("Berry"))
             {
@@ -54,7 +45,6 @@ public class MouseManager : Subscriber
 
             if (hitObject.CompareTag("Frog"))
             {
-                Debug.Log("hit frog", hitObject);
                 Frog frog = hitObject.GetComponent<Frog>();
 
                 if (!frog.IsTongueOutside())
@@ -80,7 +70,6 @@ public class MouseManager : Subscriber
 
         isSubscribed = false;
     }
-
 
     protected override void OnDestroy()
     {
