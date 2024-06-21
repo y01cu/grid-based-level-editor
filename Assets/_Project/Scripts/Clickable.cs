@@ -4,23 +4,23 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class Clickable : MonoBehaviour
+public abstract class Clickable : CellObject
 {
     private bool _isTweenable = true;
 
     [SerializeField] protected ProperNaming properNaming = new();
 
-    public virtual void OnClickedOver()
+    public virtual void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
-        ScaleUpAndDown();
+        ScaleUpAndDown(targetScale);
     }
 
-    private void ScaleUpAndDown()
+    protected void ScaleUpAndDown(Vector3 targetScale)
     {
         if (_isTweenable)
         {
             _isTweenable = false;
-            transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.12f).SetEase(Ease.Linear).SetLoops(2, LoopType.Yoyo).onComplete += () => { _isTweenable = true; };
+            transform.DOScale(targetScale, 0.1f).SetEase(Ease.Linear).SetLoops(2, LoopType.Yoyo).onComplete += () => { _isTweenable = true; };
         }
     }
 

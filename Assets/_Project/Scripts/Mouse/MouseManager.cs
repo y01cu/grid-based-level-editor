@@ -26,7 +26,6 @@ public class MouseManager : Subscriber
         if (context.performed)
         {
             OnRightMouseButtonClicked?.Invoke();
-            Debug.Log("checking rmb");
         }
     }
 
@@ -50,7 +49,7 @@ public class MouseManager : Subscriber
 
             if (hitObject.CompareTag("Berry"))
             {
-                hitObject.GetComponent<Berry>().OnClickedOver();
+                hitObject.GetComponent<Berry>().OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
             }
 
             if (hitObject.CompareTag("Frog"))
@@ -62,7 +61,8 @@ public class MouseManager : Subscriber
                 {
                     OnMoveUsed?.Invoke();
                 }
-                frog.OnClickedOver();
+
+                frog.OnClickedOverWithTargetScale(new Vector3(1.4f, 1.4f, 1.4f));
             }
         }
     }

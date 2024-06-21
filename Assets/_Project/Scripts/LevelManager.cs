@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class LevelManager : Subscriber
 {
@@ -18,6 +20,8 @@ public class LevelManager : Subscriber
 
     [SerializeField] private int moveCount;
 
+    [SerializeField] private Image levelFailedImage;
+
     public int GetLevelNumber()
     {
         return levelNumber;
@@ -27,6 +31,25 @@ public class LevelManager : Subscriber
     {
         Debug.Log("move count decreased");
         moveCount--;
+
+        if (moveCount <= 0)
+        {
+            levelFailedImage.gameObject.SetActive(true);
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendCallback(TweenFailedImage).AppendInterval(2f).onComplete += RestartLevel;
+
+            // onComplete += sequence.AppendInterval(0.5f).onComplete += RestartLevel;
+        }
+    }
+
+    private void TweenFailedImage()
+    {
+        levelFailedImage.transform.DOScale(transform.localScale, 1f).From(Vector3.zero);
+    }
+
+    private void RestartLevel()
+    {
+        SceneManager.LoadSceneAsync(levelNumber - 1);
     }
 
     public int GetRemaningMoveCount()

@@ -294,6 +294,21 @@ PrefabInstance:
       objectReference: {fileID: 9162882333646823005}
     - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
         type: 3}
+      propertyPath: normalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 01ef2e747dcda4a478306f8bb9e4a9bb, type: 2}
+    - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
+        type: 3}
+      propertyPath: obstacleMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
+    - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
+        type: 3}
+      propertyPath: skinnedMeshRenderer
+      value: 
+      objectReference: {fileID: 99253460817961770}
+    - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
+        type: 3}
       propertyPath: collisionMask.m_Bits
       value: 320
       objectReference: {fileID: 0}
@@ -695,6 +710,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 751432656844875069}
   m_SourcePrefab: {fileID: 100100000, guid: c8a8204cf82de384dbb2ff0f18e03e36, type: 3}
+--- !u!137 &99253460817961770 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 9176593253609670209, guid: c8a8204cf82de384dbb2ff0f18e03e36,
+    type: 3}
+  m_PrefabInstance: {fileID: 9095389497082701163}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8472987806996134819 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 841971963266506440, guid: c8a8204cf82de384dbb2ff0f18e03e36,

@@ -114,14 +114,12 @@ public class CellBase : MonoBehaviour
                 if (isSpawningFinalBerryForFrog)
                 {
                     cellObject.GetComponent<Berry>().SetAsLastBerryForFrog();
-                    Debug.Log("spawned final berry", this);
                 }
 
 
                 // Debug.DrawRay(transform.position, rayDirection * RayLength, Color.red);
             }
         }
-
 
         if (_timer >= DestructionWaitingTime && _isObjectSpawned && !isDeathOrderGiven)
         {

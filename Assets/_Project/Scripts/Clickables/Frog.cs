@@ -11,7 +11,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-
 public class Frog : Clickable
 {
     public event Action FreeBerriesForFrog;
@@ -29,6 +28,7 @@ public class Frog : Clickable
     private CellGeneration.OrderType orderType;
 
     [SerializeField] private bool isObstacleHit;
+
 
     // Objects are named as first with their color then with their type
     // Colors and namings are:
@@ -66,14 +66,14 @@ public class Frog : Clickable
         orderType = newOrderType;
     }
 
-    public override async void OnClickedOver()
+    public override void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
         if (_isTongueOutside)
         {
             return;
         }
 
-        base.OnClickedOver();
+        base.OnClickedOverWithTargetScale(targetScale);
 
         lineRenderer.positionCount = 1;
 
@@ -93,27 +93,15 @@ public class Frog : Clickable
 
         JustCheckCollision(startPoint, direction);
 
-        if (berries.Count > 0)
+        if (detectedObjects.Count > 0)
         {
-            // Vector3 relativePosition = cube2.transform.InverseTransformPoint(worldPosition);
-
-
-            // berries[^1].transform.SetParent(lineRenderer.transform);
-
-            // Debug.Log("last berry: " + berries[^1].transform.localPosition);
-
             if (!isObstacleHit)
             {
-                points.Add(transform.parent.InverseTransformPoint(berries[^1].transform.localPosition));
-                Debug.Log("added last berry point: " + points[^1]);
+                points.Add(transform.parent.InverseTransformPoint(detectedObjects[^1].transform.localPosition));
             }
         }
 
-        // Debug.Log("berry point: " + berryPoints[berryPoints.Count - 1]);
-
-        // TweenBetweenTwoPoints(startPoint);
-
-        time = berryCounter * 2.5f;
+        time = detectedObjects.Count * 2.5f;
         AnimateLine();
     }
 
@@ -144,38 +132,19 @@ public class Frog : Clickable
             Vector3 start = points[index - 1];
             Vector3 end = points[index];
 
-            var distance = (start - end);
-
-            int distanceValue = (int)MathF.Abs((distance.x + distance.y + distance.z));
-
-
-            // Debug.Log("start: " + start + " - end: " + end);
-            // Debug.Log("subs of start and end: " + distance);
-            // Debug.Log("distance value: " + distanceValue);
-
             sequence.Append(DOTween.To(() => start, x =>
             {
-                // if (!isObstacleHit)
-                // {
-                // }
-                // CheckCollision(x, Vector3.up);
                 UpdateLine(index, x);
                 if (boxCollider != null)
                 {
                     boxCollider.center = x;
                 }
-
-                // boxCollider.
-                // Berry hitBerry = hits[i].collider.GetComponent<Berry>();
-                // FreeBerriesForFrog += hitBerry.SetAsHitable;
             }, end, segmentDuration).SetEase(Ease.Linear));
-            // }, end, time / points.Count).SetEase(Ease.Linear));
-            //.AppendCallback(() => { detectedBerries[^1].SetLineRenderer(lineRenderer); });
         }
 
         sequence.AppendCallback(() =>
         {
-            if (!isObstacleHit)
+            if (!isObstacleHit && detectedBerries[^1].IsLastBerryForFrog())
             {
                 if (boxCollider != null)
                 {
@@ -187,6 +156,12 @@ public class Frog : Clickable
                     detectedBerries[^1].SetLineRenderer(lineRenderer, segmentDuration);
                 }
             }
+            else
+            {
+                var lastDetectedObject = detectedObjects[^1];
+                lastDetectedObject.GetComponent<CellObject>().HandleBeingObstacle();
+                Debug.Log("this is the obstacle obj", lastDetectedObject);
+            }
         });
 
 
@@ -197,11 +172,6 @@ public class Frog : Clickable
             Vector3 end = points[index - 1];
             Vector3 start = points[index];
 
-            var distance = (start - end);
-
-            int distanceValue = (int)MathF.Abs((distance.x + distance.y + distance.z));
-
-
             sequence.Append(DOTween.To(() => start, x =>
             {
                 if (boxCollider != null)
@@ -223,63 +193,31 @@ public class Frog : Clickable
             }));
         }
 
-        sequence.AppendCallback(() =>
-        {
-            if (lineRenderer != null)
-            {
-                lineRenderer.positionCount = 0;
-                _isTongueOutside = false;
-            }
-        }).onComplete += () =>
-        {
-            _isTongueOutside = false;
-
-            isObstacleHit = false;
-        }; // Reset to no points
+        sequence.onComplete += () => { ResetBackToInitialState(); };
     }
 
-    private void AnimateBackward(Sequence sequence)
+    private void ResetBackToInitialState()
     {
-        for (int i = points.Count - 1; i > 0; i--)
+        for (int i = 0; i < detectedBerries.Count; i++)
         {
-            int index = i;
-            Vector3 end = points[index - 1];
-            Vector3 start = points[index];
-
-            var distance = (start - end);
-
-            int distanceValue = (int)MathF.Abs((distance.x + distance.y + distance.z));
-
-
-            sequence.Append(DOTween.To(() => start, x =>
-            {
-                if (boxCollider != null)
-                {
-                    boxCollider.center = x;
-                }
-
-                UpdateLine(index, x);
-            }, end, segmentDuration).SetEase(Ease.Linear).OnComplete(() =>
-            {
-                if (lineRenderer != null)
-                {
-                    lineRenderer.positionCount--;
-                    if (index == 1)
-                    {
-                        lineRenderer.positionCount = 1; // Reset to one point to complete the backward animation
-                    }
-                }
-            }));
+            detectedBerries[i].TurnBackToNormalState();
         }
 
-        sequence.AppendCallback(() =>
-        {
-            if (lineRenderer != null)
-            {
-                lineRenderer.positionCount = 0;
-                _isTongueOutside = false;
-            }
-        });
+        detectedBerries.Clear();
+
+        detectedObjects.Clear();
+
+        points.Clear();
+
+        lineRenderer.positionCount = 1;
+
+        lineRenderer.SetPosition(0, transform.localPosition);
+
+        points.Add(lineRenderer.GetPosition(0));
+
+        _isTongueOutside = false;
+
+        isObstacleHit = false;
     }
 
     void UpdateLine(int index, Vector3 position)
@@ -315,10 +253,8 @@ public class Frog : Clickable
 
     private List<Vector3> points = new();
 
-    private List<Berry> berries = new();
-    private int berryCounter = 0;
+    private List<GameObject> detectedObjects = new();
     private float segmentDuration;
-
 
     private void JustCheckCollision(Vector3 startPoint, Vector3 direction)
     {
@@ -328,25 +264,36 @@ public class Frog : Clickable
 
         if (hits.Length > 0)
         {
-            bool isSameColor = hits[0].collider.gameObject.name[0] == gameObject.name[0];
-            bool isCollidedWithFrog = hits[0].collider.gameObject.name[2] == 'F';
+            var firstHit = hits[0].transform;
+            // bool isSameColor = firstHit.name[0] == gameObject.name[0];
+            // bool isCollidedWithFrog = firstHit.name[2] == 'F';
 
-            if (isSameColor)
+            if (firstHit.name[0] != gameObject.name[0])
             {
-                Debug.Log("first letters are same");
-            }
-            else
-            {
+                // is obstacle
+
                 Debug.Log("first letters are not same", hits[0].collider);
 
-                var obstaclePoint = transform.parent.InverseTransformPoint(hits[0].collider.transform.parent.transform.localPosition);
+                firstHit.GetComponent<CellObject>().SetAsObstacle();
+
+                Vector3 obstaclePoint;
+                if (firstHit.transform.parent != null)
+                {
+                    obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.parent.transform.localPosition);
+                }
+                else
+                {
+                    obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.localPosition);
+                }
+
+                detectedObjects.Add(firstHit.gameObject);
                 points.Add(obstaclePoint);
                 Debug.Log("added obstacle point: " + obstaclePoint);
                 isObstacleHit = true;
                 return;
             }
 
-            if (isCollidedWithFrog)
+            if (firstHit.name[2] == 'F')
             {
                 return;
             }
@@ -367,8 +314,6 @@ public class Frog : Clickable
 
             if (currentCollider.CompareTag("Arrow"))
             {
-                berryCounter = 0;
-
                 // TODO: The multiplier must change based on arrow rotation
 
                 // Try adding the point here:
@@ -568,95 +513,41 @@ public class Frog : Clickable
 
             if (currentCollider.CompareTag("Berry"))
             {
-                berryCounter++;
                 Berry berry = currentCollider.GetComponent<Berry>();
 
                 if (berry.gameObject.name[0] == gameObject.name[0] && !berry.IsDetected())
                 {
                     berry.SetAsDetected();
 
-                    Debug.Log("this berry's tongue hit state: " + berry.IsTongueHit(), berry);
-
-                    berries.Add(berry);
+                    detectedObjects.Add(berry.gameObject);
                 }
 
                 if (berry.IsLastBerryForFrog())
                 {
-                    Debug.Log("found last berry for frog");
                     return;
                 }
             }
         }
 
-        if (hits.Length != 0 && !isAnyArrowHit && berryCounter < CellGeneration.Instance.GetHeight() + 2)
+        if (hits.Length != 0 && !isAnyArrowHit)
         {
             JustCheckCollision(startPoint + direction, direction);
         }
-
-
-        // return new Vector3(0, 0, berryCounter);
     }
 
-    // private RaycastHit[] CheckCollision(Vector3 startPoint, Vector3 dir)
-    // {
-    //     // Debug.DrawLine(startPoint, endPoint, Color.blue, 1f);
-    //
-    //     // Vector3 direction = endPoint - startPoint;
-    //
-    //     float distance = dir.magnitude;
-    //
-    //     // This detection process takes time.
-    //
-    //     RaycastHit[] hits = Physics.RaycastAll(transform.position, dir, distance, collisionMask);
-    //
-    //
-    //     // Debug.DrawLine(startPoint, dir, Color.magenta, 2f);
-    //
-    //
-    //     for (int i = 0; i < hits.Length; i++)
-    //     {
-    //         if (hits[i].collider.CompareTag("Arrow"))
-    //         {
-    //             Vector3 startPosition = hits[i].collider.transform.position;
-    //             lineRenderer.positionCount++;
-    //             // lineRenderer.SetPosition(lineRenderer.positionCount-1, );
-    //
-    //             return CheckCollision(startPosition, new Vector3(startPosition.x - 1, startPosition.y, startPosition.z));
-    //         }
-    //
-    //         if (hits[i].collider.CompareTag("Berry"))
-    //         {
-    //             // Berry hitBerry = hits[i].collider.GetComponent<Berry>();
-    //             // FreeBerriesForFrog += hitBerry.SetAsHitable;
-    //             // hitBerry.OnClickedOver();
-    //             // hitBerry.SetTongueHit();
-    //
-    //             // hitBerry.SetDirection(-(direction));
-    //             // MoveBerriesToFrog += hitBerry.MoveToFrog;
-    //
-    //             // if (!detectedBerries.Contains(hitBerry))
-    //             // {
-    //             //     // lineRenderer.SetPosition(_detectedObjects.Count + 1, new Vector3(0, 0, lineRenderer.GetPosition(lineRenderer.positionCount - 1).z));
-    //             //
-    //             //     detectedBerries.Add(hitBerry);
-    //             //     // DOTween.To( hit.collider.transform.position, x =>
-    //             //     // {
-    //             //     //     
-    //             //     // })
-    //             //     // AddPointToLine(hit.point);
-    //             // }
-    //         }
-    //     }
-    //
-    //     // if ()
-    //     // {
-    //     // Debug.Log("frog color: " + _colorFirstLetter + " hit color: " + hit.collider.gameObject.name[0]);
-    //
-    //     // TODO: There could be performance improvements here
-    //
-    //
-    //     // }
-    //
-    //     return hits;
-    // }
+    [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
+
+
+    public override async void HandleBeingObstacle()
+    {
+        AudioManager.Instance.PlayAudioClip(obstacleStateClip);
+
+        skinnedMeshRenderer.material = obstacleMaterial;
+
+        await Task.Delay(1000);
+
+        skinnedMeshRenderer.material = normalMaterial;
+
+        CleanObstacleState();
+    }
 }

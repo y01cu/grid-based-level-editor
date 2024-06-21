@@ -1,31 +1,20 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Berry : Clickable
 {
-    private bool _isHitable;
-    private bool _isTongueHit;
-
-    private Vector3 _forceDirection;
-    [SerializeField] private Rigidbody rigidbody;
-
-    [HideInInspector] public bool isMoving;
-
-    private LineRenderer _lineRenderer;
-
-    private float _interpolationFactor = 7.5f; //
+    [SerializeField] private AudioClip normalStateClip;
 
     [SerializeField] private BoxCollider boxCollider;
 
-    private Vector3 lineRendererVector3;
+    private LineRenderer lineRenderer;
 
-    private bool _isDetected;
-
+    private bool isHitable;
+    private bool isTongueHit;
+    private bool isDetected;
     private bool isLastBerryForFrog;
 
     public bool IsLastBerryForFrog()
@@ -42,12 +31,12 @@ public class Berry : Clickable
 
     public void SetAsDetected()
     {
-        _isDetected = true;
+        isDetected = true;
     }
 
     public bool IsDetected()
     {
-        return _isDetected;
+        return isDetected;
     }
 
     public void SetTargetBoxCollider(BoxCollider givenTargetBoxCollider)
@@ -58,29 +47,21 @@ public class Berry : Clickable
 
     private void Start()
     {
-        _isLineRendererNotNull = _lineRenderer != null;
         gameObject.name = properNaming.GetProperName();
-    }
-
-    private bool isMovingHorizontally;
-
-    public bool IsTongueHit()
-    {
-        return _isTongueHit;
     }
 
     private void Update()
     {
-        if (_lineRenderer != null)
+        if (lineRenderer != null)
         {
-            if (_lineRenderer.positionCount < 2)
+            if (lineRenderer.positionCount < 2)
             {
                 return;
             }
 
             if (!isLerping)
             {
-                StartCoroutine(LerpPosition(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), lerpDuration));
+                StartCoroutine(LerpPosition(transform.localPosition, lineRenderer.GetPosition(lineRenderer.positionCount - 2), lerpDuration));
             }
 
             // transform.localPosition = Vector3.Lerp(transform.localPosition, _lineRenderer.GetPosition(_lineRenderer.positionCount - 2), .9f * Time.deltaTime); //  0.02f
@@ -115,101 +96,54 @@ public class Berry : Clickable
     public void SetLineRenderer(LineRenderer newLineRenderer, float newDuration)
     {
         lerpDuration = newDuration;
-        _lineRenderer = newLineRenderer;
-        transform.SetParent(_lineRenderer.transform);
-        isMoving = true;
-
-        var currentPosition = transform.localPosition;
-
-        var targetPosition = _lineRenderer.GetPosition(_lineRenderer.positionCount - 2);
-        // Vector3.Lerp(transform.localPosition, targetPosition, 1);
+        lineRenderer = newLineRenderer;
+        transform.SetParent(lineRenderer.transform);
     }
 
     public LineRenderer GetLineRenderer()
     {
-        return _lineRenderer;
-    }
-
-    public override void OnClickedOver()
-    {
-        if (!_isTongueHit || _isHitable)
-        {
-            base.OnClickedOver();
-        }
+        return lineRenderer;
     }
 
     public void SetTongueHit()
     {
-        _isTongueHit = true;
-        _isHitable = false;
+        isTongueHit = true;
+        isHitable = false;
 
         Debug.Log("this one is hit by tongue", this);
     }
 
     public void SetAsHitable()
     {
-        _isHitable = true;
-    }
-
-    public void SetDirection(Vector3 forceDirection)
-    {
-        _forceDirection = forceDirection;
-    }
-
-    public void SetRigidbody(Rigidbody rb)
-    {
-        rigidbody = rb;
-    }
-
-    public void MoveToFrog()
-    {
-        rigidbody.AddForce(_forceDirection);
+        isHitable = true;
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Berry"))
         {
+            Debug.Log("berry entered");
+
             Berry otherBerry = other.gameObject.GetComponent<Berry>();
 
-            if (isMoving && !otherBerry.isMoving)
+            if (lineRenderer != null && otherBerry.GetLineRenderer() == null)
             {
+                otherBerry.SetLineRenderer(lineRenderer, timeLeft);
             }
-
-            if (_lineRenderer != null && otherBerry.GetLineRenderer() == null)
-            {
-                otherBerry.SetLineRenderer(_lineRenderer, timeLeft);
-            }
-
-            // var direction = _lineRenderer.GetPosition(_lineRenderer.positionCount - 2) - transform.localPosition;
-
-            // -----
-
-            // Debug.Log("dir: " + direction);
-
-            // otherBerry.GetComponent<Rigidbody>().velocity *=2;
-
-            // otherBerry.SetRigidbody(rigidbody);
         }
     }
 
-    private WaitForSeconds frogDestroyDelay = new(0.6f);
-    private bool _isLineRendererNotNull;
     private bool isLerping;
     private bool _lineRendererNotNull;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Frog") && isMoving)
+        if (other.CompareTag("Frog"))
         {
             boxCollider.isTrigger = true;
             List<Berry> detectedBerries = other.GetComponent<Frog>().GetDetectedObjects();
 
             transform.SetParent(null);
-
-            // for (int i = 0; i < detectedObjects.Count; i++)
-            // {
-            // }
 
             transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () =>
             {
@@ -222,22 +156,18 @@ public class Berry : Clickable
                     Destroy(other.gameObject);
                 }
             };
-
-            // yield return new WaitUntil(() => detectedObjects.Count == 0);
-            // Destroy(other.gameObject);
-            // Debug.Log("game object's destroyed");
         }
 
         if (other.CompareTag("Tongue"))
         {
-            if (!_isTongueHit)
+            if (!isTongueHit)
             {
-                OnClickedOver();
+                OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
                 SetTongueHit();
                 var frog = other.transform.parent.GetComponent<Frog>();
                 frog.FreeBerriesForFrog += SetAsHitable;
                 frog.detectedBerries.Add(this);
-                _isTongueHit = true;
+                isTongueHit = true;
             }
         }
 
@@ -247,5 +177,37 @@ public class Berry : Clickable
 
             other.transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () => { Destroy(other.gameObject); };
         }
+    }
+
+    public override void OnClickedOverWithTargetScale(Vector3 targetScale)
+    {
+        if (!isTongueHit || isHitable)
+        {
+            base.OnClickedOverWithTargetScale(targetScale);
+
+            AudioManager.Instance.PlayAudioClip(normalStateClip);
+        }
+    }
+
+
+    [SerializeField] private MeshRenderer meshRenderer;
+
+    public override async void HandleBeingObstacle()
+    {
+        AudioManager.Instance.PlayAudioClip(obstacleStateClip);
+
+        meshRenderer.material = obstacleMaterial;
+
+        await Task.Delay(1000);
+
+        meshRenderer.material = normalMaterial;
+
+        CleanObstacleState();
+    }
+
+    public void TurnBackToNormalState()
+    {
+        isDetected = false;
+        isTongueHit = false;
     }
 }

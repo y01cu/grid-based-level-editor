@@ -722,6 +722,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c314826845bb304fb914bb1c52e83ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleMaterial: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
+  normalMaterial: {fileID: 2100000, guid: 8413bf28a7c37dd41b8bbc9e8ffb6021, type: 2}
+  obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   properNaming:
     color: 71
     type: 70
@@ -729,10 +732,11 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 320
-  newTongue: {fileID: 1830602515127278272}
   time: 10
   boxCollider: {fileID: 4058240585277469920}
+  isObstacleHit: 0
   detectedBerries: []
+  skinnedMeshRenderer: {fileID: 5170343470221918315}
 --- !u!114 &1830602515127278272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -750,6 +754,12 @@ MonoBehaviour:
 --- !u!4 &4070665452422349400 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6173914371398649308, guid: 3d3d12d25c4eb0244ad4a1503847d950,
+    type: 3}
+  m_PrefabInstance: {fileID: 7913896301093422980}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &5170343470221918315 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3031891491739207663, guid: 3d3d12d25c4eb0244ad4a1503847d950,
     type: 3}
   m_PrefabInstance: {fileID: 7913896301093422980}
   m_PrefabAsset: {fileID: 0}

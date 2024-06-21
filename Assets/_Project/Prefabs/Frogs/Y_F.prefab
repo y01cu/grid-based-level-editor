@@ -464,6 +464,21 @@ PrefabInstance:
       objectReference: {fileID: 1056252753664834811}
     - target: {fileID: 4654882158872261148, guid: 624b7a459e9032244bd409313ac14675,
         type: 3}
+      propertyPath: normalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a59b4965c2c302c41bd39d3e8afe75c8, type: 2}
+    - target: {fileID: 4654882158872261148, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: obstacleMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
+    - target: {fileID: 4654882158872261148, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: skinnedMeshRenderer
+      value: 
+      objectReference: {fileID: 1098452516986005546}
+    - target: {fileID: 4654882158872261148, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
       propertyPath: collisionMask.m_Bits
       value: 320
       objectReference: {fileID: 0}
@@ -730,6 +745,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2951860451266378053}
   m_SourcePrefab: {fileID: 100100000, guid: 624b7a459e9032244bd409313ac14675, type: 3}
+--- !u!137 &1098452516986005546 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2336913757417360780, guid: 624b7a459e9032244bd409313ac14675,
+    type: 3}
+  m_PrefabInstance: {fileID: 3409257975209026982}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8107372038149499417 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6904921998256082879, guid: 624b7a459e9032244bd409313ac14675,

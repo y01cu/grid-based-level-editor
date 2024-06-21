@@ -70,7 +70,7 @@ public class CellGeneration : MonoBehaviour
     {
         for (int i = 0; i < cellOrders.Length; i++)
         {
-            if (cellOrders[i].frogIndex == SpecificIndex.None && cellOrders[i].frogIndex == cellOrders[i].arrowIndex)
+            if (cellOrders[i].frogIndex != SpecificIndex.None && cellOrders[i].frogIndex == cellOrders[i].arrowIndex)
             {
                 Debug.LogError("ERROR: TWO OBJS IN THE SAME INDEX!");
             }
@@ -194,7 +194,7 @@ public class CellGeneration : MonoBehaviour
                 var newPosition = targetPosition + new Vector3(0, layerValue * showingBelowTransformation, 0);
 
                 var targetRotation = Quaternion.Euler(XAxisAngle, 0, 0);
-                // var targetRotation = Quaternion.Euler(rotation);
+
                 var cellBase = Instantiate(cellBases[(int)objectColor], newPosition, targetRotation, layerParentObject.transform);
 
                 cellBase.orderType = orderType;
