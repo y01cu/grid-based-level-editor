@@ -47,7 +47,7 @@ public class MouseManager : Subscriber
             {
                 Frog frog = hitObject.GetComponent<Frog>();
 
-                if (!frog.IsTongueOutside())
+                if (!frog.lineManager.IsLineOutside())
                 {
                     OnMoveUsed?.Invoke();
                 }

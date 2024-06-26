@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5388423148735719051}
   - component: {fileID: 399699268847440103}
   - component: {fileID: 4058240585277469920}
+  - component: {fileID: 8941590148620850978}
   m_Layer: 8
   m_Name: Tongue
   m_TagString: Tongue
@@ -157,6 +158,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0.13, z: 0}
+--- !u!114 &8941590148620850978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3816006460664746061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115e8f18e2f32304babbebf5888acd61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 399699268847440103}
+  detectedBerries: []
+  boxCollider: {fileID: 4058240585277469920}
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 320
 --- !u!1 &4041292530243084329
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,21 +737,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c314826845bb304fb914bb1c52e83ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectColor: 0
+  objectType: 0
   obstacleMaterial: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
   normalMaterial: {fileID: 2100000, guid: 8413bf28a7c37dd41b8bbc9e8ffb6021, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
-  properNaming:
-    color: 71
-    type: 70
   lineRenderer: {fileID: 399699268847440103}
   collisionMask:
     serializedVersion: 2
     m_Bits: 320
-  time: 10
   boxCollider: {fileID: 4058240585277469920}
-  isObstacleHit: 0
-  detectedBerries: []
   skinnedMeshRenderer: {fileID: 5170343470221918315}
+  isObstacleHit: 0
+  time: 10
+  detectedBerries: []
+  lineManager: {fileID: 8941590148620850978}
 --- !u!4 &4070665452422349400 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6173914371398649308, guid: 3d3d12d25c4eb0244ad4a1503847d950,

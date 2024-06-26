@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 6000498421802958090}
   - component: {fileID: 4561812317300486874}
   - component: {fileID: 5644759591051127221}
+  - component: {fileID: 4966230339188152850}
   m_Layer: 8
   m_Name: Tongue
   m_TagString: Tongue
@@ -189,6 +190,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0.13, z: 0}
+--- !u!114 &4966230339188152850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9115686037910478583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115e8f18e2f32304babbebf5888acd61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 4561812317300486874}
+  detectedBerries: []
+  boxCollider: {fileID: 5644759591051127221}
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 320
 --- !u!1001 &4990896850648885667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -778,21 +797,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c314826845bb304fb914bb1c52e83ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectColor: 0
+  objectType: 0
   obstacleMaterial: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
   normalMaterial: {fileID: 2100000, guid: aaac73df7660d97438aa9464842dd4d2, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
-  properNaming:
-    color: 66
-    type: 70
   lineRenderer: {fileID: 4561812317300486874}
   collisionMask:
     serializedVersion: 2
     m_Bits: 320
-  time: 10
   boxCollider: {fileID: 5644759591051127221}
-  isObstacleHit: 0
-  detectedBerries: []
   skinnedMeshRenderer: {fileID: 8020993406818840140}
+  isObstacleHit: 0
+  time: 10
+  detectedBerries: []
+  lineManager: {fileID: 4966230339188152850}
 --- !u!54 &3793282005698674255
 Rigidbody:
   m_ObjectHideFlags: 0

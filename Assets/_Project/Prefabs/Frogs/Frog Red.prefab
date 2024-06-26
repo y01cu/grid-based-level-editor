@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2298564973544776468}
   - component: {fileID: 9162882333646823005}
   - component: {fileID: 7393006813975784102}
+  - component: {fileID: 638202664924930296}
   m_Layer: 8
   m_Name: Tongue
   m_TagString: Tongue
@@ -157,6 +158,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0.13, z: 0}
+--- !u!114 &638202664924930296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6560665730455119943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115e8f18e2f32304babbebf5888acd61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 9162882333646823005}
+  detectedBerries: []
+  boxCollider: {fileID: 7393006813975784102}
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 320
 --- !u!1 &6817913755694824272
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,6 +301,11 @@ PrefabInstance:
       propertyPath: boxCollider
       value: 
       objectReference: {fileID: 7393006813975784102}
+    - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
+        type: 3}
+      propertyPath: lineManager
+      value: 
+      objectReference: {fileID: 638202664924930296}
     - target: {fileID: 275305651473524180, guid: c8a8204cf82de384dbb2ff0f18e03e36,
         type: 3}
       propertyPath: lineRenderer

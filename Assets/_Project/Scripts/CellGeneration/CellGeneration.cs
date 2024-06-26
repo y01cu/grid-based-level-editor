@@ -183,7 +183,6 @@ public class CellGeneration : MonoBehaviour
 
                 cellBase.orderType = orderType;
 
-
                 if (y == frogIndexValue)
                 {
                     switch (frogIndex)
