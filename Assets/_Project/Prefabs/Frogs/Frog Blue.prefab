@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7664300010794382425}
   m_Layer: 8
-  m_Name: B_F
+  m_Name: Frog Blue
   m_TagString: Frog
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

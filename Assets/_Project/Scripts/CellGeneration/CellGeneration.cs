@@ -237,14 +237,6 @@ public class CellGeneration : MonoBehaviour
                     cellBase.SetAsSpawningFinalBerryForFrog();
                 }
 
-                //
-                // if (y == frogIndexValue)
-                // {
-                //     cellBase.ChangeCellObjectType();
-                // }
-
-                // cellBase.CreateCellObject();
-
                 await Task.Delay(50);
             }
         }
@@ -374,11 +366,6 @@ public class CellGeneration : MonoBehaviour
 
         Points.Add(point, true);
         return point;
-    }
-
-    private void DeleteTopLayer()
-    {
-        Destroy(cellParentTransform.GetChild(cellParentTransform.childCount - 1).gameObject);
     }
 
     public enum SpecificIndex

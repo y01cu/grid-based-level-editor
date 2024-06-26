@@ -23,12 +23,6 @@ public class Berry : Clickable
     private float lerpDuration;
     private float timeLeft;
 
-
-    private void Start()
-    {
-        gameObject.name = properNaming.GetProperName();
-    }
-
     private void Update()
     {
         if (lineRenderer != null)

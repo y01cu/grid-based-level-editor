@@ -5,7 +5,7 @@ public abstract class Clickable : CellObject
 {
     private bool isTweenable = true;
 
-    [SerializeField] protected ProperNaming properNaming = new();
+    // [SerializeField] protected ProperNaming properNaming = new();
 
     public virtual void OnClickedOverWithTargetScale(Vector3 targetScale)
     {

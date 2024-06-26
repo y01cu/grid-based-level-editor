@@ -33,28 +33,11 @@ public class Frog : Clickable
 
     public List<Berry> detectedBerries = new();
     private List<Vector3> points = new();
-    
+
     private List<GameObject> detectedObjects = new();
-
-
-    // Objects are named as first with their color then with their type
-    // Colors and namings are:
-    // B:Blue
-    // G:Green
-    // R:Red
-
-    // Y:Yellow
-
-    // B_B: Blue Berry
-
-    // R_A: Red Arrow
-
-    // G_F: Green Frog
 
     private void Start()
     {
-        gameObject.name = properNaming.GetProperName();
-
         lineRenderer.numCornerVertices = 8;
         lineRenderer.numCapVertices = 8;
 
@@ -107,11 +90,14 @@ public class Frog : Clickable
         float distance = direction.magnitude;
         RaycastHit[] hits = Physics.RaycastAll(startPoint, direction, distance, collisionMask);
 
+        var firstHit = hits[0].transform;
+        var firstCellObject = hits[0].transform.GetComponent<CellObject>();
+
         if (hits.Length > 0)
         {
-            var firstHit = hits[0].transform;
+            bool isDifferentColor = firstHit.transform.GetComponent<CellObject>().objectColor != objectColor;
 
-            if (firstHit.name[0] != gameObject.name[0])
+            if (isDifferentColor)
             {
                 // is obstacle
 
@@ -132,7 +118,7 @@ public class Frog : Clickable
                 return;
             }
 
-            if (firstHit.name[2] == 'F')
+            if (firstHit.transform.GetComponent<CellObject>().objectType == CellBase.ObjectType.Frog)
             {
                 return;
             }
@@ -337,7 +323,9 @@ public class Frog : Clickable
             {
                 Berry berry = currentCollider.GetComponent<Berry>();
 
-                if (berry.gameObject.name[0] == gameObject.name[0] && !berry.IsDetected())
+                bool isSameColor = berry.objectColor == objectColor;
+
+                if (isSameColor && !berry.IsDetected())
                 {
                     berry.SetAsDetected();
 

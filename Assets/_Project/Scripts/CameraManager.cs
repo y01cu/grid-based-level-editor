@@ -4,8 +4,6 @@ public class CameraManager : MonoBehaviour
 {
     [SerializeField] private Camera camera;
 
-    [SerializeField] private CellGeneration cellGeneration;
-
     private void Start()
     {
         PositionCameraIntoTheMiddle();
@@ -18,7 +16,7 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 GetProperCameraCoordinates()
     {
-        var edgeLength = cellGeneration.GetHeight() - 0.75f;
+        var edgeLength = CellGeneration.Instance.GetHeight() - 0.75f;
 
         var properCameraEdge = edgeLength / 2;
 

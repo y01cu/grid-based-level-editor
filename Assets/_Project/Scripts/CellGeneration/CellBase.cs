@@ -68,17 +68,33 @@ public class CellBase : MonoBehaviour
 
         if (objectType == ObjectType.Arrow)
         {
-            cellObject.GetComponent<Arrow>().SetDirection(arrowDirection);
+            var arrowObject = cellObject.GetComponent<Arrow>();
+            arrowObject.SetDirection(arrowDirection);
+            SetUpCellObject(arrowObject);
         }
 
-        if (objectType == ObjectType.Frog)
+        else if (objectType == ObjectType.Frog)
         {
-            cellObject.GetComponentInChildren<Frog>().SetOrderType(orderType);
+            var frogObject = cellObject.GetComponentInChildren<Frog>();
+            frogObject.SetOrderType(orderType);
+            SetUpCellObject(frogObject);
+        }
+
+        else if (objectType == ObjectType.Berry)
+        {
+            var berryObject = cellObject.GetComponent<CellObject>();
+            SetUpCellObject(berryObject);
         }
 
         return cellObject;
 
         // cellObject.transform.position = objectTargetTransformFromChild.position;
+    }
+
+    private void SetUpCellObject(CellObject cellObject)
+    {
+        cellObject.objectColor = objectColor;
+        cellObject.objectType = objectType;
     }
 
     public void ChangeCellObjectType(ObjectType newObjectType)
