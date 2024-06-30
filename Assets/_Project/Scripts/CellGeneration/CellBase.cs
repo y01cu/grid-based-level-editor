@@ -9,10 +9,7 @@ using UnityEngine.Serialization;
 
 public class CellBase : MonoBehaviour
 {
-    // ATTENTION: Always sort array objects in alphabetical order
-
     public GameObject[] CellObjectPrefabs;
-    // public GameObject cellObject;
 
     public ObjectColor objectColor;
     public ObjectType objectType;
@@ -20,11 +17,11 @@ public class CellBase : MonoBehaviour
     private const float InitialWaitingTime = 2f;
     private const float DestructionWaitingTime = 3.5f;
     private bool isObjectSpawned;
+    private bool isDeathOrderGiven;
     private float timer;
 
     public Direction arrowDirection;
 
-    private bool isDeathOrderGiven;
 
     public Vector3 additionalRotationVector3;
 
@@ -32,16 +29,9 @@ public class CellBase : MonoBehaviour
 
     [SerializeField] private Transform objectTargetTransformFromChild;
 
-    // [SerializeField] private Transform parentTransform;
-
     [SerializeField] private LayerMask collisionLayers;
 
     private bool isSpawningFinalBerryForFrog;
-
-    public bool IsSpawningFinalBerryForFrog()
-    {
-        return isSpawningFinalBerryForFrog;
-    }
 
     public void SetAsSpawningFinalBerryForFrog()
     {

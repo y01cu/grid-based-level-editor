@@ -11,11 +11,9 @@ public class LevelManager : IRMBListener
     private int sceneBuildIndex;
     private int activeNonGrayCellCount;
     private int levelNumber;
-
     private float timer;
     private float activationInitialDelay = 3;
-
-    private bool isGameEnd;
+    private bool isGameEnded;
 
     #region Singleton
 
@@ -36,7 +34,6 @@ public class LevelManager : IRMBListener
     private void Start()
     {
         sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-
         levelNumber = sceneBuildIndex + 1;
 
         if (!isSubscribed)
@@ -47,7 +44,7 @@ public class LevelManager : IRMBListener
 
     private void Update()
     {
-        if (isGameEnd)
+        if (isGameEnded)
         {
             return;
         }
@@ -63,7 +60,7 @@ public class LevelManager : IRMBListener
                 {
                     UIManager.Instance.gameCompletedImage.gameObject.SetActive(true);
                     UIManager.Instance.gameCompletedImage.transform.DOScale(transform.localScale, 1f).From(Vector3.zero);
-                    isGameEnd = true;
+                    isGameEnded = true;
                 }
                 else
                 {
