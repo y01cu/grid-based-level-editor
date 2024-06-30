@@ -1,14 +1,10 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
-public class LevelManager : Subscriber
+public class LevelManager : IRMBListener
 {
     public static LevelManager Instance;
-
-    [SerializeField] private Image levelFailedImage;
-    [SerializeField] private Image gameCompletedImage;
 
     [SerializeField] private int moveCount;
     private int sceneBuildIndex;
@@ -44,7 +40,7 @@ public class LevelManager : Subscriber
 
         if (!isSubscribed)
         {
-            SubscribeToEvents();
+            ListenRMBEvent();
         }
     }
 
@@ -64,8 +60,8 @@ public class LevelManager : Subscriber
 
                 if (levelNumber == SceneManager.sceneCountInBuildSettings)
                 {
-                    gameCompletedImage.gameObject.SetActive(true);
-                    gameCompletedImage.transform.DOScale(transform.localScale, 1f).From(Vector3.zero);
+                    UIManager.Instance.gameCompletedImage.gameObject.SetActive(true);
+                    UIManager.Instance.gameCompletedImage.transform.DOScale(transform.localScale, 1f).From(Vector3.zero);
                     isGameEnd = true;
                 }
                 else
@@ -76,32 +72,26 @@ public class LevelManager : Subscriber
         }
     }
 
-    private void ShowCompletedImage()
-    {
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendCallback(TweenCompletedImage).AppendInterval(2f);
-    }
-
     public void DecreaseMoveCount()
     {
         moveCount--;
 
         if (moveCount < 0)
         {
-            levelFailedImage.gameObject.SetActive(true);
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendCallback(TweenFailedImage).AppendInterval(2f).onComplete += RestartLevel;
+            HandleLevelFail();
         }
+    }
+
+    private void HandleLevelFail()
+    {
+        UIManager.Instance.levelFailedImage.gameObject.SetActive(true);
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendCallback(TweenFailedImage).AppendInterval(2f).onComplete += RestartLevel;
     }
 
     private void TweenFailedImage()
     {
-        levelFailedImage.transform.DOScale(transform.localScale, 1f).From(Vector3.zero);
-    }
-
-    private void TweenCompletedImage()
-    {
-        gameCompletedImage.transform.DOScale(transform.localScale, 1f).From(Vector3.zero);
+        UIManager.Instance.levelFailedImage.transform.DOScale(transform.localScale, 1f).From(Vector3.zero);
     }
 
     private void RestartLevel()
@@ -119,14 +109,14 @@ public class LevelManager : Subscriber
         return levelNumber;
     }
 
-    protected override void SubscribeToEvents()
+    protected override void ListenRMBEvent()
     {
         MouseManager.OnMoveUsed += DecreaseMoveCount;
 
         isSubscribed = true;
     }
 
-    protected override void UnsubscribeFromEvents()
+    protected override void StopListeningRMBEvent()
     {
         MouseManager.OnMoveUsed -= DecreaseMoveCount;
 
@@ -150,6 +140,6 @@ public class LevelManager : Subscriber
 
     protected override void OnDestroy()
     {
-        UnsubscribeFromEvents();
+        StopListeningRMBEvent();
     }
 }

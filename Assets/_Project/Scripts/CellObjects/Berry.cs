@@ -57,7 +57,7 @@ public class Berry : Clickable
         if (other.CompareTag("Frog"))
         {
             boxCollider.isTrigger = true;
-            List<Berry> detectedBerries = other.GetComponent<Frog>().GetDetectedObjects();
+            List<Berry> detectedBerries = other.GetComponent<Frog>().lineManager.GetDetectedBerries();
 
             transform.SetParent(null);
 
@@ -76,13 +76,16 @@ public class Berry : Clickable
 
         if (other.CompareTag("Tongue"))
         {
+            Debug.Log("tongue hit berry");
+
+
             if (!isTongueHit)
             {
                 OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
                 SetTongueHit();
                 var frog = other.transform.parent.GetComponent<Frog>();
-                frog.FreeBerriesForFrog += SetAsHitable;
-                frog.detectedBerries.Add(this);
+                // frog.FreeBerriesForFrog += SetAsHitable;
+                frog.lineManager.GetDetectedBerries().Add(this);
                 isTongueHit = true;
             }
         }
@@ -116,8 +119,11 @@ public class Berry : Clickable
 
     public override void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
+        Debug.Log($"this obj is clicked {gameObject.name} | is tong hit: {isTongueHit} | ishitable: {isHitable}");
+
         if (!isTongueHit || isHitable)
         {
+            Debug.Log("berry started scaling here...");
             base.OnClickedOverWithTargetScale(targetScale);
 
             AudioManager.Instance.PlayAudioClip(normalStateClip);
@@ -169,10 +175,10 @@ public class Berry : Clickable
         isDetected = true;
     }
 
-    public void SetAsHitable()
-    {
-        isHitable = true;
-    }
+    // public void SetAsHitable()
+    // {
+    //     isHitable = true;
+    // }
 
     public bool IsLastBerryForFrog()
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MouseManager : Subscriber
+public class MouseManager : IRMBListener
 {
     public static event Action OnRightMouseButtonClicked;
     public static event Action OnMoveUsed;
@@ -17,7 +17,7 @@ public class MouseManager : Subscriber
 
         if (!isSubscribed)
         {
-            SubscribeToEvents();
+            ListenRMBEvent();
         }
     }
 
@@ -47,7 +47,7 @@ public class MouseManager : Subscriber
             {
                 Frog frog = hitObject.GetComponent<Frog>();
 
-                if (!frog.lineManager.IsLineOutside())
+                if (!frog.lineManager.IsLineOutside)
                 {
                     OnMoveUsed?.Invoke();
                 }
@@ -57,14 +57,14 @@ public class MouseManager : Subscriber
         }
     }
 
-    protected override void SubscribeToEvents()
+    protected override void ListenRMBEvent()
     {
         OnRightMouseButtonClicked += DetectObjectUnderMouse;
 
         isSubscribed = true;
     }
 
-    protected override void UnsubscribeFromEvents()
+    protected override void StopListeningRMBEvent()
     {
         OnRightMouseButtonClicked -= DetectObjectUnderMouse;
 
@@ -73,6 +73,6 @@ public class MouseManager : Subscriber
 
     protected override void OnDestroy()
     {
-        UnsubscribeFromEvents();
+        StopListeningRMBEvent();
     }
 }

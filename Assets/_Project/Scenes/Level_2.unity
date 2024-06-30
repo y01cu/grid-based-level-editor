@@ -646,7 +646,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 330585545}
-  cellGeneration: {fileID: 2001982930}
 --- !u!1 &368026076
 GameObject:
   m_ObjectHideFlags: 0
@@ -1312,6 +1311,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movesTMP: {fileID: 455641077}
   levelTMP: {fileID: 872837490}
+  levelFailedImage: {fileID: 103984490}
+  gameCompletedImage: {fileID: 0}
 --- !u!4 &993560485
 Transform:
   m_ObjectHideFlags: 0
@@ -1742,6 +1743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelFailedImage: {fileID: 103984490}
+  gameCompletedImage: {fileID: 0}
   moveCount: 6
 --- !u!4 &1699694746
 Transform:

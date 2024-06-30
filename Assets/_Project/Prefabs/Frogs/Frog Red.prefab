@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9162882333646823005}
   - component: {fileID: 7393006813975784102}
   - component: {fileID: 638202664924930296}
+  - component: {fileID: 3765644545222223543}
   m_Layer: 8
   m_Name: Tongue
   m_TagString: Tongue
@@ -171,11 +172,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 9162882333646823005}
-  detectedBerries: []
-  boxCollider: {fileID: 7393006813975784102}
+  lineCollision: {fileID: 3765644545222223543}
+  tongueBoxCollider: {fileID: 7393006813975784102}
+--- !u!114 &3765644545222223543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6560665730455119943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f378648cc6bfb4e920d2092e1f4e60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   collisionMask:
     serializedVersion: 2
     m_Bits: 320
+  detectedObjectStorage:
+    points: []
+    detectedObjects: []
+    detectedBerries: []
 --- !u!1 &6817913755694824272
 GameObject:
   m_ObjectHideFlags: 0

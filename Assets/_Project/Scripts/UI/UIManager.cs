@@ -1,17 +1,31 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class UIManager : Subscriber
+public class UIManager : IRMBListener
 {
+    public static UIManager Instance;
+
     [SerializeField] private TextMeshProUGUI movesTMP;
     [SerializeField] private TextMeshProUGUI levelTMP;
+
+    public Image levelFailedImage;
+    public Image gameCompletedImage;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     private StringBuilder stringBuilder;
 
@@ -24,7 +38,7 @@ public class UIManager : Subscriber
 
         if (!isSubscribed)
         {
-            SubscribeToEvents();
+            ListenRMBEvent();
         }
 
         stringBuilder = new StringBuilder();
@@ -62,14 +76,14 @@ public class UIManager : Subscriber
         return stringBuilder.ToString();
     }
 
-    protected override void SubscribeToEvents()
+    protected override void ListenRMBEvent()
     {
         MouseManager.OnMoveUsed += DecreaseMovesText;
 
         isSubscribed = true;
     }
 
-    protected override void UnsubscribeFromEvents()
+    protected override void StopListeningRMBEvent()
     {
         MouseManager.OnMoveUsed -= DecreaseMovesText;
 
@@ -78,6 +92,6 @@ public class UIManager : Subscriber
 
     protected override void OnDestroy()
     {
-        UnsubscribeFromEvents();
+        StopListeningRMBEvent();
     }
 }

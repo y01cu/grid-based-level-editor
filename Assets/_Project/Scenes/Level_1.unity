@@ -1787,6 +1787,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movesTMP: {fileID: 1670331411}
   levelTMP: {fileID: 533639180}
+  levelFailedImage: {fileID: 1176751953}
+  gameCompletedImage: {fileID: 0}
 --- !u!4 &1883304203
 Transform:
   m_ObjectHideFlags: 0
