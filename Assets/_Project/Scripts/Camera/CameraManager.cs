@@ -16,7 +16,7 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 GetProperCameraCoordinates()
     {
-        var edgeLength = CellGeneration.Instance.GetHeight() - 0.75f;
+        var edgeLength = CellGeneration.Instance.Height - 0.75f;
 
         var properCameraEdge = edgeLength / 2;
 

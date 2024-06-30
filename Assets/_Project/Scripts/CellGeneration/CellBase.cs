@@ -28,7 +28,7 @@ public class CellBase : MonoBehaviour
 
     public Vector3 additionalRotationVector3;
 
-    public CellGeneration.OrderType orderType;
+    public OrderType orderType;
 
     [SerializeField] private Transform objectTargetTransformFromChild;
 
@@ -64,8 +64,6 @@ public class CellBase : MonoBehaviour
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.Rotate(additionalRotationVector3);
 
-        // cellObject.GetComponent<Frog>().SetOrderType(orderType);
-
         if (objectType == ObjectType.Arrow)
         {
             var arrowObject = cellObject.GetComponent<Arrow>();
@@ -87,8 +85,6 @@ public class CellBase : MonoBehaviour
         }
 
         return cellObject;
-
-        // cellObject.transform.position = objectTargetTransformFromChild.position;
     }
 
     private void SetUpCellObject(CellObject cellObject)
@@ -131,9 +127,6 @@ public class CellBase : MonoBehaviour
                 {
                     cellObject.GetComponent<Berry>().SetAsLastBerryForFrog();
                 }
-
-
-                // Debug.DrawRay(transform.position, rayDirection * RayLength, Color.red);
             }
         }
 
@@ -156,40 +149,4 @@ public class CellBase : MonoBehaviour
             }
         }
     }
-
-    // public 
-
-    public enum ObjectColor
-    {
-        _Empty,
-        Blue,
-        Green,
-        Red,
-        Yellow,
-    }
-
-    public enum ObjectType
-    {
-        Arrow,
-        Berry,
-        Frog,
-    }
-
-    // /// <summary>
-    // /// Must be called whenever a cell is created
-    // /// </summary>
-    // /// <param name="targetObjectType"></param>
-    // /// <param name="position"></param>
-    // /// <param name="rotation"></param>
-    // public GameObject CreateCellObjectOfTypeInTransformOnParent(ObjectType targetObjectType, Vector3 position, Quaternion rotation)
-    // {
-    //     cellObject = CellObjectPrefabs[(int)targetObjectType];
-    //     Instantiate(cellObject);
-    //     cellObject.transform.localPosition = position;
-    //     cellObject.transform.localRotation = rotation;
-    //     cellObject.name = targetObjectType + "---";
-    //
-    //     return cellObject;
-    //     // cellObject.transform.SetParent(_parentTransform);
-    // }
 }

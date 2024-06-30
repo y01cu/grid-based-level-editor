@@ -32,7 +32,7 @@ public class LineManager : MonoBehaviour
         lineRenderer.positionCount = 1;
     }
 
-    public void MoveTongueLine(Vector3 startPoint, Vector3 direction, CellGeneration.OrderType orderType, CellBase.ObjectColor objectColor)
+    public void MoveTongueLine(Vector3 startPoint, Vector3 direction, OrderType orderType, ObjectColor objectColor)
     {
         var temp = lineCollision.JustCheckCollisionReturnIfHit(startPoint, direction, orderType, objectColor);
 

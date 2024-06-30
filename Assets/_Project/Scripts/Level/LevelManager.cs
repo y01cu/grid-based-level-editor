@@ -1,4 +1,5 @@
 using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -135,6 +136,10 @@ public class LevelManager : IRMBListener
 
     public void QuitGame()
     {
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#endif
+
         Application.Quit();
     }
 

@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_Name
-      value: G_B
+      value: Berry Green
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
@@ -139,17 +139,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfc61399e879e964c815c70eb0bd346a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectColor: 0
+  objectType: 0
   obstacleMaterial: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
   normalMaterial: {fileID: 2100000, guid: 6057b183565e305408c03d7414808aff, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
-  properNaming:
-    color: 71
-    type: 66
   normalStateClip: {fileID: 8300000, guid: 5cae738135a18e142a8bdcb095144a64, type: 3}
-  rigidbody: {fileID: 4299544222555717156}
-  isMoving: 0
   boxCollider: {fileID: 2333523355673318724}
-  targetBoxCollider: {fileID: 0}
   meshRenderer: {fileID: 1564266439204673736}
 --- !u!54 &4299544222555717156
 Rigidbody:
@@ -176,7 +172,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 94
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!23 &1564266439204673736 stripped
 MeshRenderer:

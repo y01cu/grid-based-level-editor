@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Frog : Clickable
 {
-    private CellGeneration.OrderType orderType;
+    private OrderType orderType;
 
     [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
 
@@ -32,7 +32,7 @@ public class Frog : Clickable
         lineManager.MoveTongueLine(startPoint, direction, orderType, objectColor);
     }
 
-    public void SetOrderType(CellGeneration.OrderType newOrderType)
+    public void SetOrderType(OrderType newOrderType)
     {
         orderType = newOrderType;
     }

@@ -1646,37 +1646,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1231438832
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1231438833}
-  m_Layer: 0
-  m_Name: -- POST PROCESSING --
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1231438833
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231438832}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1505137659
 GameObject:
   m_ObjectHideFlags: 0
@@ -1955,7 +1924,7 @@ GameObject:
   - component: {fileID: 1699694746}
   - component: {fileID: 1699694745}
   m_Layer: 0
-  m_Name: LevelManager
+  m_Name: Level Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1973,8 +1942,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fcbc16c20749c42816f663b89d8ff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelFailedImage: {fileID: 719176693}
-  gameCompletedImage: {fileID: 312450874}
   moveCount: 8
 --- !u!4 &1699694746
 Transform:
@@ -2185,16 +2152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0487009a41ce4754790b8c7ca3e16e05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orderLength: 0
-  width: 4
-  height: 4
-  cellBases:
-  - {fileID: 3257195153420974243, guid: 2a328fd7f824fa94eb376a601ca850e8, type: 3}
-  - {fileID: 6218630723515409759, guid: 8df29ced29487e74285d80fc41397d88, type: 3}
-  - {fileID: 5513097400587629622, guid: a3436c7edc44f384eb123088ace4964b, type: 3}
-  - {fileID: -1059630805916366743, guid: 567dfbfa57696b7489deb087867e82dd, type: 3}
-  - {fileID: -9457170272729233, guid: 541b8dd9dc0112e42bb42e1994210e89, type: 3}
-  cellParentTransform: {fileID: 457691977}
   cellOrders:
   - cellColor: 0
     frogIndex: 0
@@ -2286,6 +2243,16 @@ MonoBehaviour:
     stepCount: 2
     orderType: 1
     finalBerryIndex: 2
+  cellBases:
+  - {fileID: 3257195153420974243, guid: 2a328fd7f824fa94eb376a601ca850e8, type: 3}
+  - {fileID: 6218630723515409759, guid: 8df29ced29487e74285d80fc41397d88, type: 3}
+  - {fileID: 5513097400587629622, guid: a3436c7edc44f384eb123088ace4964b, type: 3}
+  - {fileID: -1059630805916366743, guid: 567dfbfa57696b7489deb087867e82dd, type: 3}
+  - {fileID: -9457170272729233, guid: 541b8dd9dc0112e42bb42e1994210e89, type: 3}
+  cellParentTransform: {fileID: 457691977}
+  orderLength: 0
+  width: 4
+  height: 4
 --- !u!4 &2001982932
 Transform:
   m_ObjectHideFlags: 0
@@ -2313,7 +2280,7 @@ GameObject:
   - component: {fileID: 2109983749}
   - component: {fileID: 2109983748}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: Event System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2379,13 +2346,12 @@ SceneRoots:
   - {fileID: 1018096049}
   - {fileID: 457691977}
   - {fileID: 923139915}
-  - {fileID: 651965779}
   - {fileID: 1699694746}
+  - {fileID: 651965779}
   - {fileID: 2109983750}
   - {fileID: 480953337}
   - {fileID: 330585546}
   - {fileID: 1209791312}
   - {fileID: 410087041}
-  - {fileID: 1231438833}
   - {fileID: 1001554479}
   - {fileID: 616717911}
