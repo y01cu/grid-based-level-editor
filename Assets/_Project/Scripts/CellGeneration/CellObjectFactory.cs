@@ -16,13 +16,7 @@ public class CellObjectFactory
     {
         // var cellObject = Object.Instantiate(cellObjectPrefabs[(int)objectType], objectTargetTransformFromChild.position, Quaternion.identity);
         var cellObject = Object.Instantiate(cellObjectPrefabs[(int)objectType]);
-        cellObject.transform.position = new Vector3(0, 0, 0);
-        cellObject.transform.localPosition = objectTargetTransformFromChild.position;
-        cellObject.transform.DOScale(Vector3.zero, 2f).From();
-        cellObject.transform.Rotate(additionalRotationVector3);
-
         var cellObjectComponent = GrabCellObjectBasedOnObjectType(objectType, cellObject);
-        cellObjectComponent.Initialize(objectColor, objectType);
 
         if (cellObjectComponent is Arrow arrow)
         {
@@ -32,6 +26,12 @@ public class CellObjectFactory
         {
             frog.SetOrderType(orderType);
         }
+
+        cellObject.transform.position = new Vector3(0, 0, 0);
+        cellObject.transform.localPosition = objectTargetTransformFromChild.position;
+        cellObject.transform.DOScale(Vector3.zero, 2f).From();
+        cellObject.transform.Rotate(additionalRotationVector3);
+        cellObjectComponent.Initialize(objectColor, objectType);
 
         return cellObject;
     }

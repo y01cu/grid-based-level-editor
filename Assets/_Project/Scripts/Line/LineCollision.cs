@@ -64,7 +64,7 @@ public class LineCollision : MonoBehaviour
             if (currentCollider.CompareTag("Arrow"))
             {
                 HandleArrowCollision(currentCollider, orderType, objectColor);
-                // isAnyArrowHit = LongArrowCheck(orderType, objectColor, currentCollider);
+
                 isAnyArrowHit = true;
             }
 

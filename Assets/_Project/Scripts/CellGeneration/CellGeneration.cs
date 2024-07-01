@@ -23,9 +23,6 @@ public class CellGeneration : MonoBehaviour
     private Dictionary<Vector3, bool> pointsDictionary = new();
     private WaitForSeconds cellOrderDelay = new(0.2f);
     private const float LayerZAxisIncrement = -0.1f;
-    private const float XAxisAngle = -90;
-
-    // Attention! Everytime a grid layer is set the position of the next layer must increase for it to be placed on previous one.
 
     [Serializable]
     public class CellOrder

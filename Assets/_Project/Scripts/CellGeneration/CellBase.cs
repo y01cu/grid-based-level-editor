@@ -16,6 +16,7 @@ public class CellBase : MonoBehaviour
 
     private const float InitialWaitingTime = 2f;
     private const float DestructionWaitingTime = 3.5f;
+    private const float RayLength = 0.2f;
     private float timer;
     private bool isObjectSpawned;
     private bool isDeathOrderGiven;
@@ -94,16 +95,8 @@ public class CellBase : MonoBehaviour
         return Physics.Raycast(transform.position, transform.up, out RaycastHit hitInfo, length, collisionLayers);
     }
 
-    private void SetUpCellObject(CellObject cellObject)
-    {
-        cellObject.objectColor = objectColor;
-        cellObject.objectType = objectType;
-    }
-
     public void ChangeCellObjectType(ObjectType newObjectType)
     {
         objectType = newObjectType;
     }
-
-    private const float RayLength = 0.2f;
 }
