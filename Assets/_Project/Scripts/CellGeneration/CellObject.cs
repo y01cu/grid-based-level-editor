@@ -9,4 +9,10 @@ public abstract class CellObject : MonoBehaviour
     public AudioClip obstacleStateClip;
 
     public abstract void HandleBeingObstacle();
+
+    public virtual void Initialize(ObjectColor objectColor, ObjectType objectType)
+    {
+        this.objectColor = objectColor;
+        this.objectType = objectType;
+    }
 }

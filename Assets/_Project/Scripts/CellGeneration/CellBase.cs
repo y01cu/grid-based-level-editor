@@ -1,37 +1,32 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DG.Tweening;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class CellBase : MonoBehaviour
 {
     public GameObject[] CellObjectPrefabs;
-
     public ObjectColor objectColor;
     public ObjectType objectType;
-
-    private const float InitialWaitingTime = 2f;
-    private const float DestructionWaitingTime = 3.5f;
-    private bool isObjectSpawned;
-    private bool isDeathOrderGiven;
-    private float timer;
-
     public Direction arrowDirection;
-
-
     public Vector3 additionalRotationVector3;
-
     public OrderType orderType;
 
     [SerializeField] private Transform objectTargetTransformFromChild;
-
     [SerializeField] private LayerMask collisionLayers;
 
+    private const float InitialWaitingTime = 2f;
+    private const float DestructionWaitingTime = 3.5f;
+    private float timer;
+    private bool isObjectSpawned;
+    private bool isDeathOrderGiven;
     private bool isSpawningFinalBerryForFrog;
+
+    private CellObjectFactory cellObjectFactory;
+
+    private void Awake()
+    {
+        cellObjectFactory = new CellObjectFactory(CellObjectPrefabs, objectTargetTransformFromChild);
+    }
 
     public void SetAsSpawningFinalBerryForFrog()
     {
@@ -46,35 +41,57 @@ public class CellBase : MonoBehaviour
         }
     }
 
-    public GameObject CreateCellObject()
+    private void FixedUpdate()
     {
-        var cellObject = Instantiate(CellObjectPrefabs[(int)objectType]);
-        cellObject.transform.position = new Vector3(0, 0, 0);
-        cellObject.transform.DOScale(Vector3.zero, 2f).From();
-        cellObject.transform.localPosition = objectTargetTransformFromChild.position;
-        cellObject.transform.Rotate(additionalRotationVector3);
-
-        if (objectType == ObjectType.Arrow)
+        if (objectColor == ObjectColor._Empty)
         {
-            var arrowObject = cellObject.GetComponent<Arrow>();
-            arrowObject.SetDirection(arrowDirection);
-            SetUpCellObject(arrowObject);
+            return;
         }
 
-        else if (objectType == ObjectType.Frog)
+        timer += Time.deltaTime;
+
+        if (timer >= InitialWaitingTime && !isObjectSpawned)
         {
-            var frogObject = cellObject.GetComponentInChildren<Frog>();
-            frogObject.SetOrderType(orderType);
-            SetUpCellObject(frogObject);
+            TrySpawnObject();
         }
 
-        else if (objectType == ObjectType.Berry)
+        if (timer >= DestructionWaitingTime && isObjectSpawned && !isDeathOrderGiven)
         {
-            var berryObject = cellObject.GetComponent<CellObject>();
-            SetUpCellObject(berryObject);
+            TryDestroyObject();
         }
+    }
 
-        return cellObject;
+    private void TryDestroyObject()
+    {
+        if (!RaycastUp(RayLength * 2.75f))
+        {
+            isDeathOrderGiven = true;
+            transform.DOScale(Vector3.zero, 1f).onComplete += () =>
+            {
+                LevelManager.Instance.DecreaseActiveNonGrayCellCount();
+                Destroy(gameObject);
+            };
+        }
+    }
+
+    private void TrySpawnObject()
+    {
+        if (!RaycastUp(RayLength))
+        {
+            isObjectSpawned = true;
+            var cellObject = cellObjectFactory.CreateCellObject(objectType, additionalRotationVector3, arrowDirection, orderType, objectColor);
+            timer = 0;
+
+            if (isSpawningFinalBerryForFrog)
+            {
+                cellObject.GetComponent<Berry>().SetAsLastBerryForFrog();
+            }
+        }
+    }
+
+    private bool RaycastUp(float length)
+    {
+        return Physics.Raycast(transform.position, transform.up, out RaycastHit hitInfo, length, collisionLayers);
     }
 
     private void SetUpCellObject(CellObject cellObject)
@@ -89,54 +106,4 @@ public class CellBase : MonoBehaviour
     }
 
     private const float RayLength = 0.2f;
-
-    private void FixedUpdate()
-    {
-        if (objectColor == ObjectColor._Empty)
-        {
-            return;
-        }
-
-        timer += Time.deltaTime;
-
-        if (timer >= InitialWaitingTime && !isObjectSpawned)
-        {
-            Vector3 rayDirection = transform.up;
-
-            if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hitInfo, RayLength) && hitInfo.collider.gameObject.CompareTag("Cell"))
-            {
-                Debug.DrawRay(transform.position, rayDirection * RayLength, Color.green);
-            }
-            else
-            {
-                isObjectSpawned = true;
-                var cellObject = CreateCellObject();
-                timer = 0;
-
-                if (isSpawningFinalBerryForFrog)
-                {
-                    cellObject.GetComponent<Berry>().SetAsLastBerryForFrog();
-                }
-            }
-        }
-
-        if (timer >= DestructionWaitingTime && isObjectSpawned && !isDeathOrderGiven)
-        {
-            Vector3 rayDirection = transform.up;
-
-            if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hitInfo, RayLength * 2.75f, collisionLayers))
-            {
-                Debug.DrawRay(transform.position, rayDirection * RayLength * 2.75f, Color.green);
-            }
-            else
-            {
-                isDeathOrderGiven = true;
-                transform.DOScale(Vector3.zero, 1f).onComplete += () =>
-                {
-                    LevelManager.Instance.DecreaseActiveNonGrayCellCount();
-                    Destroy(gameObject);
-                };
-            }
-        }
-    }
 }

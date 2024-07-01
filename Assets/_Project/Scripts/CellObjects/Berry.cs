@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -7,137 +6,74 @@ using UnityEngine;
 public class Berry : Clickable
 {
     [SerializeField] private AudioClip normalStateClip;
-
     [SerializeField] private BoxCollider boxCollider;
-
     [SerializeField] private MeshRenderer meshRenderer;
 
     private LineRenderer lineRenderer;
-
-    private bool isHitable;
     private bool isTongueHit;
     private bool isDetected;
     private bool isLastBerryForFrog;
     private bool isLerping;
-
     private float lerpDuration;
     private float timeLeft;
 
+    private BerryCollisionHandler collisionHandler;
+
+    public bool IsTongueHit => isTongueHit;
+    public float TimeLeft => timeLeft;
+
+    private void Awake()
+    {
+        collisionHandler = new BerryCollisionHandler(this);
+    }
+
     private void Update()
     {
-        if (lineRenderer != null)
-        {
-            if (lineRenderer.positionCount < 2)
-            {
-                return;
-            }
+        if (lineRenderer == null || lineRenderer.positionCount < 2 || isLerping) return;
 
-            if (!isLerping)
-            {
-                StartCoroutine(LerpPosition(transform.localPosition, lineRenderer.GetPosition(lineRenderer.positionCount - 2), lerpDuration));
-            }
-        }
+        StartCoroutine(LerpPosition(transform.localPosition, lineRenderer.GetPosition(lineRenderer.positionCount - 2), lerpDuration));
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Berry"))
-        {
-            Berry otherBerry = other.gameObject.GetComponent<Berry>();
-
-            if (lineRenderer != null && otherBerry.GetLineRenderer() == null)
-            {
-                otherBerry.SetLineRenderer(lineRenderer, timeLeft);
-            }
-        }
+        collisionHandler.HandleCollision(other);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Frog"))
-        {
-            boxCollider.isTrigger = true;
-            List<Berry> detectedBerries = other.GetComponent<Frog>().lineManager.GetDetectedBerries();
-
-            transform.SetParent(null);
-
-            transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () =>
-            {
-                Destroy(gameObject);
-
-                detectedBerries.Remove(this);
-                if (detectedBerries.Count == 0)
-                {
-                    Destroy(other.gameObject.transform.parent.gameObject);
-                    Destroy(other.gameObject);
-                }
-            };
-        }
-
-        if (other.CompareTag("Tongue"))
-        {
-            Debug.Log("tongue hit berry");
-
-
-            if (!isTongueHit)
-            {
-                OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
-                SetTongueHit();
-                var frog = other.transform.parent.GetComponent<Frog>();
-                // frog.FreeBerriesForFrog += SetAsHitable;
-                frog.lineManager.GetDetectedBerries().Add(this);
-                isTongueHit = true;
-            }
-        }
-
-        if (other.CompareTag("Arrow"))
-        {
-            // Create a general method for destroying / tweening objects out
-
-            other.transform.DOScale(new Vector3(0, 0, 0), .5f).SetEase(Ease.Linear).onComplete += () => { Destroy(other.gameObject); };
-        }
+        collisionHandler.HandleTrigger(other);
     }
 
     private IEnumerator LerpPosition(Vector3 start, Vector3 end, float duration)
     {
         isLerping = true;
-
         float time = 0;
+
         while (time < duration)
         {
             transform.localPosition = Vector3.Lerp(start, end, time / duration);
             time += Time.deltaTime;
-
             timeLeft = duration - time;
             yield return null;
         }
 
         transform.localPosition = end;
-
         isLerping = false;
     }
 
     public override void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
-        Debug.Log($"this obj is clicked {gameObject.name} | is tong hit: {isTongueHit} | ishitable: {isHitable}");
+        if (IsTongueHit) return;
 
-        if (!isTongueHit || isHitable)
-        {
-            Debug.Log("berry started scaling here...");
-            base.OnClickedOverWithTargetScale(targetScale);
-
-            AudioManager.Instance.PlayAudioClip(normalStateClip);
-        }
+        base.OnClickedOverWithTargetScale(targetScale);
+        AudioManager.Instance.PlayAudioClip(normalStateClip);
     }
 
     public override async void HandleBeingObstacle()
     {
         AudioManager.Instance.PlayAudioClip(obstacleStateClip);
-
         meshRenderer.material = obstacleMaterial;
-
         await Task.Delay(1000);
-
         meshRenderer.material = normalMaterial;
     }
 
@@ -162,7 +98,6 @@ public class Berry : Clickable
     public void SetTongueHit()
     {
         isTongueHit = true;
-        isHitable = false;
     }
 
     public void SetAsLastBerryForFrog()
@@ -174,11 +109,6 @@ public class Berry : Clickable
     {
         isDetected = true;
     }
-
-    // public void SetAsHitable()
-    // {
-    //     isHitable = true;
-    // }
 
     public bool IsLastBerryForFrog()
     {
@@ -194,4 +124,7 @@ public class Berry : Clickable
     {
         return lineRenderer;
     }
+
+    // Expose necessary internal state for collision handling
+    public BoxCollider GetBoxCollider() => boxCollider;
 }
