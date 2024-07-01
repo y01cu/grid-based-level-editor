@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Arrow : CellObject
 {
-    private Direction direction;
-
     [SerializeField] private MeshRenderer meshRenderer;
+    
+    private Direction direction;
 
     public override async void HandleBeingObstacle()
     {

@@ -1,11 +1,9 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class LineCollision : MonoBehaviour
 {
+    public DetectedObjectStorage detectedObjectStorage = new();
     [SerializeField] private LayerMask collisionMask;
-
-    [NotNull] public DetectedObjectStorage detectedObjectStorage = new();
 
     private bool isCollidedWithLastBerry;
     private bool isObstacleHit;
@@ -16,7 +14,7 @@ public class LineCollision : MonoBehaviour
         set => isObstacleHit = value;
     }
 
-    public bool JustCheckCollisionReturnIfHit(Vector3 startPoint, Vector3 direction, OrderType orderType, ObjectColor objectColor)
+    public void JustCheckCollision(Vector3 startPoint, Vector3 direction, OrderType orderType, ObjectColor objectColor)
     {
         Debug.DrawRay(startPoint, direction, Color.black, 3f);
         float distance = direction.magnitude;
@@ -24,7 +22,7 @@ public class LineCollision : MonoBehaviour
 
         if (hits.Length == 0)
         {
-            return IsObstacleHit;
+            return;
         }
 
         Transform firstHit = hits[0].transform;
@@ -51,7 +49,7 @@ public class LineCollision : MonoBehaviour
 
                 IsObstacleHit = true;
 
-                return IsObstacleHit;
+                return;
             }
         }
 
@@ -76,10 +74,8 @@ public class LineCollision : MonoBehaviour
 
         if (hits.Length != 0 && !isAnyArrowHit && !isCollidedWithLastBerry && !IsObstacleHit)
         {
-            JustCheckCollisionReturnIfHit(startPoint + direction, direction, orderType, objectColor);
+            JustCheckCollision(startPoint + direction, direction, orderType, objectColor);
         }
-
-        return IsObstacleHit;
     }
 
     private void HandleArrowCollision(Collider currentCollider, OrderType orderType, ObjectColor objectColor)
@@ -90,15 +86,13 @@ public class LineCollision : MonoBehaviour
         detectedObjectStorage.points.Add(newPoint);
 
         // Since arrows change direction and the movement continues check collision till finding last berry. 
-        JustCheckCollisionReturnIfHit(currentCollider.transform.position, VectorHelper.GetDirectionVector(arrowDirection), orderType, objectColor);
+        JustCheckCollision(currentCollider.transform.position, VectorHelper.GetDirectionVector(arrowDirection), orderType, objectColor);
     }
 
     private void HandleBerryCollision(Collider currentCollider, ObjectColor objectColor)
     {
         Berry berry = currentCollider.GetComponent<Berry>();
-
         var isBerryPickable = berry.objectColor == objectColor && !berry.IsDetected();
-
         if (isBerryPickable)
         {
             berry.SetAsDetected();

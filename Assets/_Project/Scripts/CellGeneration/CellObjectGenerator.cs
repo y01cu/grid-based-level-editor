@@ -79,7 +79,7 @@ public class CellObjectGenerator
         CellBase cellBase = Object.Instantiate(cellBases[(int)cellOrder.cellColor], newPosition, targetRotation, layerParentObject.transform);
         cellBase.orderType = cellOrder.orderType;
 
-        CellObjectTypeSetter.SetCellObjectType(cellBase, cellOrder, x, y);
+        CellObjectTypeSetup.SetCellObjectType(cellBase, cellOrder, x, y);
 
         await Task.Delay(50);
     }

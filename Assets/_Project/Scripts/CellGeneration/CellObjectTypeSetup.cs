@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class CellObjectTypeSetter
+public static class CellObjectTypeSetup
 {
     public static void SetCellObjectType(CellBase cellBase, CellGeneration.CellOrder cellOrder, int x, int y)
     {

@@ -8,13 +8,15 @@ using UnityEngine.UI;
 public class UIManager : IRMBListener
 {
     public static UIManager Instance;
-
+    public Image levelFailedImage;
+    public Image gameCompletedImage;
+    
     [SerializeField] private TextMeshProUGUI movesTMP;
     [SerializeField] private TextMeshProUGUI levelTMP;
 
-    public Image levelFailedImage;
-    public Image gameCompletedImage;
-
+    private StringBuilder stringBuilder;
+    private WaitForSeconds initialDelayForSetup = new(0.5f);
+    
     private void Awake()
     {
         if (Instance != null)
@@ -27,11 +29,6 @@ public class UIManager : IRMBListener
         }
     }
 
-    private StringBuilder stringBuilder;
-
-    private WaitForSeconds initialDelayForSetup = new(0.5f);
-
-    // Start is called before the first frame update
     private IEnumerator Start()
     {
         yield return initialDelayForSetup;
@@ -43,10 +40,7 @@ public class UIManager : IRMBListener
 
         stringBuilder = new StringBuilder();
 
-        // Setup initial TMPs
-
         movesTMP.text = UpdateMovesTMP(LevelManager.Instance.GetRemaningMoveCount());
-
         levelTMP.text = SetupLevelTMP(LevelManager.Instance.GetLevelNumber());
     }
 

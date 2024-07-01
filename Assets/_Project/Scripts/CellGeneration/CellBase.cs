@@ -64,7 +64,7 @@ public class CellBase : MonoBehaviour
 
     private void TryDestroyObject()
     {
-        if (!RaycastUp(RayLength * 2.75f))
+        if (!VectorHelper.CheckRaycastUp(RayLength * 2.75f, transform, collisionLayers))
         {
             isDeathOrderGiven = true;
             transform.DOScale(Vector3.zero, 1f).onComplete += () =>
@@ -77,7 +77,7 @@ public class CellBase : MonoBehaviour
 
     private void TrySpawnObject()
     {
-        if (!RaycastUp(RayLength))
+        if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
         {
             isObjectSpawned = true;
             var cellObject = cellObjectFactory.CreateCellObject(objectType, additionalRotationVector3, arrowDirection, orderType, objectColor);
@@ -88,11 +88,6 @@ public class CellBase : MonoBehaviour
                 cellObject.GetComponent<Berry>().SetAsLastBerryForFrog();
             }
         }
-    }
-
-    private bool RaycastUp(float length)
-    {
-        return Physics.Raycast(transform.position, transform.up, out RaycastHit hitInfo, length, collisionLayers);
     }
 
     public void ChangeCellObjectType(ObjectType newObjectType)

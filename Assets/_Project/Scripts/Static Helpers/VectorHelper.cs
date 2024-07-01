@@ -20,13 +20,6 @@ public static class VectorHelper
         }
     }
 
-    /// <summary>
-    /// Checks point and updates points dictionary if necessary. 
-    /// </summary>
-    /// <param name="point"></param>
-    /// <param name="pointsDictionary"></param>
-    /// <param name="zLayerIncrement"></param>
-    /// <returns></returns>
     public static Vector3 CheckGivenDictionaryAndUpdateVector(Vector3 point, Dictionary<Vector3, bool> pointsDictionary, float zLayerIncrement)
     {
         if (pointsDictionary.ContainsKey(point))
@@ -37,5 +30,10 @@ public static class VectorHelper
 
         pointsDictionary.Add(point, true);
         return point;
+    }
+
+    public static bool CheckRaycastUp(float length, Transform transform, LayerMask layers)
+    {
+        return Physics.Raycast(transform.position, transform.up, length, layers);
     }
 }

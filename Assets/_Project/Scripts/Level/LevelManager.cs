@@ -54,8 +54,6 @@ public class LevelManager : IRMBListener
         {
             if (activeNonGrayCellCount == 0)
             {
-                Debug.Log("level no: " + levelNumber + " | scene count: " + SceneManager.sceneCountInBuildSettings);
-
                 if (levelNumber == SceneManager.sceneCountInBuildSettings)
                 {
                     UIManager.Instance.gameCompletedImage.gameObject.SetActive(true);

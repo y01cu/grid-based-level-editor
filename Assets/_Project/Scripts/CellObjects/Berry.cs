@@ -26,6 +26,11 @@ public class Berry : Clickable
     {
         collisionHandler = new BerryCollisionHandler(this);
     }
+    
+    private void Start()
+    {
+        isTweenable = true;
+    }
 
     private void Update()
     {

@@ -14,10 +14,8 @@ public class CellObjectFactory
 
     public GameObject CreateCellObject(ObjectType objectType, Vector3 additionalRotationVector3, Direction arrowDirection, OrderType orderType, ObjectColor objectColor)
     {
-        // var cellObject = Object.Instantiate(cellObjectPrefabs[(int)objectType], objectTargetTransformFromChild.position, Quaternion.identity);
         var cellObject = Object.Instantiate(cellObjectPrefabs[(int)objectType]);
         var cellObjectComponent = GrabCellObjectBasedOnObjectType(objectType, cellObject);
-
         if (cellObjectComponent is Arrow arrow)
         {
             arrow.SetDirection(arrowDirection);
