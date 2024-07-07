@@ -23,6 +23,5 @@ public abstract class Clickable : CellObject
     public void ResetAsTweenable()
     {
         isTweenable = true;
-        Debug.Log("here it is");
     }
 }
