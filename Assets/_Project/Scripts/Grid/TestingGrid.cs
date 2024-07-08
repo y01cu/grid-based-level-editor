@@ -6,27 +6,29 @@ public class TestingGrid : MonoBehaviour
 {
     [SerializeField] private Camera camera;
 
+    [SerializeField] private HeatMapVisual heatMapVisual;
+
     private GridSystem gridSystem;
     private float mouseMoveTimer;
-    private float mouseMoveTimerMax = .01f;
-
+    private float mouseMoveTimerMax = 0.01f;
 
     private void Start()
     {
-        gridSystem = new GridSystem(100, 100, 10f, new Vector3(0, 0));
+        gridSystem = new GridSystem(100, 100, 2f, Vector3.zero);
 
-        HeatMapVisual heatMapVisual = new HeatMapVisual(gridSystem, GetComponent<MeshFilter>());
+        heatMapVisual.SetGridSystem(gridSystem);
     }
 
     private void Update()
     {
-        HandleHeatMapMouseMove();
-        HandleClickToModifyGrid();
+        // HandleHeatMapMouseMove();
+        // HandleClickToModifyGrid();
 
-        // if (Input.GetMouseButtonDown(0))
-        // {
-        //     gridSystem.SetValue(camera.ScreenToWorldPoint(Input.mousePosition), 56);
-        // }
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 position = camera.ScreenToWorldPoint(Input.mousePosition);
+            gridSystem.AddValue(position, 100, 5, 40);
+        }
 
         // if (Input.GetMouseButtonDown(1))
         // {
@@ -54,56 +56,6 @@ public class TestingGrid : MonoBehaviour
             mouseMoveTimer += mouseMoveTimerMax;
             int gridValue = gridSystem.GetValue(camera.ScreenToWorldPoint(Input.mousePosition));
             gridSystem.SetValue(camera.ScreenToWorldPoint(Input.mousePosition), gridValue + 1);
-        }
-    }
-
-    private class HeatMapVisual
-    {
-        private GridSystem gridSystem;
-        private Mesh mesh;
-
-        public HeatMapVisual(GridSystem gridSystem, MeshFilter meshFilter)
-        {
-            this.gridSystem = gridSystem;
-
-            mesh = new Mesh();
-            meshFilter.mesh = mesh;
-
-            UpdateHeapMapVisual();
-
-            gridSystem.OnGridValueChanged += GridSystemOnOnGridValueChanged;
-        }
-
-        private void GridSystemOnOnGridValueChanged(object sender, GridSystem.OnGridValueChangedEventArgs e)
-        {
-            UpdateHeapMapVisual();
-        }
-
-        private void UpdateHeapMapVisual()
-        {
-            Vector3[] vertices;
-            Vector2[] uv;
-            int[] triangles;
-
-            MeshUtils.CreateEmptyMeshArrays(gridSystem.Width * gridSystem.Height, out vertices, out uv, out triangles);
-
-            for (int x = 0; x < gridSystem.Width; x++)
-            {
-                for (int y = 0; y < gridSystem.Height; y++)
-                {
-                    int index = x * gridSystem.Height + y;
-                    Vector3 baseSize = new Vector3(1, 1) * gridSystem.CellSize;
-                    int gridValue = gridSystem.GetValue(x, y);
-                    int maxGridValue = 100;
-                    float gridValueNormalized = Mathf.Clamp01((float)gridValue / maxGridValue);
-                    Vector2 gridCellUV = new Vector2(gridValueNormalized, 0f);
-                    MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, gridSystem.GetWorldPosition(x, y) + baseSize * .5f, 0f, baseSize, gridCellUV, gridCellUV);
-                }
-            }
-
-            mesh.vertices = vertices;
-            mesh.uv = uv;
-            mesh.triangles = triangles;
         }
     }
 }

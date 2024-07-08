@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using CodeMonkey.Utils;
 using UnityEngine;
 
@@ -8,6 +6,8 @@ using UnityEngine;
 public class GridSystem
 {
     public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
+    public const int HEAT_MAP_MAX_VALUE = 100;
+    public const int HEAT_MAP_MIN_VALUE = 0;
 
     public class OnGridValueChangedEventArgs : EventArgs
     {
@@ -41,20 +41,25 @@ public class GridSystem
         this.originPosition = originPosition;
 
         gridArray = new int[width, height];
-        debugTextArray = new TextMesh[width, height];
 
-        for (int x = 0; x < gridArray.GetLength(0); x++)
+        bool isDebugMode = true;
+
+        if (isDebugMode)
         {
-            for (int y = 0; y < gridArray.GetLength(1); y++)
+            debugTextArray = new TextMesh[width, height];
+            for (int x = 0; x < gridArray.GetLength(0); x++)
             {
-                debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 10, Color.red, TextAnchor.MiddleCenter);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.red, 100f);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.red, 100f);
+                for (int y = 0; y < gridArray.GetLength(1); y++)
+                {
+                    debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 12, Color.white, TextAnchor.MiddleCenter);
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
+                }
             }
-        }
 
-        Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.red, 100f);
-        Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.red, 100f);
+            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
+            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
+        }
     }
 
 
@@ -72,8 +77,11 @@ public class GridSystem
     {
         if (x >= 0 && y >= 0 && x < width && y < height)
         {
-            gridArray[x, y] = value;
+            gridArray[x, y] = Mathf.Clamp(value, HEAT_MAP_MIN_VALUE, HEAT_MAP_MAX_VALUE);
+
             OnGridValueChanged?.Invoke(this, new OnGridValueChangedEventArgs(x, y));
+
+
             // debugTextArray[x, y].text = gridArray[x, y].ToString();
         }
     }
@@ -99,5 +107,44 @@ public class GridSystem
     {
         GridPosition gridPos = GetGridPosition(worldPosition);
         return GetValue(gridPos.x, gridPos.y);
+    }
+
+    public void AddValue(int x, int y, int value)
+    {
+        SetValue(x, y, GetValue(x, y) + value);
+    }
+
+    public void AddValue(Vector3 worldPosition, int value, int fullValueRange, int totalRange)
+    {
+        int lowerValueAmount = Mathf.RoundToInt((float)value / (totalRange - fullValueRange));
+        GridPosition gridPosition = GetGridPosition(worldPosition);
+        for (int x = 0; x < totalRange; x++)
+        {
+            for (int y = 0; y < totalRange - x; y++)
+            {
+                int radius = x + y;
+                int addValueAmount = value;
+                if (radius > fullValueRange)
+                {
+                    addValueAmount -= lowerValueAmount * (radius - fullValueRange);
+                }
+
+                AddValue(gridPosition.x + x, gridPosition.y + y, addValueAmount);
+
+                if (x != 0)
+                {
+                    AddValue(gridPosition.x - x, gridPosition.y + y, addValueAmount);
+                }
+
+                if (y != 0)
+                {
+                    AddValue(gridPosition.x + x, gridPosition.y - y, addValueAmount);
+                    if (x != 0)
+                    {
+                        AddValue(gridPosition.x - x, gridPosition.y - y, addValueAmount);
+                    }
+                }
+            }
+        }
     }
 }
