@@ -1,11 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HeatMapVisual : MonoBehaviour
 {
-    private GridSystem gridSystem;
+    private GridSystem<HeatMapGridObject> gridSystem;
     private Mesh mesh;
     private bool isMeshReadyToUpdate;
 
@@ -15,17 +12,16 @@ public class HeatMapVisual : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    public void SetGridSystem(GridSystem gridSystem)
+    public void SetGridSystem(GridSystem<HeatMapGridObject> gridSystem)
     {
         this.gridSystem = gridSystem;
         UpdateHeapMapVisual();
 
-        gridSystem.OnGridValueChanged += GridSystemOnOnGridValueChanged;
+        gridSystem.OnGridObjectChanged += GridSystemOnGridObjectChanged;
     }
 
-    private void GridSystemOnOnGridValueChanged(object sender, GridSystem.OnGridValueChangedEventArgs e)
+    private void GridSystemOnGridObjectChanged(object sender, GridSystem<HeatMapGridObject>.OnGridValueChangedEventArgs e)
     {
-        // UpdateHeapMapVisual();
         isMeshReadyToUpdate = true;
     }
 
@@ -47,13 +43,12 @@ public class HeatMapVisual : MonoBehaviour
             for (int y = 0; y < gridSystem.Height; y++)
             {
                 int index = x * gridSystem.Height + y;
-
                 Vector3 quadSize = new Vector3(1, 1) * gridSystem.CellSize;
-                int gridValue = gridSystem.GetValue(x, y);
-                int maxGridValue = 100;
-                float gridValueNormalized = Mathf.Clamp01((float)gridValue / maxGridValue);
-                Vector2 gridCellUV = new Vector2(gridValueNormalized, 0f);
-                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, gridSystem.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridCellUV, gridCellUV);
+                HeatMapGridObject gridObject = gridSystem.GetGridObject(x, y);
+                // int maxGridValue = 100;
+                float gridValueNormalized = gridObject.GetValueNormalized();
+                Vector2 gridValueUV = new Vector2(gridValueNormalized, 0f);
+                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, gridSystem.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridValueUV, gridValueUV);
             }
         }
 
