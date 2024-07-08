@@ -2,7 +2,7 @@ using CodeMonkey.Utils;
 using UnityEditor;
 using UnityEngine;
 
-public class TestingGrid : MonoBehaviour
+public class TestingGenericHeatmapGrid : MonoBehaviour
 {
     [SerializeField] private Camera camera;
     [SerializeField] private HeatMapVisual heatMapVisual;
