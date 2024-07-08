@@ -49,7 +49,7 @@ public class GridSystem<TGridObject>
             }
         }
 
-        bool isDebugMode = false;
+        bool isDebugMode = true;
         if (isDebugMode)
         {
             TextMesh[,] debugTextArray = new TextMesh[width, height];
@@ -62,8 +62,7 @@ public class GridSystem<TGridObject>
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
                 }
             }
-            
-            
+
 
             Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
             Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,12 +44,18 @@ public class TilemapVisual : MonoBehaviour
         }
     }
 
-    public void SetGridSystem(GridSystem<TilemapGrid.TilemapObject> gridSystem)
+    public void SetGridSystem(TilemapGrid tilemapGrid, GridSystem<TilemapGrid.TilemapObject> gridSystem)
     {
         this.gridSystem = gridSystem;
         UpdateTilemapVisual();
 
         gridSystem.OnGridObjectChanged += GridSystemOnGridObjectChanged;
+        tilemapGrid.OnLoaded += TilemapGridOnOnLoaded;
+    }
+
+    private void TilemapGridOnOnLoaded(object sender, EventArgs e)
+    {
+        isMeshReadyToUpdate = true;
     }
 
     private void GridSystemOnGridObjectChanged(object sender, GridSystem<TilemapGrid.TilemapObject>.OnGridValueChangedEventArgs e)

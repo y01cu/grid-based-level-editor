@@ -11,7 +11,7 @@ public class NewTesting : MonoBehaviour
     private void Start()
     {
         tilemapGrid = new TilemapGrid(20, 10, 5f, Vector3.zero);
-        tilemapGrid.SetTilemapVisualGrid(tilemapVisual);
+        tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
     }
 
     private void Update()
@@ -38,6 +38,18 @@ public class NewTesting : MonoBehaviour
         {
             tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Frog;
             Debug.Log("frog");
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            tilemapGrid.Save();
+            Debug.Log("saved!");
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            tilemapGrid.Load();
+            Debug.Log("loaded!");
         }
     }
 }
