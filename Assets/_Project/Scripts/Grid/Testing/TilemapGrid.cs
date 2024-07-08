@@ -34,6 +34,7 @@ public class TilemapGrid
             for (int y = 0; y < gridSystem.Height; y++)
             {
                 TilemapObject tilemapObject = gridSystem.GetGridObject(x, y);
+
                 tilemapObjectSaveObjectList.Add(tilemapObject.Save());
             }
         }
@@ -46,13 +47,71 @@ public class TilemapGrid
     public void Load()
     {
         SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
+
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObject(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             tilemapObject.Load(tilemapObjectSaveObject);
+            gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            Debug.Log($"loaded tilemap obj: {tilemapObject} | on x: {tilemapObjectSaveObject.x} y: {tilemapObjectSaveObject.y}");
         }
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void LoadWithCellBases(CellBase[] cellBases)
+    {
+        SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
+
+        foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
+        {
+            var tilemapObject = gridSystem.GetGridObject(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            tilemapObject.Load(tilemapObjectSaveObject);
+            gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            Debug.Log($"loaded tilemap obj: {tilemapObject} | on x: {tilemapObjectSaveObject.x} y: {tilemapObjectSaveObject.y}");
+            var newPos = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
+            if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSprite.None)
+            {
+                continue;
+            }
+
+            CreateObjectBasedOnSpriteWithPosition(cellBases, tilemapObject.GetTilemapSprite(), newPos);
+        }
+
+
+        OnLoaded?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void CreateObjectBasedOnSpriteWithPosition(CellBase[] cellBases, TilemapObject.TilemapSprite tilemapSprite, Vector3 pos)
+    {
+        if (tilemapSprite == TilemapObject.TilemapSprite.Blue)
+        {
+            SetObjectToInstantiate(cellBases[1].gameObject);
+        }
+
+        if (tilemapSprite == TilemapObject.TilemapSprite.Green)
+        {
+            SetObjectToInstantiate(cellBases[2].gameObject);
+        }
+
+        if (tilemapSprite == TilemapObject.TilemapSprite.Red)
+        {
+            SetObjectToInstantiate(cellBases[3].gameObject);
+        }
+
+        if (tilemapSprite == TilemapObject.TilemapSprite.Yellow)
+        {
+            SetObjectToInstantiate(cellBases[4].gameObject);
+        }
+
+        GameObject.Instantiate(gameObj, pos, Quaternion.Euler(270, 0, 0));
+    }
+
+    private GameObject gameObj;
+
+    public void SetObjectToInstantiate(GameObject newGameObject)
+    {
+        gameObj = newGameObject;
     }
 
     public class SaveObject
@@ -63,11 +122,14 @@ public class TilemapGrid
 
     public class TilemapObject
     {
+        [Serializable]
         public enum TilemapSprite
         {
             None,
-            Ground,
-            Frog
+            Blue,
+            Green,
+            Red,
+            Yellow
         }
 
         private GridSystem<TilemapObject> gridSystem;

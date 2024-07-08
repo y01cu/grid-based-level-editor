@@ -23,6 +23,8 @@ public class TilemapVisual : MonoBehaviour
     private Mesh mesh;
     private bool isMeshReadyToUpdate;
     private Dictionary<TilemapGrid.TilemapObject.TilemapSprite, UVCoords> uvCoordsDictionary;
+    private MeshRenderer meshRenderer;
+
 
     private void Awake()
     {
@@ -32,6 +34,12 @@ public class TilemapVisual : MonoBehaviour
         Texture texture = GetComponent<MeshRenderer>().material.mainTexture;
         float textureHeight = texture.height;
         float textureWidth = texture.width;
+
+        meshRenderer = GetComponent<MeshRenderer>();
+
+        // var meshRenderer = GetComponent<MeshRenderer>();
+        // meshRenderer.material.color = Color.cyan;
+
 
         uvCoordsDictionary = new Dictionary<TilemapGrid.TilemapObject.TilemapSprite, UVCoords>();
         foreach (var tilemapSpriteUV in tilemapSpriteUvArray)

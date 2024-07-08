@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class NewTesting : MonoBehaviour
@@ -10,8 +11,15 @@ public class NewTesting : MonoBehaviour
 
     private void Start()
     {
-        tilemapGrid = new TilemapGrid(20, 10, 5f, Vector3.zero);
+        AdjustSpriteButton.AdjustSpriteToColor += SetSprite;
+        tilemapGrid = new TilemapGrid(4, 4, 3f, Vector3.zero);
         tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
+    }
+
+    private void SetSprite(TilemapGrid.TilemapObject.TilemapSprite newTilemapSprite)
+    {
+        tilemapSprite = newTilemapSprite;
+        Debug.Log($"updated to: {newTilemapSprite.ToString()}");
     }
 
     private void Update()
@@ -28,16 +36,28 @@ public class NewTesting : MonoBehaviour
             Debug.Log("none");
         }
 
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Ground;
-            Debug.Log("ground");
+            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Blue;
+            Debug.Log("blue");
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.G))
         {
-            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Frog;
-            Debug.Log("frog");
+            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Green;
+            Debug.Log("green");
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Red;
+            Debug.Log("red");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Yellow;
+            Debug.Log("yellow");
         }
 
         if (Input.GetKeyDown(KeyCode.S))
@@ -51,5 +71,10 @@ public class NewTesting : MonoBehaviour
             tilemapGrid.Load();
             Debug.Log("loaded!");
         }
+    }
+
+    private void OnDestroy()
+    {
+        AdjustSpriteButton.AdjustSpriteToColor -= SetSprite;
     }
 }

@@ -52,6 +52,16 @@ public class CellGeneration : MonoBehaviour
 
     private IEnumerator Start()
     {
+        yield return new WaitForSeconds(.2f);
+        tilemapGrid = new TilemapGrid(4, 4, 3f, Vector3.zero);
+        // StartCoroutine(ProcessCellOrders());
+        // tilemapGrid.SetObjectToInstantiate(cellBases[1].gameObject);
+        // tilemapGrid.Load();
+        tilemapGrid.LoadWithCellBases(cellBases);
+    }
+
+    private IEnumerator ProcessCellOrders()
+    {
         CellOrderProcessor cellOrderProcessor = new CellOrderProcessor(cellOrders, Height);
         foreach (var cellOrder in cellOrderProcessor.ProcessOrders())
         {
@@ -60,4 +70,29 @@ public class CellGeneration : MonoBehaviour
             yield return cellOrderDelay;
         }
     }
+
+    #region TestLoadSystem
+
+    private TilemapGrid tilemapGrid;
+
+    private GridSystem<TilemapGrid.TilemapObject> gridSystem;
+
+
+    // public void Load()
+    // {
+    //     TilemapGrid.SaveObject saveObject = SaveSystem.LoadMostRecentObject<TilemapGrid.SaveObject>();
+    //
+    //     foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
+    //     {
+    //         var tilemapObject = gridSystem.GetGridObject(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+    //         tilemapObject.Load(tilemapObjectSaveObject);
+    //         gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+    //         Debug.Log($"loaded tilemap obj: {tilemapObject}");
+    //     }
+    //
+    //
+    //     // OnLoaded?.Invoke(this, EventArgs.Empty);
+    // }
+
+    #endregion
 }
