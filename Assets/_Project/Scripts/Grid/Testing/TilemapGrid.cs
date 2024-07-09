@@ -78,7 +78,7 @@ public class TilemapGrid
             }
 
             ChangeObjectSpriteOnPosition(cellBases, tilemapObject.GetTilemapSprite());
-            // ChangeObjectType(tilemapObject.GetTilemapObjectType());
+            ChangeObjectType(tilemapObject.GetTilemapObjectType());
 
             Object.Instantiate(cellBaseObj, newPos, Quaternion.Euler(270, 0, 0));
         }
