@@ -52,6 +52,18 @@ public class CellGeneration : MonoBehaviour
 
     private IEnumerator Start()
     {
+        yield return new WaitForSeconds(.2f);
+        tilemapGrid = new TilemapGrid(4, 4, 3f, Vector3.zero);
+        
+        // StartCoroutine(ProcessCellOrders());
+        // tilemapGrid.SetObjectToInstantiate(cellBases[1].gameObject);
+        // tilemapGrid.Load();
+        
+        tilemapGrid.LoadWithCellBases(cellBases);
+    }
+
+    private IEnumerator ProcessCellOrders()
+    {
         CellOrderProcessor cellOrderProcessor = new CellOrderProcessor(cellOrders, Height);
         foreach (var cellOrder in cellOrderProcessor.ProcessOrders())
         {
