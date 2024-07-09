@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TilemapVisual : MonoBehaviour
 {
     [System.Serializable]
     public struct TilemapSpriteUV
     {
-        public TilemapGrid.TilemapObject.TilemapSprite tilemapSprite;
+        [FormerlySerializedAs("tilemapSprite")]
+        public TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
+
         public Vector2Int uv00Pixels;
         public Vector2Int uv11Pixels;
     }
@@ -22,7 +25,7 @@ public class TilemapVisual : MonoBehaviour
     private GridSystem<TilemapGrid.TilemapObject> gridSystem;
     private Mesh mesh;
     private bool isMeshReadyToUpdate;
-    private Dictionary<TilemapGrid.TilemapObject.TilemapSprite, UVCoords> uvCoordsDictionary;
+    private Dictionary<TilemapGrid.TilemapObject.TilemapSpriteTexture, UVCoords> uvCoordsDictionary;
     private MeshRenderer meshRenderer;
 
 
@@ -41,10 +44,10 @@ public class TilemapVisual : MonoBehaviour
         // meshRenderer.material.color = Color.cyan;
 
 
-        uvCoordsDictionary = new Dictionary<TilemapGrid.TilemapObject.TilemapSprite, UVCoords>();
+        uvCoordsDictionary = new Dictionary<TilemapGrid.TilemapObject.TilemapSpriteTexture, UVCoords>();
         foreach (var tilemapSpriteUV in tilemapSpriteUvArray)
         {
-            uvCoordsDictionary[tilemapSpriteUV.tilemapSprite] = new UVCoords
+            uvCoordsDictionary[tilemapSpriteUV.tilemapSpriteTexture] = new UVCoords
             {
                 uv00 = new Vector2(tilemapSpriteUV.uv00Pixels.x / textureWidth, tilemapSpriteUV.uv00Pixels.y / textureHeight),
                 uv11 = new Vector2(tilemapSpriteUV.uv11Pixels.x / textureWidth, tilemapSpriteUV.uv11Pixels.y / textureHeight),
@@ -92,11 +95,13 @@ public class TilemapVisual : MonoBehaviour
                 Vector3 quadSize = new Vector3(1, 1) * gridSystem.CellSize;
 
                 TilemapGrid.TilemapObject gridObject = gridSystem.GetGridObject(x, y);
-                TilemapGrid.TilemapObject.TilemapSprite tilemapSprite = gridObject.GetTilemapSprite();
+                TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture = gridObject.GetTilemapSprite();
+
+                Debug.Log("here's texture" + tilemapSpriteTexture);
 
                 Vector2 gridValueUV00;
                 Vector2 gridValueUV11;
-                if (tilemapSprite == TilemapGrid.TilemapObject.TilemapSprite.None)
+                if (tilemapSpriteTexture == TilemapGrid.TilemapObject.TilemapSpriteTexture.None)
                 {
                     gridValueUV00 = Vector2.zero;
                     gridValueUV11 = Vector2.zero;
@@ -104,7 +109,7 @@ public class TilemapVisual : MonoBehaviour
                 }
                 else
                 {
-                    UVCoords uvCoords = uvCoordsDictionary[tilemapSprite];
+                    UVCoords uvCoords = uvCoordsDictionary[tilemapSpriteTexture];
                     gridValueUV00 = uvCoords.uv00;
                     gridValueUV11 = uvCoords.uv11;
                 }

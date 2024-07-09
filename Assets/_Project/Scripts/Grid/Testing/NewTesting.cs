@@ -6,20 +6,35 @@ public class NewTesting : MonoBehaviour
     [SerializeField] private Camera camera;
     [SerializeField] private TilemapVisual tilemapVisual;
 
-    private TilemapGrid.TilemapObject.TilemapSprite tilemapSprite;
+    private TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
+    private TilemapGrid.TilemapObject.TilemapObjectType tilemapObjectType;
     private TilemapGrid tilemapGrid;
+
+    private string typeName;
 
     private void Start()
     {
-        AdjustSpriteButton.AdjustSpriteToColor += SetSprite;
+        AdjustTypeButton.AdjustTileObjectType += SetObjectType;
+        AdjustSpriteButton.AdjustSpriteTexture += SetSprite;
         tilemapGrid = new TilemapGrid(4, 4, 3f, Vector3.zero);
         tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
     }
 
-    private void SetSprite(TilemapGrid.TilemapObject.TilemapSprite newTilemapSprite)
+    private void AdjustTileObject(string newTypeName)
     {
-        tilemapSprite = newTilemapSprite;
-        Debug.Log($"updated to: {newTilemapSprite.ToString()}");
+        typeName = newTypeName;
+    }
+
+    private void SetSprite(TilemapGrid.TilemapObject.TilemapSpriteTexture newTilemapSpriteTexture)
+    {
+        tilemapSpriteTexture = newTilemapSpriteTexture;
+        Debug.Log($"updated to: {newTilemapSpriteTexture.ToString()}");
+    }
+
+    private void SetObjectType(TilemapGrid.TilemapObject.TilemapObjectType newType)
+    {
+        tilemapObjectType = newType;
+        Debug.Log($"changed to type: {tilemapObjectType}");
     }
 
     private void Update()
@@ -27,36 +42,36 @@ public class NewTesting : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-            tilemapGrid.SetTilemapSprite(mouseWorldPosition, tilemapSprite);
+            tilemapGrid.SetupTilemapOnPosition(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectType);
         }
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.None;
+            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.None;
             Debug.Log("none");
         }
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Blue;
+            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Blue;
             Debug.Log("blue");
         }
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Green;
+            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Green;
             Debug.Log("green");
         }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Red;
+            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Red;
             Debug.Log("red");
         }
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            tilemapSprite = TilemapGrid.TilemapObject.TilemapSprite.Yellow;
+            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Yellow;
             Debug.Log("yellow");
         }
 
@@ -75,6 +90,6 @@ public class NewTesting : MonoBehaviour
 
     private void OnDestroy()
     {
-        AdjustSpriteButton.AdjustSpriteToColor -= SetSprite;
+        AdjustSpriteButton.AdjustSpriteTexture -= SetSprite;
     }
 }

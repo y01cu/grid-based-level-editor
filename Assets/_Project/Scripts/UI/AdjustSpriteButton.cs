@@ -1,16 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AdjustSpriteButton : MonoBehaviour
 {
-    [SerializeField] private TilemapGrid.TilemapObject.TilemapSprite tilemapSprite;
+    [SerializeField] private TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
 
-    public static event Action<TilemapGrid.TilemapObject.TilemapSprite> AdjustSpriteToColor;
+    public static event Action<TilemapGrid.TilemapObject.TilemapSpriteTexture> AdjustSpriteTexture;
 
     public void UpdateSprite()
     {
-        AdjustSpriteToColor?.Invoke(tilemapSprite);
+        AdjustSpriteTexture?.Invoke(tilemapSpriteTexture);
     }
 }

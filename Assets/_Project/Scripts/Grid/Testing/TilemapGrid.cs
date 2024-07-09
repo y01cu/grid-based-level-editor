@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Mono.CSharp;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 public class TilemapGrid
 {
@@ -15,10 +17,10 @@ public class TilemapGrid
         gridSystem = new GridSystem<TilemapObject>(width, height, cellSize, originPosition, (GridSystem<TilemapObject> g, int x, int y) => new TilemapObject(g, x, y));
     }
 
-    public void SetTilemapSprite(Vector3 worldPosition, TilemapObject.TilemapSprite tilemapSprite)
+    public void SetupTilemapOnPosition(Vector3 worldPosition, TilemapObject.TilemapSpriteTexture tilemapSpriteTexture, TilemapObject.TilemapObjectType tilemapObjectType)
     {
         TilemapObject tilemapObject = gridSystem.GetGridObject(worldPosition);
-        tilemapObject?.SetTilemapSprite(tilemapSprite);
+        tilemapObject?.SetTilemapSpriteAndType(tilemapSpriteTexture, tilemapObjectType);
     }
 
     public void SetTilemapVisualGrid(TilemapGrid tilemapGrid, TilemapVisual tilemapVisual)
@@ -70,48 +72,53 @@ public class TilemapGrid
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             Debug.Log($"loaded tilemap obj: {tilemapObject} | on x: {tilemapObjectSaveObject.x} y: {tilemapObjectSaveObject.y}");
             var newPos = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
-            if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSprite.None)
+            if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSpriteTexture.None)
             {
                 continue;
             }
 
-            CreateObjectBasedOnSpriteWithPosition(cellBases, tilemapObject.GetTilemapSprite(), newPos);
+            ChangeObjectSpriteOnPosition(cellBases, tilemapObject.GetTilemapSprite());
+            // ChangeObjectType(tilemapObject.GetTilemapObjectType());
+
+            Object.Instantiate(cellBaseObj, newPos, Quaternion.Euler(270, 0, 0));
         }
 
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
     }
 
-    public void CreateObjectBasedOnSpriteWithPosition(CellBase[] cellBases, TilemapObject.TilemapSprite tilemapSprite, Vector3 pos)
+    private void ChangeObjectType(TilemapObject.TilemapObjectType tilemapObjectType)
     {
-        if (tilemapSprite == TilemapObject.TilemapSprite.Blue)
+        var cellObjectType = tilemapObjectType switch
         {
-            SetObjectToInstantiate(cellBases[1].gameObject);
-        }
+            TilemapObject.TilemapObjectType.Arrow => ObjectType.Arrow,
+            TilemapObject.TilemapObjectType.Berry => ObjectType.Berry,
+            TilemapObject.TilemapObjectType.Frog => ObjectType.Frog,
+        };
 
-        if (tilemapSprite == TilemapObject.TilemapSprite.Green)
-        {
-            SetObjectToInstantiate(cellBases[2].gameObject);
-        }
-
-        if (tilemapSprite == TilemapObject.TilemapSprite.Red)
-        {
-            SetObjectToInstantiate(cellBases[3].gameObject);
-        }
-
-        if (tilemapSprite == TilemapObject.TilemapSprite.Yellow)
-        {
-            SetObjectToInstantiate(cellBases[4].gameObject);
-        }
-
-        GameObject.Instantiate(gameObj, pos, Quaternion.Euler(270, 0, 0));
+        cellBaseObj.objectType = cellObjectType;
     }
 
-    private GameObject gameObj;
-
-    public void SetObjectToInstantiate(GameObject newGameObject)
+    public void ChangeObjectSpriteOnPosition(CellBase[] cellBases, TilemapObject.TilemapSpriteTexture tilemapSpriteTexture)
     {
-        gameObj = newGameObject;
+        var objectIndex = tilemapSpriteTexture switch
+        {
+            TilemapObject.TilemapSpriteTexture.Blue => 1,
+            TilemapObject.TilemapSpriteTexture.Green => 2,
+            TilemapObject.TilemapSpriteTexture.Red => 3,
+            TilemapObject.TilemapSpriteTexture.Yellow => 4,
+        };
+
+        SetObjectToInstantiate(cellBases[objectIndex]);
+
+        // GameObject.Instantiate(cellBaseObj, pos, Quaternion.Euler(270, 0, 0));
+    }
+
+    private CellBase cellBaseObj;
+
+    public void SetObjectToInstantiate(CellBase newCellBaseObj)
+    {
+        cellBaseObj = newCellBaseObj;
     }
 
     public class SaveObject
@@ -123,19 +130,28 @@ public class TilemapGrid
     public class TilemapObject
     {
         [Serializable]
-        public enum TilemapSprite
+        public enum TilemapSpriteTexture
         {
-            None,
-            Blue,
-            Green,
-            Red,
-            Yellow
+            None = 0,
+            Blue = 1,
+            Green = 2,
+            Red = 3,
+            Yellow = 4
+        }
+
+        public enum TilemapObjectType
+        {
+            None = 0,
+            Arrow = 1,
+            Berry = 2,
+            Frog = 3
         }
 
         private GridSystem<TilemapObject> gridSystem;
         private int x;
         private int y;
-        private TilemapSprite tilemapSprite;
+        private TilemapSpriteTexture tilemapSpriteTexture;
+        private TilemapObjectType tilemapObjectType;
 
         public TilemapObject(GridSystem<TilemapObject> gridSystem, int x, int y)
         {
@@ -144,26 +160,37 @@ public class TilemapGrid
             this.y = y;
         }
 
-        public TilemapSprite GetTilemapSprite()
+        public TilemapSpriteTexture GetTilemapSprite()
         {
-            return tilemapSprite;
+            return tilemapSpriteTexture;
         }
 
-        public void SetTilemapSprite(TilemapSprite tilemapSprite)
+        public TilemapObjectType GetTilemapObjectType()
         {
-            this.tilemapSprite = tilemapSprite;
+            return tilemapObjectType;
+        }
+
+        public void SetTilemapSpriteAndType(TilemapSpriteTexture newTexture, TilemapObjectType newType)
+        {
+            this.tilemapSpriteTexture = newTexture;
+            this.tilemapObjectType = newType;
             gridSystem.TriggerGridObjectChanged(x, y);
         }
 
         public override string ToString()
         {
-            return tilemapSprite.ToString();
+            // return _tilemapSpriteTexture.ToString();
+            return tilemapObjectType.ToString();
         }
 
         [Serializable]
         public class SaveObject
         {
-            public TilemapSprite tilemapSprite;
+            [FormerlySerializedAs("tilemapSprite")]
+            public TilemapSpriteTexture tilemapSpriteTexture;
+
+            public TilemapObjectType tilemapObjectType;
+
             public int x;
             public int y;
         }
@@ -172,7 +199,8 @@ public class TilemapGrid
         {
             return new SaveObject
             {
-                tilemapSprite = tilemapSprite,
+                tilemapSpriteTexture = tilemapSpriteTexture,
+                tilemapObjectType = tilemapObjectType,
                 x = x,
                 y = y
             };
@@ -180,7 +208,8 @@ public class TilemapGrid
 
         public void Load(SaveObject saveObject)
         {
-            tilemapSprite = saveObject.tilemapSprite;
+            tilemapSpriteTexture = saveObject.tilemapSpriteTexture;
+            tilemapObjectType = saveObject.tilemapObjectType;
         }
     }
 }
