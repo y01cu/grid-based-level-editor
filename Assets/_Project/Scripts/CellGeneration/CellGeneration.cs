@@ -72,4 +72,29 @@ public class CellGeneration : MonoBehaviour
             yield return cellOrderDelay;
         }
     }
+
+    #region TestLoadSystem
+
+    private TilemapGrid tilemapGrid;
+
+    private GridSystem<TilemapGrid.TilemapObject> gridSystem;
+
+
+    // public void Load()
+    // {
+    //     TilemapGrid.SaveObject saveObject = SaveSystem.LoadMostRecentObject<TilemapGrid.SaveObject>();
+    //
+    //     foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
+    //     {
+    //         var tilemapObject = gridSystem.GetGridObject(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+    //         tilemapObject.Load(tilemapObjectSaveObject);
+    //         gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+    //         Debug.Log($"loaded tilemap obj: {tilemapObject}");
+    //     }
+    //
+    //
+    //     // OnLoaded?.Invoke(this, EventArgs.Empty);
+    // }
+
+    #endregion
 }

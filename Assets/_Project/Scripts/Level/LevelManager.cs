@@ -12,7 +12,7 @@ public class LevelManager : IRMBListener
     private int activeNonGrayCellCount;
     private int levelNumber;
     private float timer;
-    private float activationInitialDelay = 3;
+    private float activationInitialDelay = 10; // prev: 3
     private bool isGameEnded;
 
     #region Singleton
