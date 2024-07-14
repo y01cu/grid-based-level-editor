@@ -33,6 +33,7 @@
 ExportedObj/
 .consulo/
 *.csproj
+*.idea
 *.unityproj
 *.sln
 *.suo
@@ -46,6 +47,7 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -70,3 +72,10 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Kubacho Lab assets
+/[Aa]ssets/VFavorites*
+/[Aa]ssets/VFolders*
+/[Aa]ssets/VHierarchy*
+/[Aa]ssets/VRuler*
+/[Aa]ssets/VTabs*
