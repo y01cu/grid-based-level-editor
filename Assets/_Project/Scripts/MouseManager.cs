@@ -9,13 +9,50 @@ public class MouseManager : IRMBListener
 
     [SerializeField] private PlayerInput playerInput;
 
+    private InputAction scrollAction;
+    private InputAction rmbClickAction;
+
     private void Start()
     {
-        playerInput.onActionTriggered += context => RightClickInteract(context);
+        // playerInput.onActionTriggered += context => RightClickInteract(context);
 
         if (!isSubscribed)
         {
             ListenRMBEvent();
+        }
+
+        rmbClickAction = playerInput.actions["Mouse Button"];
+        scrollAction = playerInput.actions["Mouse Scroll"];
+
+        if (rmbClickAction != null)
+        {
+            rmbClickAction.performed += RightClickInteract;
+        }
+        else
+        {
+            Debug.LogError("rmb click action not found!");
+        }
+
+        if (scrollAction != null)
+        {
+            scrollAction.performed += HandleScrollAction;
+        }
+        else
+        {
+            Debug.LogError("scroll action not found!");
+        }
+    }
+
+    private void HandleScrollAction(InputAction.CallbackContext context)
+    {
+        Vector2 scrollValue = context.ReadValue<Vector2>();
+        if (scrollValue.y >= 0)
+        {
+            Debug.Log("up!");
+        }
+        else if (scrollValue.y < 0)
+        {
+            Debug.Log("down!");
         }
     }
 

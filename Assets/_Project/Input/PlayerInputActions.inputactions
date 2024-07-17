@@ -6,13 +6,22 @@
             "id": "198f642e-64de-4582-b282-7a62c89c1ea2",
             "actions": [
                 {
-                    "name": "Mouse",
+                    "name": "Mouse Button",
                     "type": "Button",
                     "id": "4c490874-1166-457e-aaf4-2a331963537b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Mouse Scroll",
+                    "type": "Value",
+                    "id": "0e204e4a-67dc-420a-be9f-2df50386a3c6",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -23,7 +32,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Mouse",
+                    "action": "Mouse Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0d99fd6c-0072-417d-a1ac-cd5cb70bb936",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
