@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db343e85b833a240877e0c03dedb2c6, type: 3}
+  m_Name: Berry
+  m_EditorClassIdentifier: 
+  name: Berry
+  prefab: {fileID: 7716824819547675763, guid: 435608f0a118d094bb76e514c07ceb25, type: 3}
+  direction: 2
+  normalMaterial: {fileID: 0}
+  obstacleMaterial: {fileID: 0}

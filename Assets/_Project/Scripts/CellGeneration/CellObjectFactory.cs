@@ -34,6 +34,20 @@ public class CellObjectFactory
         return cellObject;
     }
 
+    public GameObject CreateCellObjectWithSO(ObjectTypeSO objectTypeSO)
+    {
+        var cellObject = Object.Instantiate(objectTypeSO.prefab);
+        // objectTypeSO.cellObjectType.
+            
+        cellObject.transform.position = new Vector3(0, 0, 0);
+        cellObject.transform.localPosition = objectTargetTransformFromChild.position;
+        cellObject.transform.DOScale(Vector3.zero, 2f).From();
+        // cellObject.transform.Rotate(additionalRotationVector3);
+        // cellObjectComponent.Initialize(objectColor, objectType);
+
+        return cellObject.gameObject;
+    }
+
     private CellObject GrabCellObjectBasedOnObjectType(ObjectType objectType, GameObject freshSpawnedObj)
     {
         return objectType switch

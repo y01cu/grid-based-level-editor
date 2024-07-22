@@ -36,32 +36,32 @@ public class TestingGenericHeatmapGrid : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            stringGridSystem.GetGridObject(position).AddLetter("A");
+            stringGridSystem.GetGridObjectOnCoordinates(position).AddLetter("A");
         }
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            stringGridSystem.GetGridObject(position).AddLetter("B");
+            stringGridSystem.GetGridObjectOnCoordinates(position).AddLetter("B");
         }
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            stringGridSystem.GetGridObject(position).AddLetter("C");
+            stringGridSystem.GetGridObjectOnCoordinates(position).AddLetter("C");
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            stringGridSystem.GetGridObject(position).AddNumber("1");
+            stringGridSystem.GetGridObjectOnCoordinates(position).AddNumber("1");
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            stringGridSystem.GetGridObject(position).AddNumber("2");
+            stringGridSystem.GetGridObjectOnCoordinates(position).AddNumber("2");
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            stringGridSystem.GetGridObject(position).AddNumber("3");
+            stringGridSystem.GetGridObjectOnCoordinates(position).AddNumber("3");
         }
 
         // if (Input.GetMouseButtonDown(1))

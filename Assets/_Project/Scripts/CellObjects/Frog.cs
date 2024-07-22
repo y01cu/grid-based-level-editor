@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -10,7 +9,7 @@ public class Frog : Clickable
     [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
 
     private OrderType orderType;
-    
+
     private WaitForSeconds initialDelayForClick = new(2f);
 
     protected IEnumerator Start()
@@ -20,7 +19,7 @@ public class Frog : Clickable
         Debug.Log("set as tweenable");
         isTweenable = true;
     }
-    
+
     public override void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
         if (lineManager.IsLineOutside)

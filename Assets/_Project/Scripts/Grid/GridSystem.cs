@@ -68,7 +68,11 @@ public class GridSystem<TGridObject>
             Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
             Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
 
-            OnGridObjectChanged += (sender, args) => { debugTextArray[args.x, args.y].text = gridArray[args.x, args.y]?.ToString(); };
+            OnGridObjectChanged += (sender, args) =>
+            {
+                debugTextArray[args.x, args.y].text = gridArray[args.x, args.y]?.ToString();
+                Debug.Log($"value changed!!! new val: {gridArray[args.x, args.y]}");
+            };
         }
     }
 
@@ -107,7 +111,7 @@ public class GridSystem<TGridObject>
         SetGridObject(gridPos.x, gridPos.y, value);
     }
 
-    public TGridObject GetGridObject(int x, int y)
+    public TGridObject GetGridObjectOnCoordinates(int x, int y)
     {
         if (x >= 0 && y >= 0 && x < width && y < height)
         {
@@ -117,9 +121,9 @@ public class GridSystem<TGridObject>
         return default;
     }
 
-    public TGridObject GetGridObject(Vector3 worldPosition)
+    public TGridObject GetGridObjectOnCoordinates(Vector3 worldPosition)
     {
         GridPosition gridPos = GetGridPosition(worldPosition);
-        return GetGridObject(gridPos.x, gridPos.y);
+        return GetGridObjectOnCoordinates(gridPos.x, gridPos.y);
     }
 }

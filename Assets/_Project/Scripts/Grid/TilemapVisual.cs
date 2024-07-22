@@ -94,10 +94,8 @@ public class TilemapVisual : MonoBehaviour
                 int index = x * gridSystem.Height + y;
                 Vector3 quadSize = new Vector3(1, 1) * gridSystem.CellSize;
 
-                TilemapGrid.TilemapObject gridObject = gridSystem.GetGridObject(x, y);
+                TilemapGrid.TilemapObject gridObject = gridSystem.GetGridObjectOnCoordinates(x, y);
                 TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture = gridObject.GetTilemapSprite();
-
-                Debug.Log("here's texture" + tilemapSpriteTexture);
 
                 Vector2 gridValueUV00;
                 Vector2 gridValueUV11;

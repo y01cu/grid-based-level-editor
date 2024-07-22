@@ -186,13 +186,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f378648cc6bfb4e920d2092e1f4e60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionMask:
-    serializedVersion: 2
-    m_Bits: 320
   detectedObjectStorage:
     points: []
     detectedObjects: []
     detectedBerries: []
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 320
 --- !u!1 &4041292530243084329
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,14 +755,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectColor: 0
-  objectType: 0
   obstacleMaterial: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
   normalMaterial: {fileID: 2100000, guid: 8413bf28a7c37dd41b8bbc9e8ffb6021, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
-  skinnedMeshRenderer: {fileID: 5170343470221918315}
-  isObstacleHit: 0
-  time: 10
+  objectTypeSO: {fileID: 11400000, guid: 9a95101c6b7db4647be7386cfc962e1a, type: 2}
   lineManager: {fileID: 8941590148620850978}
+  skinnedMeshRenderer: {fileID: 5170343470221918315}
 --- !u!4 &4070665452422349400 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6173914371398649308, guid: 3d3d12d25c4eb0244ad4a1503847d950,

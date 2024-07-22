@@ -140,10 +140,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectColor: 0
-  objectType: 0
   obstacleMaterial: {fileID: 2100000, guid: a00125188c0c05a49902eac6b74c6393, type: 2}
   normalMaterial: {fileID: 2100000, guid: 42c30a692439a7b4290c34c6f1de6030, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
+  objectTypeSO: {fileID: 11400000, guid: 9694ead2b07adce41a65f87703bc6516, type: 2}
   normalStateClip: {fileID: 8300000, guid: 5cae738135a18e142a8bdcb095144a64, type: 3}
   boxCollider: {fileID: 635213937580863160}
   meshRenderer: {fileID: 8889128839063627548}

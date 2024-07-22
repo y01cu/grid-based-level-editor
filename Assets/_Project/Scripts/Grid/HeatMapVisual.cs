@@ -44,7 +44,7 @@ public class HeatMapVisual : MonoBehaviour
             {
                 int index = x * gridSystem.Height + y;
                 Vector3 quadSize = new Vector3(1, 1) * gridSystem.CellSize;
-                HeatMapGridObject gridObject = gridSystem.GetGridObject(x, y);
+                HeatMapGridObject gridObject = gridSystem.GetGridObjectOnCoordinates(x, y);
                 // int maxGridValue = 100;
                 float gridValueNormalized = gridObject.GetValueNormalized();
                 Vector2 gridValueUV = new Vector2(gridValueNormalized, 0f);

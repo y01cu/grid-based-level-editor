@@ -8,6 +8,8 @@ public class NewTesting : MonoBehaviour
 
     private TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
     private TilemapGrid.TilemapObject.TilemapObjectType tilemapObjectType;
+    private ObjectTypeSO tilemapObjectTypeSO;
+
     private TilemapGrid tilemapGrid;
 
     private string typeName;
@@ -15,9 +17,21 @@ public class NewTesting : MonoBehaviour
     private void Start()
     {
         AdjustTypeButton.AdjustTileObjectType += SetObjectType;
+        AdjustTypeButton.OnActiveBuildingTypeChanged += SetObjectTypeSO;
         AdjustSpriteButton.AdjustSpriteTexture += SetSprite;
         tilemapGrid = new TilemapGrid(4, 4, 3f, Vector3.zero);
         tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
+    }
+
+    private void SetObjectTypeSO(object sender, OnActiveBuildingTypeChangedEventArgs e)
+    {
+        tilemapObjectTypeSO = e.activeObjectTypeSO;
+    }
+
+    private void SetObjectType(TilemapGrid.TilemapObject.TilemapObjectType newType)
+    {
+        tilemapObjectType = newType;
+        Debug.Log($"changed to type: {tilemapObjectType}");
     }
 
     private void AdjustTileObject(string newTypeName)
@@ -31,48 +45,14 @@ public class NewTesting : MonoBehaviour
         Debug.Log($"updated to: {newTilemapSpriteTexture.ToString()}");
     }
 
-    private void SetObjectType(TilemapGrid.TilemapObject.TilemapObjectType newType)
-    {
-        tilemapObjectType = newType;
-        Debug.Log($"changed to type: {tilemapObjectType}");
-    }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-            tilemapGrid.SetupTilemapOnPosition(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectType);
-        }
-
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.None;
-            Debug.Log("none");
-        }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Blue;
-            Debug.Log("blue");
-        }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Green;
-            Debug.Log("green");
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Red;
-            Debug.Log("red");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            tilemapSpriteTexture = TilemapGrid.TilemapObject.TilemapSpriteTexture.Yellow;
-            Debug.Log("yellow");
+            // tilemapGrid.SetupTilemapOnPosition(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectType);
+            tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectTypeSO);
         }
 
         if (Input.GetKeyDown(KeyCode.S))

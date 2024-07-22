@@ -218,13 +218,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f378648cc6bfb4e920d2092e1f4e60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionMask:
-    serializedVersion: 2
-    m_Bits: 320
   detectedObjectStorage:
     points: []
     detectedObjects: []
     detectedBerries: []
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 320
 --- !u!1001 &3409257975209026982
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -498,6 +498,12 @@ PrefabInstance:
       propertyPath: lineRenderer
       value: 
       objectReference: {fileID: 1056252753664834811}
+    - target: {fileID: 4654882158872261148, guid: 624b7a459e9032244bd409313ac14675,
+        type: 3}
+      propertyPath: objectTypeSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 9a95101c6b7db4647be7386cfc962e1a,
+        type: 2}
     - target: {fileID: 4654882158872261148, guid: 624b7a459e9032244bd409313ac14675,
         type: 3}
       propertyPath: normalMaterial
