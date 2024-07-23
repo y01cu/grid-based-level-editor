@@ -2,7 +2,6 @@ using System;
 using CodeMonkey.Utils;
 using UnityEngine;
 
-
 public class GridSystem<TGridObject>
 {
     public event EventHandler<OnGridValueChangedEventArgs> OnGridObjectChanged;
@@ -68,14 +67,9 @@ public class GridSystem<TGridObject>
             Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
             Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
 
-            OnGridObjectChanged += (sender, args) =>
-            {
-                debugTextArray[args.x, args.y].text = gridArray[args.x, args.y]?.ToString();
-                Debug.Log($"value changed!!! new val: {gridArray[args.x, args.y]}");
-            };
+            OnGridObjectChanged += (sender, args) => { debugTextArray[args.x, args.y].text = gridArray[args.x, args.y]?.ToString(); };
         }
     }
-
 
     public Vector3 GetWorldPosition(int x, int y)
     {

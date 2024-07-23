@@ -9,18 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6db343e85b833a240877e0c03dedb2c6, type: 3}
-  m_Name: Frog
+  m_Script: {fileID: 11500000, guid: d5ab2da10f506994597ef279be6d8b85, type: 3}
+  m_Name: FrogColorMaterials
   m_EditorClassIdentifier: 
-  name: Frog
-  prefab: {fileID: 7664300010794382425, guid: f808072221b8b1c4d93e94c8f80636a2, type: 3}
-  spriteForLevelEditor: {fileID: 21300000, guid: dcaf245a48da73d41948b508a551071d,
-    type: 3}
-  direction: 2
-  normalMaterials:
+  materials:
   - {fileID: 2100000, guid: aaac73df7660d97438aa9464842dd4d2, type: 2}
   - {fileID: 2100000, guid: 8413bf28a7c37dd41b8bbc9e8ffb6021, type: 2}
   - {fileID: 2100000, guid: 01ef2e747dcda4a478306f8bb9e4a9bb, type: 2}
   - {fileID: 2100000, guid: a59b4965c2c302c41bd39d3e8afe75c8, type: 2}
-  obstacleMaterial: {fileID: 0}
-  cellObjectType: {fileID: 0}

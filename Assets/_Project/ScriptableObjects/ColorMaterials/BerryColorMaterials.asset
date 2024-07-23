@@ -9,18 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6db343e85b833a240877e0c03dedb2c6, type: 3}
-  m_Name: Berry
+  m_Script: {fileID: 11500000, guid: d5ab2da10f506994597ef279be6d8b85, type: 3}
+  m_Name: BerryColorMaterials
   m_EditorClassIdentifier: 
-  name: Berry
-  prefab: {fileID: 7716824819547675763, guid: 435608f0a118d094bb76e514c07ceb25, type: 3}
-  spriteForLevelEditor: {fileID: 21300000, guid: 8aa462069fd278a4d9fc80048eb5a7c6,
-    type: 3}
-  direction: 2
-  normalMaterials:
+  materials:
   - {fileID: 2100000, guid: 42c30a692439a7b4290c34c6f1de6030, type: 2}
   - {fileID: 2100000, guid: 6057b183565e305408c03d7414808aff, type: 2}
   - {fileID: 2100000, guid: cca42418e52beba43ad87727f81453c2, type: 2}
   - {fileID: 2100000, guid: 3aeab0a0dd9df9a44a19028ab0a85f50, type: 2}
-  obstacleMaterial: {fileID: 0}
-  cellObjectType: {fileID: 0}

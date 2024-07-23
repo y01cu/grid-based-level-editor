@@ -1,14 +1,14 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/ObjectType")]
 public class ObjectTypeSO : ScriptableObject
 {
     public new string name;
     public Transform prefab;
+    public Sprite spriteForLevelEditor;
     public Direction direction;
-    public Material normalMaterial;
+    public List<Material> normalMaterials;
     public Material obstacleMaterial;
     public CellObject cellObjectType;
 }

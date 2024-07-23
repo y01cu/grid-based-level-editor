@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Mono.CSharp;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
@@ -10,7 +8,7 @@ public class TilemapGrid
 {
     public event EventHandler OnLoaded;
 
-    private GridSystem<TilemapObject> gridSystem;
+    public GridSystem<TilemapObject> gridSystem { get; private set; }
 
     public TilemapGrid(int width, int height, float cellSize, Vector3 originPosition)
     {
@@ -61,38 +59,11 @@ public class TilemapGrid
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             tilemapObject.Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
-            Debug.Log($"loaded tilemap obj: {tilemapObject} | on x: {tilemapObjectSaveObject.x} y: {tilemapObjectSaveObject.y}");
         }
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
     }
 
-    public void LoadWithCellBases(CellBase[] cellBases)
-    {
-        SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
-
-        foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
-        {
-            var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
-            tilemapObject.Load(tilemapObjectSaveObject);
-            gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
-            // Debug.Log($"loaded tilemap obj: {tilemapObject} | on x: {tilemapObjectSaveObject.x} y: {tilemapObjectSaveObject.y}");
-            var newPos = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
-            if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSpriteTexture.None)
-            {
-                continue;
-            }
-
-            ChangeObjectSpriteOnPosition(cellBases, tilemapObject.GetTilemapSprite());
-            // ChangeObjectType(tilemapObject.GetObjectTypeSO());
-            ChangeObjectType(tilemapObject.GetTilemapObjectType());
-
-            Object.Instantiate(cellBaseObj, newPos, Quaternion.Euler(270, 0, 0));
-        }
-
-
-        OnLoaded?.Invoke(this, EventArgs.Empty);
-    }
 
     public void LoadWithCellBasesWithSO(CellBase[] cellBases)
     {
@@ -103,7 +74,6 @@ public class TilemapGrid
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             tilemapObject.Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
-            // Debug.Log($"loaded tilemap obj: {tilemapObject} | on x: {tilemapObjectSaveObject.x} y: {tilemapObjectSaveObject.y}");
             var newPos = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
             if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSpriteTexture.None)
             {
@@ -111,26 +81,12 @@ public class TilemapGrid
             }
 
             ChangeObjectSpriteOnPosition(cellBases, tilemapObject.GetTilemapSprite());
-            // ChangeObjectType(tilemapObject.GetObjectTypeSO());
-            // ChangeObjectType(tilemapObject.GetTilemapObjectType());
 
             Object.Instantiate(cellBaseObj, newPos, Quaternion.Euler(270, 0, 0));
         }
 
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void ChangeObjectType(TilemapObject.TilemapObjectType tilemapObjectType)
-    {
-        var cellObjectType = tilemapObjectType switch
-        {
-            TilemapObject.TilemapObjectType.Arrow => ObjectType.Arrow,
-            TilemapObject.TilemapObjectType.Berry => ObjectType.Berry,
-            TilemapObject.TilemapObjectType.Frog => ObjectType.Frog,
-        };
-
-        cellBaseObj.objectType = cellObjectType;
     }
 
     public void ChangeObjectSpriteOnPosition(CellBase[] cellBases, TilemapObject.TilemapSpriteTexture tilemapSpriteTexture)
@@ -191,6 +147,11 @@ public class TilemapGrid
             this.gridSystem = gridSystem;
             this.x = x;
             this.y = y;
+        }
+
+        public Vector3 GetPositionVector3()
+        {
+            return new Vector3(x, y);
         }
 
         public TilemapSpriteTexture GetTilemapSprite()

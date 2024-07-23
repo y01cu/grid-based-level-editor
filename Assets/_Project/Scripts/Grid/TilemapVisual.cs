@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 public class TilemapVisual : MonoBehaviour
 {
-    [System.Serializable]
+    [Serializable]
     public struct TilemapSpriteUV
     {
         [FormerlySerializedAs("tilemapSprite")]

@@ -9,18 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6db343e85b833a240877e0c03dedb2c6, type: 3}
-  m_Name: Arrow
+  m_Script: {fileID: 11500000, guid: d5ab2da10f506994597ef279be6d8b85, type: 3}
+  m_Name: ArrowColorMaterials
   m_EditorClassIdentifier: 
-  name: Arrow
-  prefab: {fileID: 4090251599750403700, guid: eba6fd29cd9b8614c89795b8a7b790a2, type: 3}
-  spriteForLevelEditor: {fileID: 21300000, guid: 2b1b6acd5c38dfa48849b3a0e6349fa3,
-    type: 3}
-  direction: 2
-  normalMaterials:
+  materials:
   - {fileID: 2100000, guid: a81f284864448e7419dc4734ac271c8f, type: 2}
   - {fileID: 2100000, guid: ff646099c16b73e44ac659e830b990eb, type: 2}
   - {fileID: 2100000, guid: db69f2143fd59fc42901eb3b485926e8, type: 2}
   - {fileID: 2100000, guid: 1c053c6bf83343d46817510fca559681, type: 2}
-  obstacleMaterial: {fileID: 0}
-  cellObjectType: {fileID: 0}
