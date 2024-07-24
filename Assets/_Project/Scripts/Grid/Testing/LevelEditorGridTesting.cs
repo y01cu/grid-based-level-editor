@@ -1,29 +1,26 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class NewTesting : MonoBehaviour
+public class LevelEditorGridTesting : MonoBehaviour
 {
-    public static NewTesting Instance { get; private set; }
+    public static LevelEditorGridTesting Instance { get; private set; }
 
-    public float cellSize
-    {
-        get => _cellSize;
-        set => _cellSize = value;
-    }
+    [field: SerializeField]
+    public float cellSize { get; private set; }
 
     public static TilemapGrid tilemapGrid { get; private set; }
 
     [SerializeField] private Camera camera;
     [SerializeField] private TilemapVisual tilemapVisual;
 
+    [SerializeField] private int width;
+    [SerializeField] private int height;
+
     private TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
 
     private TilemapGrid.TilemapObject.TilemapObjectType tilemapObjectType;
 
     private ObjectTypeSO tilemapObjectTypeSO;
-
-
-    private float _cellSize = 4f;
 
     private void Awake()
     {
@@ -62,7 +59,7 @@ public class NewTesting : MonoBehaviour
         {
             Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
             tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectTypeSO);
-            ObjectGhost.Instance.SpawnPrefabOnPosition();
+            ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
         }
 
         if (Input.GetKeyDown(KeyCode.S))

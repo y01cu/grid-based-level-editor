@@ -48,7 +48,7 @@ public class GridSystem<TGridObject>
             }
         }
 
-        bool isDebugMode = true;
+        bool isDebugMode = false;
         if (isDebugMode)
         {
             TextMesh[,] debugTextArray = new TextMesh[width, height];

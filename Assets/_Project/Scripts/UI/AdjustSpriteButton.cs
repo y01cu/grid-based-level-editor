@@ -7,8 +7,16 @@ public class AdjustSpriteButton : MonoBehaviour
 
     public static event Action<TilemapGrid.TilemapObject.TilemapSpriteTexture> AdjustSpriteTexture;
 
-    public void UpdateSprite()
+    public void UpdateSpriteAndSOColor()
     {
         AdjustSpriteTexture?.Invoke(tilemapSpriteTexture);
+        // OnActiveBuildingColorChanged?.Invoke();
     }
+    
+    public static EventHandler<OnActiveBuildingColorChangedEventArgs> OnActiveBuildingColorChanged;
+}
+
+public class OnActiveBuildingColorChangedEventArgs
+{
+    public ObjectTypeSO activeObjectTypeSO;
 }
