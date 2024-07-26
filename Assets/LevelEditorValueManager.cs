@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class EditorValueManager : MonoBehaviour
+public class LevelEditorValueManager : MonoBehaviour
 {
     private ColorMaterialsListSO colorMaterialsList;
-    public static EditorValueManager Instance { get; private set; }
+    public static LevelEditorValueManager Instance { get; private set; }
 
     private void Awake()
     {

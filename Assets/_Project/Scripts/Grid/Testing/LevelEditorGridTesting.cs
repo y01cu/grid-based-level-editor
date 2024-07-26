@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[ExecuteAlways]
 public class LevelEditorGridTesting : MonoBehaviour
 {
     public static LevelEditorGridTesting Instance { get; private set; }
