@@ -10,6 +10,10 @@ public class ObjectGhost : MonoBehaviour
     private GameObject spriteGameObject;
 
     public GameObject prefab;
+    private Vector3 tempPosition;
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip hoverAudioClip;
 
     private void Awake()
     {
@@ -33,6 +37,8 @@ public class ObjectGhost : MonoBehaviour
 
     private void Start()
     {
+        tempPosition = spriteGameObject.transform.position;
+
         AdjustTypeButton.OnActiveBuildingTypeChanged += AdjustTypeButton_OnActiveBuildingTypeChanged;
     }
 
@@ -40,6 +46,17 @@ public class ObjectGhost : MonoBehaviour
     {
         float cellSize = LevelEditorGridTesting.Instance.cellSize;
         spriteGameObject.transform.position = LevelEditorGridTesting.tilemapGrid.gridSystem.GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0);
+        if (tempPosition == spriteGameObject.transform.position)
+        {
+            Debug.Log("same");
+        }
+        else
+        {
+            // Debug.Log("not same");
+            audioSource.PlayOneShot(hoverAudioClip);
+        }
+
+        tempPosition = spriteGameObject.transform.position;
     }
 
     public void SpawnAndAdjustPrefabOnPosition()
@@ -70,9 +87,5 @@ public class ObjectGhost : MonoBehaviour
     private void SetPrefab(GameObject newPrefab)
     {
         prefab = newPrefab;
-        // var spawnedPrefab = Instantiate(newPrefab, spriteGameObject.transform.position, Quaternion.identity);
-        // spawnedPrefab.transform.SetParent(spriteGameObject.transform);
-        // spawnedPrefab.transform.Translate(0, 0, -3f);
-        // Debug.Log("here's this one", spawnedPrefab);
     }
 }
