@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +8,10 @@ public class AdjustTypeButton : MonoBehaviour
     public static event EventHandler<OnActiveObjectTypeChangedEventArgs> OnActiveObjectUpdated;
 
     [SerializeField] private ObjectTypeSO objectTypeSO;
-
     [SerializeField] private Button colorButtonTemplate;
-
     [SerializeField] private Transform targetTransformParent;
     private Vector2 anchoredPosition;
+    private List<Button> spawnedButtons = new();
 
     private const float GapBetweenButtons = 60f;
 
@@ -33,6 +33,7 @@ public class AdjustTypeButton : MonoBehaviour
         for (int i = 0; i < colorMaterialCountOfCurrentObject; i++)
         {
             var newColorButton = Instantiate(colorButtonTemplate);
+            spawnedButtons.Add(newColorButton);
             newColorButton.gameObject.SetActive(true);
             SetButtonPosition(newColorButton, i);
             AssignFunctionalityToButton(newColorButton, i);
@@ -57,21 +58,27 @@ public class AdjustTypeButton : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
+            Debug.Log($"spawned button count: {spawnedButtons.Count}");
+
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
+            foreach (var spawnedButton in spawnedButtons)
+            {
+                spawnedButton.GetComponent<Outline>().enabled = false;
+            }
+
+            button.GetComponent<Outline>().enabled = true;
         });
     }
-
-    // private Material GetMaterialFromObject(GameObject prefab)
-    // {
-    //     return prefab.GetComponent<Renderer>().sharedMaterial;
-    //     // return GetComponent<MeshRenderer>() == null ? prefab.GetComponent<SkinnedMeshRenderer>().material : prefab.GetComponent<MeshRenderer>().material;
-    // }
 
     private void ChangeButtonColor(Button button, Color color)
     {
         ColorBlock newColorBlock = button.colors;
         newColorBlock.normalColor = color;
+        newColorBlock.disabledColor = color;
+        newColorBlock.highlightedColor = color;
+        newColorBlock.pressedColor = color;
+        newColorBlock.selectedColor = color;
         button.colors = newColorBlock;
     }
 

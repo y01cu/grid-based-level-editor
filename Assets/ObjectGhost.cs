@@ -18,6 +18,8 @@ public class ObjectGhost : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip hoverAudioClip;
 
+    private GameObject currentObject;
+
     private void Awake()
     {
         Instance = this;
@@ -25,7 +27,7 @@ public class ObjectGhost : MonoBehaviour
         Hide();
     }
 
-    private void AdjustTypeButton_OnActiveBuildingTypeChanged(object sender, OnActiveBuildingTypeChangedEventArgs e)
+    private void AdjustTypeButtonOnActiveObjectUpdated(object sender, OnActiveObjectTypeChangedEventArgs e)
     {
         if (e.activeObjectTypeSO == null)
         {
@@ -36,20 +38,41 @@ public class ObjectGhost : MonoBehaviour
             SetSprite(e.activeObjectTypeSO.spriteForLevelEditor);
             SetPrefab(e.activeObjectTypeSO.prefab.gameObject);
         }
+
+        // if (currentObject == null)
+        // {
+        //     CreateNewObjectFromSO();
+        // }
+        // else
+        // {
+        // }
+        Destroy(currentObject);
+        CreateNewObjectFromSO();
+
+
+        Show();
+    }
+
+    private void CreateNewObjectFromSO()
+    {
+        currentObject = Instantiate(prefab, spriteGameObject.transform.position, Quaternion.Euler(90, 0, 0));
+        currentObject.transform.SetParent(spriteGameObject.transform);
+        currentObject.transform.localScale = Vector3.one;
     }
 
     private void Start()
     {
         tempPosition = spriteGameObject.transform.position;
 
-        AdjustTypeButton.OnActiveBuildingTypeChanged += AdjustTypeButton_OnActiveBuildingTypeChanged;
+        AdjustTypeButton.OnActiveObjectUpdated += AdjustTypeButtonOnActiveObjectUpdated;
         LevelEditorGridTesting.OnGridPositionChanged += LevelEditorGridTesting_OnGridPositionChanged;
+        var cellScale = LevelEditorGridTesting.Instance.cellSize;
+        spriteGameObject.transform.localScale = new Vector3(cellScale, cellScale, cellScale);
     }
 
     private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)
     {
-            Debug.Log("audio clip is played");
-            audioSource.PlayOneShot(hoverAudioClip);
+        audioSource.PlayOneShot(hoverAudioClip);
         // if (IsGridHit())
         // {
         // }
@@ -68,14 +91,14 @@ public class ObjectGhost : MonoBehaviour
     {
         float cellSize = LevelEditorGridTesting.Instance.cellSize;
 
-        
-        spriteGameObject.transform.position = LevelEditorGridTesting.IsOnGrid ? LevelEditorGridTesting.tilemapGrid.gridSystem
-                .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize +
-            new Vector3(cellSize / 2, cellSize / 2, 0) : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
+
+        spriteGameObject.transform.position = LevelEditorGridTesting.IsOnGrid
+            ? LevelEditorGridTesting.tilemapGrid.gridSystem
+                  .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize +
+              new Vector3(cellSize / 2, cellSize / 2, 0)
+            : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
 
 
-        
-        
         // FindCustomObjectOnPointer();
 
         tempPosition = spriteGameObject.transform.position;
@@ -87,8 +110,8 @@ public class ObjectGhost : MonoBehaviour
         var spawnedPrefab = Instantiate(prefab, spriteGameObject.transform.position, Quaternion.Euler(90, 0, 0));
         spawnedPrefab.transform.Translate(0, -2f, 0);
         spawnedPrefab.transform.localScale *= LevelEditorGridTesting.Instance.cellSize;
-        Debug.Log("spawned the object in this line of code");
     }
+
 
     private void Hide()
     {

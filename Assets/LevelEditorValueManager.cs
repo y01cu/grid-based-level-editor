@@ -13,6 +13,5 @@ public class LevelEditorValueManager : MonoBehaviour
     private void Start()
     {
         colorMaterialsList = Resources.Load<ColorMaterialsListSO>(nameof(ColorMaterialsListSO));
-        Debug.Log($"color materials list: {colorMaterialsList} | length: {colorMaterialsList.colorMaterials.Count}");
     }
 }
