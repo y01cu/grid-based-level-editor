@@ -39,13 +39,13 @@ public class LevelEditorGridTesting : MonoBehaviour
 
     private void Start()
     {
-        AdjustTypeButton.OnActiveBuildingTypeChanged += SetObjectTypeSO;
-        AdjustSpriteButton.AdjustSpriteTexture += SetSprite;
+        AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
+        // AdjustSpriteButton.AdjustSpriteTexture += SetSprite;
         tilemapGrid = new TilemapGrid(4, 4, cellSize, Vector3.zero);
         tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
     }
 
-    private void SetObjectTypeSO(object sender, OnActiveBuildingTypeChangedEventArgs e)
+    private void SetObjectTypeSO(object sender, OnActiveObjectTypeChangedEventArgs e)
     {
         tilemapObjectTypeSO = e.activeObjectTypeSO;
     }
@@ -97,7 +97,7 @@ public class LevelEditorGridTesting : MonoBehaviour
 
     private void OnDestroy()
     {
-        AdjustSpriteButton.AdjustSpriteTexture -= SetSprite;
-        AdjustTypeButton.OnActiveBuildingTypeChanged -= SetObjectTypeSO;
+        // AdjustSpriteButton.AdjustSpriteTexture -= SetSprite;
+        AdjustTypeButton.OnActiveObjectUpdated -= SetObjectTypeSO;
     }
 }

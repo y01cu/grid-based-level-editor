@@ -6,10 +6,10 @@ public class DynamicObjectColorManager : MonoBehaviour
 
     private void Start()
     {
-        AdjustTypeButton.OnActiveBuildingTypeChanged += AdjustTypeButton_OnActiveBuildingTypeChanged;
+        AdjustTypeButton.OnActiveObjectUpdated += AdjustTypeButtonOnActiveObjectUpdated;
     }
 
-    private void AdjustTypeButton_OnActiveBuildingTypeChanged(object sender, OnActiveBuildingTypeChangedEventArgs e)
+    private void AdjustTypeButtonOnActiveObjectUpdated(object sender, OnActiveObjectTypeChangedEventArgs e)
     {
         activeObjectTypeSO = e.activeObjectTypeSO;
         ShowColorsOfCurrentObjectType();

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class AdjustTypeButton : MonoBehaviour
 {
-    public static event EventHandler<OnActiveBuildingTypeChangedEventArgs> OnActiveBuildingTypeChanged;
+    public static event EventHandler<OnActiveObjectTypeChangedEventArgs> OnActiveObjectUpdated;
 
     [SerializeField] private ObjectTypeSO objectTypeSO;
 
@@ -23,7 +23,7 @@ public class AdjustTypeButton : MonoBehaviour
     public void UpdateObjectTypeFromButtonSO()
     {
         ShowObjectMaterialColorButtons();
-        OnActiveBuildingTypeChanged?.Invoke(this, new OnActiveBuildingTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
+        OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
     }
 
     private void ShowObjectMaterialColorButtons()
@@ -58,6 +58,7 @@ public class AdjustTypeButton : MonoBehaviour
         button.onClick.AddListener(() =>
         {
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
+            OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
         });
     }
 
@@ -83,7 +84,7 @@ public class AdjustTypeButton : MonoBehaviour
     #endregion
 }
 
-public class OnActiveBuildingTypeChangedEventArgs
+public class OnActiveObjectTypeChangedEventArgs
 {
     public ObjectTypeSO activeObjectTypeSO;
 }
