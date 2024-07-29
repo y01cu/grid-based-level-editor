@@ -14,7 +14,8 @@ public class LevelEditorGridTesting : MonoBehaviour
 
     [SerializeField] private Camera camera;
     [SerializeField] private TilemapVisual tilemapVisual;
-
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip objectPlacedAudioClip;
     [SerializeField] private int width;
     [SerializeField] private int height;
 
@@ -66,6 +67,7 @@ public class LevelEditorGridTesting : MonoBehaviour
             Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
             tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectTypeSO);
             ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
+            audioSource.PlayOneShot(objectPlacedAudioClip);
         }
 
         if (currentGridPosition != tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint).vector3With0Z)

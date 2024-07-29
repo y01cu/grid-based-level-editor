@@ -15,8 +15,8 @@ public class ObjectGhost : MonoBehaviour
     public GameObject prefab;
     private Vector3 tempPosition;
 
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip hoverAudioClip;
+    // [SerializeField] private AudioSource audioSource;
+    // [SerializeField] private AudioClip hoverAudioClip;
 
     private GameObject currentObject;
 
@@ -72,7 +72,8 @@ public class ObjectGhost : MonoBehaviour
 
     private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)
     {
-        audioSource.PlayOneShot(hoverAudioClip);
+        // audioSource.PlayOneShot(hoverAudioClip);
+        
         // if (IsGridHit())
         // {
         // }
