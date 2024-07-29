@@ -1,13 +1,14 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 [ExecuteAlways]
 public class LevelEditorGridTesting : MonoBehaviour
 {
+    public static EventHandler OnGridPositionChanged;
     public static LevelEditorGridTesting Instance { get; private set; }
 
-    [field: SerializeField]
-    public float cellSize { get; private set; }
+    [field: SerializeField] public float cellSize { get; private set; }
 
     public static TilemapGrid tilemapGrid { get; private set; }
 
@@ -18,10 +19,11 @@ public class LevelEditorGridTesting : MonoBehaviour
     [SerializeField] private int height;
 
     private TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
-
     private TilemapGrid.TilemapObject.TilemapObjectType tilemapObjectType;
-
     private ObjectTypeSO tilemapObjectTypeSO;
+    private Vector3 currentGridPosition = new();
+
+    public static bool IsOnGrid { get; set; }
 
     private void Awake()
     {
@@ -56,12 +58,29 @@ public class LevelEditorGridTesting : MonoBehaviour
 
     private void Update()
     {
+        Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
+        IsOnGrid = tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) != null;
+
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
             tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectTypeSO);
             ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
         }
+
+        if (currentGridPosition != tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint).vector3With0Z)
+        {
+            currentGridPosition = tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint)
+                .vector3With0Z;
+
+            if (IsOnGrid)
+            {
+                OnGridPositionChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        // Debug.Log(tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) == null ? "null" : "not null");
+
 
         if (Input.GetKeyDown(KeyCode.S))
         {

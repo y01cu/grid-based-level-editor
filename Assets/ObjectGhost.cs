@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ObjectGhost : MonoBehaviour
 {
@@ -40,24 +43,44 @@ public class ObjectGhost : MonoBehaviour
         tempPosition = spriteGameObject.transform.position;
 
         AdjustTypeButton.OnActiveBuildingTypeChanged += AdjustTypeButton_OnActiveBuildingTypeChanged;
+        LevelEditorGridTesting.OnGridPositionChanged += LevelEditorGridTesting_OnGridPositionChanged;
     }
+
+    private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)
+    {
+            Debug.Log("audio clip is played");
+            audioSource.PlayOneShot(hoverAudioClip);
+        // if (IsGridHit())
+        // {
+        // }
+    }
+
+    private bool IsGridHit()
+    {
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out RaycastHit hit);
+
+        return hit.collider != null;
+    }
+
 
     private void Update()
     {
         float cellSize = LevelEditorGridTesting.Instance.cellSize;
-        spriteGameObject.transform.position = LevelEditorGridTesting.tilemapGrid.gridSystem.GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0);
-        if (tempPosition == spriteGameObject.transform.position)
-        {
-            Debug.Log("same");
-        }
-        else
-        {
-            // Debug.Log("not same");
-            audioSource.PlayOneShot(hoverAudioClip);
-        }
+
+        
+        spriteGameObject.transform.position = LevelEditorGridTesting.IsOnGrid ? LevelEditorGridTesting.tilemapGrid.gridSystem
+                .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize +
+            new Vector3(cellSize / 2, cellSize / 2, 0) : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
+
+
+        
+        
+        // FindCustomObjectOnPointer();
 
         tempPosition = spriteGameObject.transform.position;
     }
+
 
     public void SpawnAndAdjustPrefabOnPosition()
     {
@@ -87,5 +110,29 @@ public class ObjectGhost : MonoBehaviour
     private void SetPrefab(GameObject newPrefab)
     {
         prefab = newPrefab;
+    }
+
+    private bool FindCustomObjectOnPointer()
+    {
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = Input.mousePosition;
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+        Debug.Log($"raycast results | {raycastResults.Count}");
+        for (int i = 0; i < raycastResults.Count; i++)
+        {
+            if (raycastResults[i].gameObject.GetComponent<MeshFilter>() == null)
+            {
+                raycastResults.RemoveAt(i);
+                i--;
+            }
+            else
+            {
+                Debug.Log("mesh filter found!", raycastResults[i].gameObject);
+            }
+        }
+
+        return raycastResults.Count > 0;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using CodeMonkey.Utils;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GridSystem<TGridObject>
 {
@@ -48,6 +49,8 @@ public class GridSystem<TGridObject>
             }
         }
 
+        GameObject emptyObject = new GameObject();
+
         bool isDebugMode = true;
         if (isDebugMode)
         {
@@ -56,7 +59,15 @@ public class GridSystem<TGridObject>
             {
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
-                    debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 9, Color.white, TextAnchor.MiddleCenter);
+                    var newObject = GameObject.Instantiate(emptyObject, GetWorldPosition(x, y) + new Vector3(this.cellSize / 2, this.cellSize / 2, 0), Quaternion.identity);
+                    newObject.AddComponent<MeshFilter>().mesh = UtilsClass.CreateWorldSpriteQuad(this.cellSize, Color.white);
+                    newObject.AddComponent<MeshCollider>();
+                    newObject.gameObject.name = "new obj";
+                    newObject.transform.SetParent(GameObject.Find("Canvas").transform);
+                    newObject.transform.Rotate(0, 180, 0);
+
+                    debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 9,
+                        Color.white, TextAnchor.MiddleCenter);
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
                 }
@@ -68,6 +79,11 @@ public class GridSystem<TGridObject>
 
             OnGridObjectChanged += (sender, args) => { debugTextArray[args.x, args.y].text = gridArray[args.x, args.y]?.ToString(); };
         }
+    }
+
+    private void TranslateFromGridPositionToScreenPosition(Transform transform)
+    {
+        transform.position = GetWorldPosition(0, 0);
     }
 
     public Vector3 GetWorldPosition(int x, int y)

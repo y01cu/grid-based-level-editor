@@ -1558,6 +1558,25 @@ namespace CodeMonkey.Utils {
         }
 
 
+        public static Mesh CreateWorldSpriteQuad(float cellSize, Color white)
+        {
+            Mesh mesh = new Mesh();
+            mesh.vertices = new Vector3[] {
+                new Vector3(0, 0) * cellSize,
+                new Vector3(1, 0) * cellSize,
+                new Vector3(1, 1) * cellSize,
+                new Vector3(0, 1) * cellSize,
+            };
+            mesh.uv = new Vector2[] {
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(1, 1),
+                new Vector2(0, 1),
+            };
+            mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3 };
+            mesh.colors = new Color[] { white, white, white, white };
+            return mesh;
+        }
     }
 
 }
