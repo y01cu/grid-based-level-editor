@@ -16,7 +16,6 @@ public class Frog : Clickable
     {
         isTweenable = false;
         yield return initialDelayForClick;
-        Debug.Log("set as tweenable");
         isTweenable = true;
     }
 

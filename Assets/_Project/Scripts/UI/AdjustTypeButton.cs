@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class AdjustTypeButton : MonoBehaviour
 {
     public static event EventHandler<OnActiveObjectTypeChangedEventArgs> OnActiveObjectUpdated;
+    public static event EventHandler OnHideAllMaterialButtons;
 
     [SerializeField] private ObjectTypeSO objectTypeSO;
     [SerializeField] private Button colorButtonTemplate;
@@ -18,7 +19,8 @@ public class AdjustTypeButton : MonoBehaviour
 
     private void Start()
     {
-        AssignTypeButtonFunctionality();
+        GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
+
         AssignMaterialColorUsingSpecificPixelOfTexture();
         OnActiveObjectUpdated += (sender, args) =>
         {
@@ -27,13 +29,12 @@ public class AdjustTypeButton : MonoBehaviour
                 HideObjectMaterialButtons();
             }
         };
-    }
 
-    private void AssignTypeButtonFunctionality()
-    {
-        GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
+        OnHideAllMaterialButtons += (sender, args) =>
+        {
+            HideObjectMaterialButtons();
+        };
     }
-
 
     private void ShowObjectMaterialColorButtons()
     {
@@ -41,12 +42,11 @@ public class AdjustTypeButton : MonoBehaviour
         {
             foreach (var spawnedMaterialButton in spawnedMaterialButtons)
             {
-                spawnedMaterialButton.gameObject.SetActive(false);
+                spawnedMaterialButton.gameObject.SetActive(true);
             }
         }
         else
         {
-
             var colorMaterialCountOfCurrentObject = objectTypeSO.normalMaterials.Count;
             anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
             for (int i = 0; i < colorMaterialCountOfCurrentObject; i++)
@@ -57,12 +57,25 @@ public class AdjustTypeButton : MonoBehaviour
                 SetButtonPosition(newColorButton, i);
                 AssignFunctionalityToMaterialButton(newColorButton, i);
                 ChangeButtonColor(newColorButton, objectTypeSO.normalMaterials[i].color);
+
+                if (i == 0)
+                {
+                    newColorButton.GetComponent<Outline>().enabled = true;
+                    objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[i];
+                }
             }
         }
     }
 
     public void UpdateAsSelected()
     {
+        OnHideAllMaterialButtons?.Invoke(this, EventArgs.Empty);
+        if (IsSelected)
+        {
+            IsSelected = false;
+            HideObjectMaterialButtons();
+            return;
+        }
         IsSelected = true;
         UpdateObjectTypeFromButtonSO();
     }
