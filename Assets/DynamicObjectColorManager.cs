@@ -4,6 +4,7 @@ public class DynamicObjectColorManager : MonoBehaviour
 {
     private ObjectTypeSO activeObjectTypeSO;
 
+
     private void Start()
     {
         AdjustTypeButton.OnActiveObjectUpdated += AdjustTypeButtonOnActiveObjectUpdated;

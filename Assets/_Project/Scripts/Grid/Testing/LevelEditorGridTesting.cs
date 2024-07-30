@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-[ExecuteAlways]
 public class LevelEditorGridTesting : MonoBehaviour
 {
     public static EventHandler OnGridPositionChanged;
@@ -42,7 +40,7 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
         // AdjustSpriteButton.AdjustSpriteTexture += SetSprite;
-        tilemapGrid = new TilemapGrid(4, 4, cellSize, Vector3.zero);
+        tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero);
         tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
     }
 
@@ -57,18 +55,15 @@ public class LevelEditorGridTesting : MonoBehaviour
         Debug.Log($"updated to: {newTilemapSpriteTexture.ToString()}");
     }
 
+    public void SetupObjectOnPosition(Vector3 mouseWorldPosition)
+    {
+        tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectTypeSO);
+    }
+
     private void Update()
     {
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         IsOnGrid = tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) != null;
-
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-            tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectTypeSO);
-            ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
-            audioSource.PlayOneShot(objectPlacedAudioClip);
-        }
 
         if (currentGridPosition != tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint).vector3With0Z)
         {

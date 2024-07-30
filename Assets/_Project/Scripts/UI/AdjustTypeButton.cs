@@ -10,40 +10,79 @@ public class AdjustTypeButton : MonoBehaviour
     [SerializeField] private ObjectTypeSO objectTypeSO;
     [SerializeField] private Button colorButtonTemplate;
     [SerializeField] private Transform targetTransformParent;
+    public bool IsSelected { get; set; }
     private Vector2 anchoredPosition;
-    private List<Button> spawnedButtons = new();
+    private List<Button> spawnedMaterialButtons = new();
 
     private const float GapBetweenButtons = 60f;
 
     private void Start()
     {
-        AssignColorUsingSpecificPixelOfTexture();
+        AssignTypeButtonFunctionality();
+        AssignMaterialColorUsingSpecificPixelOfTexture();
+        OnActiveObjectUpdated += (sender, args) =>
+        {
+            if (!IsSelected) // if (args.activeObjectTypeSO != objectTypeSO)
+            {
+                HideObjectMaterialButtons();
+            }
+        };
     }
 
+    private void AssignTypeButtonFunctionality()
+    {
+        GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
+    }
+
+
+    private void ShowObjectMaterialColorButtons()
+    {
+        if (spawnedMaterialButtons.Count > 0)
+        {
+            foreach (var spawnedMaterialButton in spawnedMaterialButtons)
+            {
+                spawnedMaterialButton.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+
+            var colorMaterialCountOfCurrentObject = objectTypeSO.normalMaterials.Count;
+            anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
+            for (int i = 0; i < colorMaterialCountOfCurrentObject; i++)
+            {
+                var newColorButton = Instantiate(colorButtonTemplate);
+                spawnedMaterialButtons.Add(newColorButton);
+                newColorButton.gameObject.SetActive(true);
+                SetButtonPosition(newColorButton, i);
+                AssignFunctionalityToMaterialButton(newColorButton, i);
+                ChangeButtonColor(newColorButton, objectTypeSO.normalMaterials[i].color);
+            }
+        }
+    }
+
+    public void UpdateAsSelected()
+    {
+        IsSelected = true;
+        UpdateObjectTypeFromButtonSO();
+    }
     public void UpdateObjectTypeFromButtonSO()
     {
         ShowObjectMaterialColorButtons();
         OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
     }
 
-    private void ShowObjectMaterialColorButtons()
+    private void HideObjectMaterialButtons()
     {
-        var colorMaterialCountOfCurrentObject = objectTypeSO.normalMaterials.Count;
-        anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
-        for (int i = 0; i < colorMaterialCountOfCurrentObject; i++)
+        foreach (var spawnedMaterialButton in spawnedMaterialButtons)
         {
-            var newColorButton = Instantiate(colorButtonTemplate);
-            spawnedButtons.Add(newColorButton);
-            newColorButton.gameObject.SetActive(true);
-            SetButtonPosition(newColorButton, i);
-            AssignFunctionalityToButton(newColorButton, i);
-            ChangeButtonColor(newColorButton, objectTypeSO.normalMaterials[i].color);
+            spawnedMaterialButton.gameObject.SetActive(false);
         }
     }
 
     #region ButtonSetup
 
-    private void AssignColorUsingSpecificPixelOfTexture()
+    private void AssignMaterialColorUsingSpecificPixelOfTexture()
     {
         foreach (var material in objectTypeSO.normalMaterials)
         {
@@ -54,20 +93,18 @@ public class AdjustTypeButton : MonoBehaviour
         }
     }
 
-    private void AssignFunctionalityToButton(Button button, int buttonIndex)
+    private void AssignFunctionalityToMaterialButton(Button materialButton, int buttonIndex)
     {
-        button.onClick.AddListener(() =>
+        materialButton.onClick.AddListener(() =>
         {
-            Debug.Log($"spawned button count: {spawnedButtons.Count}");
-
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
-            foreach (var spawnedButton in spawnedButtons)
+            foreach (var spawnedButton in spawnedMaterialButtons)
             {
                 spawnedButton.GetComponent<Outline>().enabled = false;
             }
 
-            button.GetComponent<Outline>().enabled = true;
+            materialButton.GetComponent<Outline>().enabled = true;
         });
     }
 
