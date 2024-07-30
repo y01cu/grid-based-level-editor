@@ -27,6 +27,9 @@
 .vs/
 .vscode/
 
+# Saved files for editor
+Assets/Saves/
+
 # Gradle cache directory
 .gradle/
 
