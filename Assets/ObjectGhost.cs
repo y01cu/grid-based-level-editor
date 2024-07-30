@@ -7,12 +7,12 @@ public class ObjectGhost : MonoBehaviour
 {
     public static ObjectGhost Instance { get; private set; }
 
-
     [SerializeField] private Camera camera;
 
     private GameObject spriteGameObject;
 
     public GameObject prefab;
+
     private Vector3 tempPosition;
 
     // [SerializeField] private AudioSource audioSource;
@@ -39,16 +39,8 @@ public class ObjectGhost : MonoBehaviour
             SetPrefab(e.activeObjectTypeSO.prefab.gameObject);
         }
 
-        // if (currentObject == null)
-        // {
-        //     CreateNewObjectFromSO();
-        // }
-        // else
-        // {
-        // }
         Destroy(currentObject);
         CreateNewObjectFromSO();
-
 
         Show();
     }
@@ -73,7 +65,7 @@ public class ObjectGhost : MonoBehaviour
     private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)
     {
         // audioSource.PlayOneShot(hoverAudioClip);
-        
+
         // if (IsGridHit())
         // {
         // }
