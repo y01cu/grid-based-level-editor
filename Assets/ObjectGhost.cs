@@ -14,10 +14,6 @@ public class ObjectGhost : MonoBehaviour
     public GameObject prefab;
 
     private Vector3 tempPosition;
-
-    // [SerializeField] private AudioSource audioSource;
-    // [SerializeField] private AudioClip hoverAudioClip;
-
     private GameObject currentObject;
 
     private void Awake()

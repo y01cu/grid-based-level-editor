@@ -40,7 +40,7 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
         // AdjustSpriteButton.AdjustSpriteTexture += SetSprite;
-        tilemapGrid = new TilemapGrid(4, 4, cellSize, Vector3.zero);
+        tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero);
         tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
     }
 
