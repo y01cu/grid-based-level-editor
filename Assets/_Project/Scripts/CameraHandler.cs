@@ -9,7 +9,6 @@ public class CameraHandler : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
     private float orthographicSize;
     private float targetOrthographicSize;
-    [SerializeField] private Slider zoomSlider;
 
     private void Start()
     {

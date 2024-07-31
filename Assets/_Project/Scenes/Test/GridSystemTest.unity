@@ -2291,7 +2291,7 @@ MonoBehaviour:
   m_Follow: {fileID: 2085880460}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 25
+    OrthographicSize: 20
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -2606,7 +2606,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 25
+  orthographic size: 20
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4037,7 +4037,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cinemachineVirtualCamera: {fileID: 1135648828}
-  zoomSlider: {fileID: 0}
 --- !u!1 &2111650629
 GameObject:
   m_ObjectHideFlags: 0

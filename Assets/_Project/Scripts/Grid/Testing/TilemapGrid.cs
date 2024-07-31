@@ -80,13 +80,18 @@ public class TilemapGrid
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             var newPos = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
             Debug.Log($"new pos: {newPos}");
-            if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSpriteTexture.None)
+            if (tilemapObject.GetObjectTypeSO() == null)
             {
                 continue;
             }
+            // if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSpriteTexture.None)
+            // {
+            //     continue;
+            // }
             Debug.Log($"cell base obj: {cellBaseObj}");
 
-            ChangeObjectSpriteOnPosition(cellBases, tilemapObject.GetTilemapSprite());
+            SetObjectTypeSO(cellBases, tilemapObject);
+            // ChangeObjectSpriteOnPosition(cellBases, tilemapObject.GetTilemapSprite());
 
             Object.Instantiate(cellBaseObj, newPos, Quaternion.Euler(270, 0, 0));
         }
@@ -95,17 +100,31 @@ public class TilemapGrid
         OnLoaded?.Invoke(this, EventArgs.Empty);
     }
 
-    public void ChangeObjectSpriteOnPosition(CellBase[] cellBases, TilemapObject.TilemapSpriteTexture tilemapSpriteTexture)
+    private void SetObjectTypeSO(CellBase[] cellBases, TilemapObject tilemapObject)
     {
-        var objectIndex = tilemapSpriteTexture switch
+        var index = tilemapObject.GetObjectTypeSO().name switch
         {
-            TilemapObject.TilemapSpriteTexture.Blue => 1,
-            TilemapObject.TilemapSpriteTexture.Green => 2,
-            TilemapObject.TilemapSpriteTexture.Red => 3,
-            TilemapObject.TilemapSpriteTexture.Yellow => 4,
+            "Arrow" => 1,
+            "Berry" => 2,
+            "Frog" => 3,
+            _ => 0
         };
 
-        SetObjectToInstantiate(cellBases[objectIndex]);
+        SetObjectToInstantiate(cellBases[index]);
+
+    }
+
+    public void ChangeObjectSpriteOnPosition(CellBase[] cellBases, TilemapObject.TilemapSpriteTexture tilemapSpriteTexture)
+    {
+        // var objectIndex = tilemapSpriteTexture switch
+        // {
+        //     TilemapObject.TilemapSpriteTexture.Blue => 1,
+        //     TilemapObject.TilemapSpriteTexture.Green => 2,
+        //     TilemapObject.TilemapSpriteTexture.Red => 3,
+        //     TilemapObject.TilemapSpriteTexture.Yellow => 4,
+        // };
+
+        // SetObjectToInstantiate(cellBases[objectIndex]);
     }
 
     private CellBase cellBaseObj;
