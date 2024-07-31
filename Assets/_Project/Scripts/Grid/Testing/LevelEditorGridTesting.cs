@@ -65,6 +65,11 @@ public class LevelEditorGridTesting : MonoBehaviour
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         IsOnGrid = tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) != null;
 
+        // Debug.Log($"IsOnGrid: {IsOnGrid} | obj: {tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)}");
+
+        Debug.Log($"obj on grid: {tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)}");
+        Debug.Log($"grid pos: {tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint)}");
+
         if (currentGridPosition != tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint).vector3With0Z)
         {
             currentGridPosition = tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint)
@@ -77,19 +82,6 @@ public class LevelEditorGridTesting : MonoBehaviour
         }
 
         // Debug.Log(tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) == null ? "null" : "not null");
-
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            tilemapGrid.Save();
-            Debug.Log("saved!");
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            tilemapGrid.Load();
-            Debug.Log("loaded!");
-        }
     }
 
     private void OnDestroy()

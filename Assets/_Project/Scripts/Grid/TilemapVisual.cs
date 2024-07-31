@@ -95,6 +95,8 @@ public class TilemapVisual : MonoBehaviour
                 Vector3 quadSize = new Vector3(1, 1) * gridSystem.CellSize;
 
                 TilemapGrid.TilemapObject gridObject = gridSystem.GetGridObjectOnCoordinates(x, y);
+                // ObjectTypeSO objectTypeSO
+                #region UVCoords
                 TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture = gridObject.GetTilemapSprite();
 
                 Vector2 gridValueUV00;
@@ -111,6 +113,7 @@ public class TilemapVisual : MonoBehaviour
                     gridValueUV00 = uvCoords.uv00;
                     gridValueUV11 = uvCoords.uv11;
                 }
+                #endregion
 
                 MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, gridSystem.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridValueUV00, gridValueUV11);
             }

@@ -48,11 +48,11 @@ public class MouseManager : IRMBListener
         Vector2 scrollValue = context.ReadValue<Vector2>();
         if (scrollValue.y >= 0)
         {
-            Debug.Log("up!");
+            // Debug.Log("up!");
         }
         else if (scrollValue.y < 0)
         {
-            Debug.Log("down!");
+            // Debug.Log("down!");
         }
     }
 

@@ -56,6 +56,19 @@ public class ObjectGhost : MonoBehaviour
         LevelEditorGridTesting.OnGridPositionChanged += LevelEditorGridTesting_OnGridPositionChanged;
         var cellScale = LevelEditorGridTesting.Instance.cellSize;
         spriteGameObject.transform.localScale = new Vector3(cellScale, cellScale, cellScale);
+        ObjectPositioning.OnRemovingObjectStarted += HideGhost;
+        ObjectPositioning.OnRemovingObjectEnded += ShowGhost;
+
+    }
+
+    private void HideGhost(object sender, EventArgs e)
+    {
+        spriteGameObject.SetActive(false);
+    }
+
+    private void ShowGhost(object sender, EventArgs e)
+    {
+        spriteGameObject.SetActive(true);
     }
 
     private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)

@@ -17,6 +17,7 @@ public class TilemapGrid
 
     public void SetupTilemapOnPosition(Vector3 worldPosition, TilemapObject.TilemapSpriteTexture tilemapSpriteTexture, TilemapObject.TilemapObjectType tilemapObjectType)
     {
+        // TODO: Update this method
         TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
         tilemapObject?.SetTilemapSpriteAndType(tilemapSpriteTexture, tilemapObjectType);
     }
@@ -40,6 +41,7 @@ public class TilemapGrid
             for (int y = 0; y < gridSystem.Height; y++)
             {
                 TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y);
+                Debug.Log($"saved tilemap object: {tilemapObject}");
 
                 tilemapObjectSaveObjectList.Add(tilemapObject.Save());
             }
@@ -57,6 +59,7 @@ public class TilemapGrid
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            Debug.Log("loaded tilemap object: " + tilemapObject);
             tilemapObject.Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
         }
@@ -68,17 +71,20 @@ public class TilemapGrid
     public void LoadWithCellBasesWithSO(CellBase[] cellBases)
     {
         SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
-
+        Debug.Log($"save object: {saveObject}");
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            Debug.Log($"tilemap object: {tilemapObject}");
             tilemapObject.Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             var newPos = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
+            Debug.Log($"new pos: {newPos}");
             if (tilemapObject.GetTilemapSprite() == TilemapObject.TilemapSpriteTexture.None)
             {
                 continue;
             }
+            Debug.Log($"cell base obj: {cellBaseObj}");
 
             ChangeObjectSpriteOnPosition(cellBases, tilemapObject.GetTilemapSprite());
 
@@ -183,11 +189,17 @@ public class TilemapGrid
             gridSystem.TriggerGridObjectChanged(x, y);
         }
 
+        public void ClearSO()
+        {
+            objectTypeSO = null;
+            gridSystem.TriggerGridObjectChanged(x, y);
+        }
+
         public override string ToString()
         {
             // return _tilemapSpriteTexture.ToString();
             // return tilemapObjectType.ToString();
-            return objectTypeSO == null ? "none" : objectTypeSO.name;
+            return objectTypeSO == null ? $"" : $"{x} {y} {objectTypeSO.name}";
         }
 
         [Serializable]
