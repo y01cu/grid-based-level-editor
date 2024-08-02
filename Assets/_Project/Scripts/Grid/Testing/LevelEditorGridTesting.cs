@@ -17,7 +17,7 @@ public class LevelEditorGridTesting : MonoBehaviour
     [SerializeField] private int width;
     [SerializeField] private int height;
 
-    private TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
+    // private TilemapGrid.TilemapObject.TilemapMaterialIndex tilemapSpriteTexture;
     private TilemapGrid.TilemapObject.TilemapObjectType tilemapObjectType;
     private ObjectTypeSO tilemapObjectTypeSO;
     private Vector3 currentGridPosition = new();
@@ -48,16 +48,17 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         tilemapObjectTypeSO = e.activeObjectTypeSO;
     }
-
-    private void SetSprite(TilemapGrid.TilemapObject.TilemapSpriteTexture newTilemapSpriteTexture)
-    {
-        tilemapSpriteTexture = newTilemapSpriteTexture;
-        Debug.Log($"updated to: {newTilemapSpriteTexture.ToString()}");
-    }
-
     public void SetupObjectOnPosition(Vector3 mouseWorldPosition)
     {
-        tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapSpriteTexture, tilemapObjectTypeSO);
+        var gridSystem = tilemapGrid.gridSystem;
+        Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
+        TilemapGrid.TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
+
+        tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapObjectTypeSO);
+
+        Debug.Log($"obj type so: {tilemapObjectTypeSO} | or: {tilemapObject.GetObjectTypeSO()}");
+
+        Debug.Log($" material index: {tilemapObject.GetObjectTypeSO().materialIndex}");
     }
 
     private void Update()
@@ -65,10 +66,11 @@ public class LevelEditorGridTesting : MonoBehaviour
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         IsOnGrid = tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) != null;
 
+        #region Logging Grid Position
         // Debug.Log($"IsOnGrid: {IsOnGrid} | obj: {tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)}");
-
-        Debug.Log($"obj on grid: {tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)}");
-        Debug.Log($"grid pos: {tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint)}");
+        // Debug.Log($"obj on grid: {tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)}");
+        // Debug.Log($"grid pos: {tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint)}");
+        #endregion
 
         if (currentGridPosition != tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint).vector3With0Z)
         {

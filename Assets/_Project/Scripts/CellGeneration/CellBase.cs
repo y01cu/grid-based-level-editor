@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 public class CellBase : MonoBehaviour
 {
-    public GameObject[] CellObjectPrefabs;
+    public List<GameObject> CellObjectPrefabs;
     public ObjectColor objectColor;
     public ObjectType objectType;
     public Direction arrowDirection;

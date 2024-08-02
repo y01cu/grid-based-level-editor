@@ -53,6 +53,7 @@ public class AdjustTypeButton : MonoBehaviour
             {
                 var newColorButton = Instantiate(colorButtonTemplate);
                 spawnedMaterialButtons.Add(newColorButton);
+                newColorButton.GetComponent<AdjustSpriteButton>().materialIndex = i;
                 newColorButton.gameObject.SetActive(true);
                 SetButtonPosition(newColorButton, i);
                 AssignFunctionalityToMaterialButton(newColorButton, i);
@@ -111,6 +112,8 @@ public class AdjustTypeButton : MonoBehaviour
         materialButton.onClick.AddListener(() =>
         {
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
+            objectTypeSO.materialIndex = buttonIndex; // Since the first material is the default material 
+
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
             foreach (var spawnedButton in spawnedMaterialButtons)
             {

@@ -1,12 +1,13 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 public class CellObjectFactory
 {
-    private readonly GameObject[] cellObjectPrefabs;
+    private readonly List<GameObject> cellObjectPrefabs;
     private readonly Transform objectTargetTransformFromChild;
 
-    public CellObjectFactory(GameObject[] cellObjectPrefabs, Transform objectTargetTransformFromChild)
+    public CellObjectFactory(List<GameObject> cellObjectPrefabs, Transform objectTargetTransformFromChild)
     {
         this.cellObjectPrefabs = cellObjectPrefabs;
         this.objectTargetTransformFromChild = objectTargetTransformFromChild;
@@ -38,7 +39,7 @@ public class CellObjectFactory
     {
         var cellObject = Object.Instantiate(objectTypeSO.prefab);
         // objectTypeSO.cellObjectType.
-            
+
         cellObject.transform.position = new Vector3(0, 0, 0);
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.DOScale(Vector3.zero, 2f).From();

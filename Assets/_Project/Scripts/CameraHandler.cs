@@ -1,8 +1,6 @@
-using System;
 using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CameraHandler : MonoBehaviour
 {

@@ -36,4 +36,12 @@ public static class VectorHelper
     {
         return Physics.Raycast(transform.position, transform.up, length, layers);
     }
+
+    public static RaycastHit[] GetRaycastHitsFromMousePosition(Camera camera)
+    {
+        RaycastHit[] hits;
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        hits = Physics.RaycastAll(ray);
+        return hits;
+    }
 }

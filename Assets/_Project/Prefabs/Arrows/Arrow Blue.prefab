@@ -81,7 +81,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5cbb0a21ec573b546917cf2c9decf8e0,
         type: 3}
       propertyPath: m_Name
-      value: Arrow Blue
+      value: Arrow
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5cbb0a21ec573b546917cf2c9decf8e0,
         type: 3}

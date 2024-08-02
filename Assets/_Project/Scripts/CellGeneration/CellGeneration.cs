@@ -15,6 +15,8 @@ public class CellGeneration : MonoBehaviour
 
     public CellOrder[] cellOrders = new CellOrder[0];
 
+    [SerializeField] private CellBase newCellBase;
+
     [SerializeField] private CellBase[] cellBases;
     [SerializeField] private Transform cellParentTransform;
     [SerializeField] private int width;
@@ -58,9 +60,9 @@ public class CellGeneration : MonoBehaviour
         // StartCoroutine(ProcessCellOrders());
         // tilemapGrid.SetObjectToInstantiate(cellBases[1].gameObject);
         // tilemapGrid.Load();
-
         // tilemapGrid.LoadWithCellBases(cellBases);
-        tilemapGrid.LoadWithCellBasesWithSO(cellBases);
+
+        tilemapGrid.LoadWithCellBasesWithSO();
     }
 
     private IEnumerator ProcessCellOrders()

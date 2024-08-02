@@ -9,7 +9,7 @@ public class TilemapVisual : MonoBehaviour
     public struct TilemapSpriteUV
     {
         [FormerlySerializedAs("tilemapSprite")]
-        public TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture;
+        // public TilemapGrid.TilemapObject.TilemapMaterialIndex tilemapSpriteTexture;
 
         public Vector2Int uv00Pixels;
         public Vector2Int uv11Pixels;
@@ -25,7 +25,7 @@ public class TilemapVisual : MonoBehaviour
     private GridSystem<TilemapGrid.TilemapObject> gridSystem;
     private Mesh mesh;
     private bool isMeshReadyToUpdate;
-    private Dictionary<TilemapGrid.TilemapObject.TilemapSpriteTexture, UVCoords> uvCoordsDictionary;
+    // private Dictionary<TilemapGrid.TilemapObject.TilemapMaterialIndex, UVCoords> uvCoordsDictionary;
     private MeshRenderer meshRenderer;
 
 
@@ -44,15 +44,15 @@ public class TilemapVisual : MonoBehaviour
         // meshRenderer.material.color = Color.cyan;
 
 
-        uvCoordsDictionary = new Dictionary<TilemapGrid.TilemapObject.TilemapSpriteTexture, UVCoords>();
-        foreach (var tilemapSpriteUV in tilemapSpriteUvArray)
-        {
-            uvCoordsDictionary[tilemapSpriteUV.tilemapSpriteTexture] = new UVCoords
-            {
-                uv00 = new Vector2(tilemapSpriteUV.uv00Pixels.x / textureWidth, tilemapSpriteUV.uv00Pixels.y / textureHeight),
-                uv11 = new Vector2(tilemapSpriteUV.uv11Pixels.x / textureWidth, tilemapSpriteUV.uv11Pixels.y / textureHeight),
-            };
-        }
+        // uvCoordsDictionary = new Dictionary<TilemapGrid.TilemapObject.TilemapMaterialIndex, UVCoords>();
+        // foreach (var tilemapSpriteUV in tilemapSpriteUvArray)
+        // {
+        //     uvCoordsDictionary[tilemapSpriteUV.tilemapSpriteTexture] = new UVCoords
+        //     {
+        //         uv00 = new Vector2(tilemapSpriteUV.uv00Pixels.x / textureWidth, tilemapSpriteUV.uv00Pixels.y / textureHeight),
+        //         uv11 = new Vector2(tilemapSpriteUV.uv11Pixels.x / textureWidth, tilemapSpriteUV.uv11Pixels.y / textureHeight),
+        //     };
+        // }
     }
 
     public void SetGridSystem(TilemapGrid tilemapGrid, GridSystem<TilemapGrid.TilemapObject> gridSystem)
@@ -97,25 +97,25 @@ public class TilemapVisual : MonoBehaviour
                 TilemapGrid.TilemapObject gridObject = gridSystem.GetGridObjectOnCoordinates(x, y);
                 // ObjectTypeSO objectTypeSO
                 #region UVCoords
-                TilemapGrid.TilemapObject.TilemapSpriteTexture tilemapSpriteTexture = gridObject.GetTilemapSprite();
+                // TilemapGrid.TilemapObject.TilemapMaterialIndex tilemapSpriteTexture = gridObject.GetTilemapSprite();
 
                 Vector2 gridValueUV00;
                 Vector2 gridValueUV11;
-                if (tilemapSpriteTexture == TilemapGrid.TilemapObject.TilemapSpriteTexture.None)
-                {
-                    gridValueUV00 = Vector2.zero;
-                    gridValueUV11 = Vector2.zero;
-                    quadSize = Vector3.zero;
-                }
-                else
-                {
-                    UVCoords uvCoords = uvCoordsDictionary[tilemapSpriteTexture];
-                    gridValueUV00 = uvCoords.uv00;
-                    gridValueUV11 = uvCoords.uv11;
-                }
+                // if (tilemapSpriteTexture == TilemapGrid.TilemapObject.TilemapMaterialIndex.None)
+                // {
+                //     gridValueUV00 = Vector2.zero;
+                //     gridValueUV11 = Vector2.zero;
+                //     quadSize = Vector3.zero;
+                // }
+                // else
+                // {
+                // // UVCoords uvCoords = uvCoordsDictionary[tilemapSpriteTexture];
+                // gridValueUV00 = uvCoords.uv00;
+                // gridValueUV11 = uvCoords.uv11;
+                // // }
                 #endregion
 
-                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, gridSystem.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridValueUV00, gridValueUV11);
+                // MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, gridSystem.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridValueUV00, gridValueUV11);
             }
         }
 

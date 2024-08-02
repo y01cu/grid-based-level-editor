@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db343e85b833a240877e0c03dedb2c6, type: 3}
+  m_Name: Cell
+  m_EditorClassIdentifier: 
+  name: Cell
+  prefab: {fileID: 4069291838996504858, guid: 49e9f12c4271b3c4281c51c6941384e7, type: 3}
+  spriteForLevelEditor: {fileID: 0}
+  direction: 0
+  normalMaterials:
+  - {fileID: 2100000, guid: eddbcdf5e68c4fd4e9a3e096ca501f3b, type: 2}
+  - {fileID: 2100000, guid: 5f11db749a6cbc143a0336addacefcfa, type: 2}
+  - {fileID: 2100000, guid: 032bcccd6dcf1a542baf6e1fccc80929, type: 2}
+  - {fileID: 2100000, guid: 2e1faf050f1091d4d901cee20591347d, type: 2}
+  obstacleMaterial: {fileID: 0}
+  cellObjectType: {fileID: 0}
+  materialIndex: 0

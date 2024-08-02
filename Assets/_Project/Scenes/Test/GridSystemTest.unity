@@ -1743,6 +1743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b3639e4fa0aee847952e5d0dcb4177f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  materialIndex: 0
 --- !u!114 &1039018422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3794,17 +3795,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemapSpriteUvArray:
-  - tilemapSpriteTexture: 1
-    uv00Pixels: {x: 0, y: 0}
+  - uv00Pixels: {x: 0, y: 0}
     uv11Pixels: {x: 512, y: 512}
-  - tilemapSpriteTexture: 2
-    uv00Pixels: {x: 512, y: 0}
+  - uv00Pixels: {x: 512, y: 0}
     uv11Pixels: {x: 1024, y: 512}
-  - tilemapSpriteTexture: 3
-    uv00Pixels: {x: 1024, y: 0}
+  - uv00Pixels: {x: 1024, y: 0}
     uv11Pixels: {x: 1536, y: 512}
-  - tilemapSpriteTexture: 4
-    uv00Pixels: {x: 1536, y: 0}
+  - uv00Pixels: {x: 1536, y: 0}
     uv11Pixels: {x: 2048, y: 512}
 --- !u!4 &1977989173
 Transform:
