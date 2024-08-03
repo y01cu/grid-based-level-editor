@@ -863,13 +863,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.043246232, y: -0.13040201, z: 0.0056934766, w: 0.9905012}
+  m_LocalRotation: {x: 0.042927142, y: -0.08322759, z: 0.007740315, w: 0.9955755}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 5, y: -15, z: 0}
+  m_LocalEulerAnglesHint: {x: 4.977, y: -9.537, z: 0.475}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1520,10 +1520,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fc38e0b906772147a4b4b00dbb33363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movesTMP: {fileID: 333069578}
-  levelTMP: {fileID: 1745805262}
   levelFailedImage: {fileID: 719176693}
   gameCompletedImage: {fileID: 312450874}
+  movesTMP: {fileID: 333069578}
+  levelTMP: {fileID: 1745805262}
 --- !u!4 &923139915
 Transform:
   m_ObjectHideFlags: 0
@@ -2243,6 +2243,7 @@ MonoBehaviour:
     stepCount: 2
     orderType: 1
     finalBerryIndex: 2
+  newCellBase: {fileID: 0}
   cellBases:
   - {fileID: 3257195153420974243, guid: 2a328fd7f824fa94eb376a601ca850e8, type: 3}
   - {fileID: 6218630723515409759, guid: 8df29ced29487e74285d80fc41397d88, type: 3}
@@ -2250,7 +2251,6 @@ MonoBehaviour:
   - {fileID: -1059630805916366743, guid: 567dfbfa57696b7489deb087867e82dd, type: 3}
   - {fileID: -9457170272729233, guid: 541b8dd9dc0112e42bb42e1994210e89, type: 3}
   cellParentTransform: {fileID: 457691977}
-  orderLength: 0
   width: 4
   height: 4
 --- !u!4 &2001982932

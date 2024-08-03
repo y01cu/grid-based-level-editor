@@ -600,13 +600,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.043246232, y: -0.13040201, z: 0.0056934766, w: 0.9905012}
+  m_LocalRotation: {x: 0.042927142, y: -0.08322759, z: 0.007740315, w: 0.9955755}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 5, y: -15, z: 0}
+  m_LocalEulerAnglesHint: {x: 4.977, y: -9.537, z: 0.475}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1035,11 +1035,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemapSpriteUvArray:
-  - tilemapSpriteTexture: 1
-    uv00Pixels: {x: 1520, y: 0}
+  - uv00Pixels: {x: 1520, y: 0}
     uv11Pixels: {x: 1900, y: 800}
-  - tilemapSpriteTexture: 2
-    uv00Pixels: {x: 1140, y: 0}
+  - uv00Pixels: {x: 1140, y: 0}
     uv11Pixels: {x: 1520, y: 800}
 --- !u!4 &721638455
 Transform:
@@ -2147,6 +2145,7 @@ MonoBehaviour:
     stepCount: 4
     orderType: 0
     finalBerryIndex: 1
+  newCellBase: {fileID: 0}
   cellBases:
   - {fileID: 3257195153420974243, guid: 2a328fd7f824fa94eb376a601ca850e8, type: 3}
   - {fileID: 6218630723515409759, guid: 8df29ced29487e74285d80fc41397d88, type: 3}
@@ -2200,8 +2199,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 470905792211a8b4cbef5ad30e2ee06e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <cellSize>k__BackingField: 0
   camera: {fileID: 330585545}
   tilemapVisual: {fileID: 721638454}
+  audioSource: {fileID: 0}
+  objectPlacedAudioClip: {fileID: 0}
+  width: 0
+  height: 0
 --- !u!4 &2134733644
 Transform:
   m_ObjectHideFlags: 0

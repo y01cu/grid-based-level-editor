@@ -120,14 +120,18 @@ public class TilemapGrid
 
     private void HandleCellWithTilemapObjectOnPosition(TilemapObject tilemapObject, Vector3 newPosition)
     {
+        var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
+
         var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         Debug.Log($"cell so loaded: {baseCellSO}", baseCellSO);
-        var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition, Quaternion.Euler(270, 0, 0));
+        var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition, initialAngleForCamera);
         //instantiatedCell
         var cellObjectTypeSO = instantiatedCell.GetComponent<CellBase>().objectTypeSO;
         cellObjectTypeSO = tilemapObject.GetObjectTypeSO();
-        var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, Quaternion.Euler(270, 0, 0));
+        // previously Quaternion.Euler(270, 0, 0)
+        var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, initialAngleForCamera); 
         newObject.GetComponent<Renderer>().sharedMaterial = tilemapObject.GetObjectTypeSO().normalMaterials[tilemapObject.materialIndex];
+        newObject.GetComponent<CellObject>().AdjustTransform();
         var renderer = instantiatedCell.GetComponent<Renderer>();
         var materials = renderer.sharedMaterials;
         materials[0] = baseCellSO.normalMaterials[tilemapObject.materialIndex];

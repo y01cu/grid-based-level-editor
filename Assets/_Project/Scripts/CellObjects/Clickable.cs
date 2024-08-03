@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Clickable : CellObject
 {
     protected bool isTweenable;
-    
+
     public virtual void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
         ScaleUpAndDown(targetScale);

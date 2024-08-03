@@ -26,7 +26,7 @@ public class Berry : Clickable
     {
         collisionHandler = new BerryCollisionHandler(this);
     }
-    
+
     private void Start()
     {
         isTweenable = true;
@@ -132,4 +132,31 @@ public class Berry : Clickable
 
     // Expose necessary internal state for collision handling
     public BoxCollider GetBoxCollider() => boxCollider;
+
+    public override void AdjustTransform()
+    {
+        AdjustPosition();
+        AdjustRotation();
+        AdjustScale();
+    }
+
+    protected override void AdjustPosition()
+    {
+        transform.Translate(0, 0.5f, 0);
+    }
+
+    protected override void AdjustRotation()
+    {
+        var additionalRotation = new Vector3(180, 90, 0);
+        Debug.Log($"rotation adjusted for berry {additionalRotation}");
+        transform.Rotate(additionalRotation);
+    }
+    protected override void AdjustScale()
+    {
+
+    }
+
+
+
+
 }
