@@ -160,4 +160,14 @@ public class ObjectGhost : MonoBehaviour
 
         return raycastResults.Count > 0;
     }
+
+    public void RotateCurrentObjectToTheRight()
+    {
+        currentObject.transform.Rotate(0, 90, 0);
+    }
+
+    public void RotateCurrentObjectToTheLeft()
+    {
+        currentObject.transform.Rotate(0, -90, 0);
+    }
 }
