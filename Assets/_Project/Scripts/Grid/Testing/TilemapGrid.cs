@@ -94,12 +94,13 @@ public class TilemapGrid
 
             HandleCellWithTilemapObjectOnPosition(tilemapObject, newPosition);
 
-            objectToInstantiate = tilemapObject.GetObjectTypeSO().prefab.gameObject;
-            objectToInstantiate.GetComponent<Renderer>().sharedMaterial = tilemapObject.GetObjectTypeSO().normalMaterials[tilemapObject.materialIndex];
+            //objectToInstantiate = tilemapObject.GetObjectTypeSO().prefab.gameObject;
+            //objectToInstantiate.GetComponent<Renderer>().sharedMaterial = tilemapObject.GetObjectTypeSO().normalMaterials[tilemapObject.materialIndex];
+            //Object.Instantiate(objectToInstantiate, newPosition, Quaternion.Euler(270, 0, 0));
 
             var objectName = tilemapObject.GetObjectTypeSO().name;
-
             int targetIndex = 0;
+
 
             // int index = cellBaseObj.CellObjectPrefabs.IndexOf(tilemapObject.GetObjectTypeSO().prefab.gameObject);
             // Debug.Log($"index: {index}");
@@ -111,7 +112,6 @@ public class TilemapGrid
 
 
             //instantiatedCell.GetComponent<Renderer>().sharedMaterials[0] = baseCellSO.normalMaterials[tilemapObject.materialIndex];
-            Object.Instantiate(objectToInstantiate, newPosition, Quaternion.Euler(270, 0, 0));
             // Object.Instantiate(cellBaseObj, newPos, Quaternion.Euler(270, 0, 0));
         }
 
@@ -123,6 +123,11 @@ public class TilemapGrid
         var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         Debug.Log($"cell so loaded: {baseCellSO}", baseCellSO);
         var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition, Quaternion.Euler(270, 0, 0));
+        //instantiatedCell
+        var cellObjectTypeSO = instantiatedCell.GetComponent<CellBase>().objectTypeSO;
+        cellObjectTypeSO = tilemapObject.GetObjectTypeSO();
+        var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, Quaternion.Euler(270, 0, 0));
+        newObject.GetComponent<Renderer>().sharedMaterial = tilemapObject.GetObjectTypeSO().normalMaterials[tilemapObject.materialIndex];
         var renderer = instantiatedCell.GetComponent<Renderer>();
         var materials = renderer.sharedMaterials;
         materials[0] = baseCellSO.normalMaterials[tilemapObject.materialIndex];

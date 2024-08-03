@@ -21,6 +21,9 @@ public class AdjustTypeButton : MonoBehaviour
     {
         GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
 
+        // Every type's initial material index must be set to 0
+        objectTypeSO.materialIndex = 0;
+
         AssignMaterialColorUsingSpecificPixelOfTexture();
         OnActiveObjectUpdated += (sender, args) =>
         {
@@ -113,6 +116,8 @@ public class AdjustTypeButton : MonoBehaviour
         {
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
             objectTypeSO.materialIndex = buttonIndex; // Since the first material is the default material 
+
+            Debug.Log($"obj type so has material index: {objectTypeSO.materialIndex}");            
 
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
             foreach (var spawnedButton in spawnedMaterialButtons)

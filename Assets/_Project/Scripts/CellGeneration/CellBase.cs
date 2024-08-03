@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CellBase : MonoBehaviour
 {
+    public ObjectTypeSO objectTypeSO;
+
     public List<GameObject> CellObjectPrefabs;
     public ObjectColor objectColor;
     public ObjectType objectType;
@@ -45,17 +47,17 @@ public class CellBase : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (objectColor == ObjectColor._Empty)
-        {
-            return;
-        }
+        //if (objectColor == ObjectColor._Empty)
+        //{
+        //    return;
+        //}
 
-        timer += Time.deltaTime;
+        //timer += Time.deltaTime;
 
-        if (timer >= InitialWaitingTime && !isObjectSpawned)
-        {
-            TrySpawnObject();
-        }
+        //if (timer >= InitialWaitingTime && !isObjectSpawned)
+        //{
+        //    TrySpawnObject();
+        //}
 
         if (timer >= DestructionWaitingTime && isObjectSpawned && !isDeathOrderGiven)
         {
