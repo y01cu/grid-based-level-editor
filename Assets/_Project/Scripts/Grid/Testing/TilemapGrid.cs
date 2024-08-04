@@ -7,16 +7,21 @@ public class TilemapGrid
 {
     public event EventHandler OnLoaded;
 
-    public GridSystem<TilemapObject> gridSystem { get; private set; }
+    public GridSystem<Stack<TilemapObject>> gridSystem { get; private set; }
 
     public TilemapGrid(int width, int height, float cellSize, Vector3 originPosition)
     {
-        gridSystem = new GridSystem<TilemapObject>(width, height, cellSize, originPosition, (GridSystem<TilemapObject> g, int x, int y) => new TilemapObject(g, x, y));
+        gridSystem = new GridSystem<Stack<TilemapObject>>(width, height, cellSize, originPosition, (GridSystem<Stack<TilemapObject>> gridSystem, int x, int y) =>
+        {
+            var stack = new Stack<TilemapObject>();
+            stack.Push(new TilemapObject(gridSystem, x, y));
+            return stack;
+        });
     }
 
     public void SetupTilemapOnPositionWithSO(Vector3 worldPosition, ObjectTypeSO objectTypeSO)
     {
-        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
+        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition).Peek();
         tilemapObject?.UpdateTilemapSpriteAndSOAndMaterial(objectTypeSO.materialIndex, objectTypeSO);
     }
 
@@ -32,15 +37,14 @@ public class TilemapGrid
         {
             for (int y = 0; y < gridSystem.Height; y++)
             {
-                TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y);
-                Debug.Log($"obj material index: {tilemapObject.GetMaterialIndex()}");
-                Debug.Log(tilemapObject.GetObjectTypeSO() ? $"saved obj so: {tilemapObject.GetObjectTypeSO().name}" : $"x: {x}, y: {y} is null ");
-                tilemapObjectSaveObjectList.Add(tilemapObject.Save());
+                Stack<TilemapObject> tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y);
+                Debug.Log($"obj material index: {tilemapObject.Peek().GetMaterialIndex()}");
+                Debug.Log(tilemapObject.Peek().GetObjectTypeSO() ? $"saved obj so: {tilemapObject.Peek().GetObjectTypeSO().name}" : $"x: {x}, y: {y} is null ");
+                tilemapObjectSaveObjectList.Add(tilemapObject.Peek().Save());
             }
         }
 
         SaveObject saveObject = new SaveObject { tilemapObjectSaveObjectArray = tilemapObjectSaveObjectList.ToArray() };
-
         SaveSystem.SaveObject(saveObject);
     }
 
@@ -52,7 +56,7 @@ public class TilemapGrid
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             Debug.Log("loaded tilemap object: " + tilemapObject);
-            tilemapObject.Load(tilemapObjectSaveObject);
+            tilemapObject.Peek().Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
         }
 
@@ -65,23 +69,23 @@ public class TilemapGrid
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
-            tilemapObject.Load(tilemapObjectSaveObject);
+            tilemapObject.Peek().Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             var newPosition = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
 
-            bool isObjectNull = tilemapObject.GetObjectTypeSO() == null;
+            bool isObjectNull = tilemapObject.Peek().GetObjectTypeSO() == null;
             if (isObjectNull)
             {
                 continue;
             }
 
-            Debug.Log(tilemapObject.GetObjectTypeSO() ? $"loaded obj so: {tilemapObject.GetObjectTypeSO().name}" : $"x: {tilemapObjectSaveObject.x}, y: {tilemapObjectSaveObject.y} is null ");
+            Debug.Log(tilemapObject.Peek().GetObjectTypeSO() ? $"loaded obj so: {tilemapObject.Peek().GetObjectTypeSO().name}" : $"x: {tilemapObjectSaveObject.x}, y: {tilemapObjectSaveObject.y} is null ");
 
-            Debug.Log($"material index: {tilemapObject.GetMaterialIndex()}");
+            Debug.Log($"material index: {tilemapObject.Peek().GetMaterialIndex()}");
 
-            HandleCellWithTilemapObjectOnPosition(tilemapObject, newPosition);
+            HandleCellWithTilemapObjectOnPosition(tilemapObject.Peek(), newPosition);
 
-            var objectName = tilemapObject.GetObjectTypeSO().name;
+            var objectName = tilemapObject.Peek().GetObjectTypeSO().name;
             int targetIndex = 0;
         }
 
@@ -120,14 +124,14 @@ public class TilemapGrid
 
     public class TilemapObject
     {
-        private GridSystem<TilemapObject> gridSystem;
+        private GridSystem<Stack<TilemapObject>> gridSystem;
         private ObjectTypeSO objectTypeSO;
         private Vector3 rotation;
         private int x;
         private int y;
         private int materialIndex;
 
-        public TilemapObject(GridSystem<TilemapObject> gridSystem, int x, int y)
+        public TilemapObject(GridSystem<Stack<TilemapObject>> gridSystem, int x, int y)
         {
             this.gridSystem = gridSystem;
             this.x = x;

@@ -22,7 +22,7 @@ public class TilemapVisual : MonoBehaviour
     }
 
     [SerializeField] private TilemapSpriteUV[] tilemapSpriteUvArray;
-    private GridSystem<TilemapGrid.TilemapObject> gridSystem;
+    private GridSystem<Stack<TilemapGrid.TilemapObject>> gridSystem;
     private Mesh mesh;
     private bool isMeshReadyToUpdate;
     // private Dictionary<TilemapGrid.TilemapObject.TilemapMaterialIndex, UVCoords> uvCoordsDictionary;
@@ -55,12 +55,14 @@ public class TilemapVisual : MonoBehaviour
         // }
     }
 
-    public void SetGridSystem(TilemapGrid tilemapGrid, GridSystem<TilemapGrid.TilemapObject> gridSystem)
+    public void SetGridSystem(TilemapGrid tilemapGrid, GridSystem<Stack<TilemapGrid.TilemapObject>> gridSystem)
     {
         this.gridSystem = gridSystem;
         UpdateTilemapVisual();
 
+        // fix it
         gridSystem.OnGridObjectChanged += GridSystemOnGridObjectChanged;
+        
         tilemapGrid.OnLoaded += TilemapGridOnOnLoaded;
     }
 
@@ -69,7 +71,7 @@ public class TilemapVisual : MonoBehaviour
         isMeshReadyToUpdate = true;
     }
 
-    private void GridSystemOnGridObjectChanged(object sender, GridSystem<TilemapGrid.TilemapObject>.OnGridValueChangedEventArgs e)
+    private void GridSystemOnGridObjectChanged(object sender, GridSystem<Stack<TilemapGrid.TilemapObject>>.OnGridValueChangedEventArgs e)
     {
         isMeshReadyToUpdate = true;
     }
@@ -94,7 +96,7 @@ public class TilemapVisual : MonoBehaviour
                 int index = x * gridSystem.Height + y;
                 Vector3 quadSize = new Vector3(1, 1) * gridSystem.CellSize;
 
-                TilemapGrid.TilemapObject gridObject = gridSystem.GetGridObjectOnCoordinates(x, y);
+                Stack<TilemapGrid.TilemapObject> gridObject = gridSystem.GetGridObjectOnCoordinates(x, y);
                 // ObjectTypeSO objectTypeSO
                 #region UVCoords
                 // TilemapGrid.TilemapObject.TilemapMaterialIndex tilemapSpriteTexture = gridObject.GetTilemapSprite();
