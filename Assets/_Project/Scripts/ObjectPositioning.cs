@@ -102,9 +102,5 @@ public class ObjectPositioning : MonoBehaviour
     {
         LevelEditorGridTesting.Instance.SetupObjectOnPosition(mouseWorldPosition);
         ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
-
-        // ---
-
-
     }
 }

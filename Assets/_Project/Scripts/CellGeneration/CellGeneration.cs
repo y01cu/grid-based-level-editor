@@ -62,7 +62,7 @@ public class CellGeneration : MonoBehaviour
         // tilemapGrid.Load();
         // tilemapGrid.LoadWithCellBases(cellBases);
 
-        tilemapGrid.LoadWithCellBasesWithSO();
+        tilemapGrid.LoadWithSO();
     }
 
     private IEnumerator ProcessCellOrders()

@@ -30,7 +30,7 @@ public class CellObjectFactory
         cellObject.transform.localPosition = objectTargetTransformFromChild.position;
         cellObject.transform.DOScale(Vector3.zero, 2f).From();
         cellObject.transform.Rotate(additionalRotationVector3);
-        cellObjectComponent.Initialize(objectColor, objectType);
+        cellObjectComponent.Initialize(objectColor);
 
         return cellObject;
     }

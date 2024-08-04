@@ -17,8 +17,6 @@ public class LevelEditorGridTesting : MonoBehaviour
     [SerializeField] private int width;
     [SerializeField] private int height;
 
-    // private TilemapGrid.TilemapObject.TilemapMaterialIndex tilemapSpriteTexture;
-    private TilemapGrid.TilemapObject.TilemapObjectType tilemapObjectType;
     private ObjectTypeSO tilemapObjectTypeSO;
     private Vector3 currentGridPosition = new();
 
@@ -39,7 +37,6 @@ public class LevelEditorGridTesting : MonoBehaviour
     private void Start()
     {
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
-        // AdjustSpriteButton.AdjustSpriteTexture += SetSprite;
         tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero);
         tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
     }
@@ -57,7 +54,6 @@ public class LevelEditorGridTesting : MonoBehaviour
         tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapObjectTypeSO);
 
         Debug.Log($"obj type so: {tilemapObjectTypeSO} | or: {tilemapObject.GetObjectTypeSO()}");
-
         Debug.Log($" material index: {tilemapObject.GetObjectTypeSO().materialIndex}");
     }
 
@@ -82,13 +78,10 @@ public class LevelEditorGridTesting : MonoBehaviour
                 OnGridPositionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        // Debug.Log(tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) == null ? "null" : "not null");
     }
 
     private void OnDestroy()
     {
-        // AdjustSpriteButton.AdjustSpriteTexture -= SetSprite;
         AdjustTypeButton.OnActiveObjectUpdated -= SetObjectTypeSO;
     }
 }

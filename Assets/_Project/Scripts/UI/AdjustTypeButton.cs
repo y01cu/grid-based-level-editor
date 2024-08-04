@@ -20,7 +20,6 @@ public class AdjustTypeButton : MonoBehaviour
     private void Start()
     {
         GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
-
         // Every type's initial material index must be set to 0
         objectTypeSO.materialIndex = 0;
 
@@ -39,7 +38,7 @@ public class AdjustTypeButton : MonoBehaviour
         };
     }
 
-    private void ShowObjectMaterialColorButtons()
+    private void SetupObjectMaterialColorButtons()
     {
         if (spawnedMaterialButtons.Count > 0)
         {
@@ -81,11 +80,7 @@ public class AdjustTypeButton : MonoBehaviour
             return;
         }
         IsSelected = true;
-        UpdateObjectTypeFromButtonSO();
-    }
-    public void UpdateObjectTypeFromButtonSO()
-    {
-        ShowObjectMaterialColorButtons();
+        SetupObjectMaterialColorButtons();
         OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
     }
 

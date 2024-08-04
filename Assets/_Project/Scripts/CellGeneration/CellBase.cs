@@ -6,13 +6,14 @@ using UnityEngine;
 public class CellBase : MonoBehaviour
 {
     public ObjectTypeSO objectTypeSO;
+     
 
     public List<GameObject> CellObjectPrefabs;
     public ObjectColor objectColor;
     public ObjectType objectType;
     public Direction arrowDirection;
     public Vector3 additionalRotationVector3;
-    public OrderType orderType;
+    public OrderType orderType;     
 
     [SerializeField] private Transform objectTargetTransformFromChild;
     [SerializeField] private LayerMask collisionLayers;

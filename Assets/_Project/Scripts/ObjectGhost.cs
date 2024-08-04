@@ -6,13 +6,10 @@ using UnityEngine.EventSystems;
 public class ObjectGhost : MonoBehaviour
 {
     public static ObjectGhost Instance { get; private set; }
-
-    [SerializeField] private Camera camera;
-
-    private GameObject spriteGameObject;
-
     public GameObject prefab;
 
+    [SerializeField] private Camera camera;
+    private GameObject spriteGameObject;
     private Vector3 tempPosition;
     private GameObject currentObject;
 
@@ -43,6 +40,7 @@ public class ObjectGhost : MonoBehaviour
 
     private void CreateNewObjectFromSO()
     {
+        // TODO: Change initial rotation to a proper value
         currentObject = Instantiate(prefab, spriteGameObject.transform.position, Quaternion.Euler(90, 0, 0));
         currentObject.transform.SetParent(spriteGameObject.transform);
         currentObject.transform.localScale = Vector3.one;
@@ -93,15 +91,9 @@ public class ObjectGhost : MonoBehaviour
     {
         float cellSize = LevelEditorGridTesting.Instance.cellSize;
 
-
-        spriteGameObject.transform.position = LevelEditorGridTesting.IsOnGrid
-            ? LevelEditorGridTesting.tilemapGrid.gridSystem
-                  .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize +
-              new Vector3(cellSize / 2, cellSize / 2, 0)
+        spriteGameObject.transform.position = LevelEditorGridTesting.IsOnGrid ? LevelEditorGridTesting.tilemapGrid.gridSystem
+        .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0)
             : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
-
-
-        // FindCustomObjectOnPointer();
 
         tempPosition = spriteGameObject.transform.position;
     }
@@ -109,7 +101,8 @@ public class ObjectGhost : MonoBehaviour
 
     public void SpawnAndAdjustPrefabOnPosition()
     {
-        var spawnedPrefab = Instantiate(prefab, spriteGameObject.transform.position, Quaternion.Euler(90, 0, 0));
+        // TODO: Change instation rotation to object ghost's rotation
+        var spawnedPrefab = Instantiate(prefab, spriteGameObject.transform.position, currentObject.transform.rotation);
         spawnedPrefab.transform.Translate(0, -2f, 0);
         spawnedPrefab.transform.localScale *= LevelEditorGridTesting.Instance.cellSize;
     }
