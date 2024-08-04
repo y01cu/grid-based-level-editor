@@ -46,16 +46,16 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         tilemapObjectTypeSO = e.activeObjectTypeSO;
     }
-    public void SetupObjectOnPosition(Vector3 mouseWorldPosition)
+    public void SetupObjectOnPosition(Vector3 mouseWorldPosition, Vector3 rotation)
     {
         var gridSystem = tilemapGrid.gridSystem;
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         Stack<TilemapGrid.TilemapObject> tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
 
-        tilemapGrid.SetupTilemapOnPositionWithSO(mouseWorldPosition, tilemapObjectTypeSO);
 
         Debug.Log($"obj type so: {tilemapObjectTypeSO} | or: {tilemapObject.Peek().GetObjectTypeSO()}");
         Debug.Log($" material index: {tilemapObject.Peek().GetObjectTypeSO().materialIndex}");
+        tilemapGrid.SetupTilemapObject(mouseWorldPosition, rotation, tilemapObjectTypeSO);
     }
 
     private void Update()

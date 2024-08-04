@@ -30,7 +30,8 @@ public class ObjectPositioning : MonoBehaviour
         if (canObjectBePlaced)
         {
             Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-            PlaceObject(mouseWorldPosition);
+            Vector3 objectRotation = ObjectGhost.Instance.GetCurrentObjectRotation();
+            PlaceObject(mouseWorldPosition, objectRotation);
         }
 
 
@@ -93,14 +94,15 @@ public class ObjectPositioning : MonoBehaviour
         var gridSystem = LevelEditorGridTesting.tilemapGrid.gridSystem;
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         Stack<TilemapGrid.TilemapObject> tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
-
-        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint).Peek()?.UpdateTilemapSpriteAndSOAndMaterial(tilemapObject.Peek().GetObjectTypeSO().materialIndex, null);
+        var objectRotation = ObjectGhost.Instance.GetCurrentObjectRotation();
+        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint).Peek()?.UpdateTilemapSpriteAndSOAndMaterial(tilemapObject.Peek().GetObjectTypeSO().materialIndex, null, objectRotation);
+        
     }
 
 
-    private void PlaceObject(Vector3 mouseWorldPosition)
+    private void PlaceObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
     {
-        LevelEditorGridTesting.Instance.SetupObjectOnPosition(mouseWorldPosition);
+        LevelEditorGridTesting.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
         ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
     }
 }

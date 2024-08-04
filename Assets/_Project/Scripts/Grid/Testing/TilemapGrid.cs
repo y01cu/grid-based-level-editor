@@ -19,10 +19,12 @@ public class TilemapGrid
         });
     }
 
-    public void SetupTilemapOnPositionWithSO(Vector3 worldPosition, ObjectTypeSO objectTypeSO)
+    public void SetupTilemapObject(Vector3 worldPosition, Vector3 rotation, ObjectTypeSO objectTypeSO)
     {
         TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition).Peek();
         tilemapObject?.UpdateTilemapSpriteAndSOAndMaterial(objectTypeSO.materialIndex, objectTypeSO);
+        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
+        tilemapObject?.UpdateTilemapObject(objectTypeSO.materialIndex, objectTypeSO, rotation);
     }
 
     public void SetTilemapVisualGrid(TilemapGrid tilemapGrid, TilemapVisual tilemapVisual)
@@ -101,9 +103,10 @@ public class TilemapGrid
         var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition, initialAngleForCamera);
         var cellObjectTypeSO = instantiatedCell.GetComponent<CellBase>().objectTypeSO;
         cellObjectTypeSO = tilemapObject.GetObjectTypeSO();
-        var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, initialAngleForCamera);
+        //var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, initialAngleForCamera);
+        var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, Quaternion.Euler(tilemapObject.GetRotation()));
         newObject.GetComponent<Renderer>().sharedMaterial = tilemapObject.GetObjectTypeSO().normalMaterials[tilemapObject.GetMaterialIndex()];
-        newObject.GetComponent<CellObject>().AdjustTransform();
+        newObject.GetComponent<CellObject>().AdjustTransformForSetup();
         var renderer = instantiatedCell.GetComponent<Renderer>();
         var materials = renderer.sharedMaterials;
         materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndex()];
@@ -161,10 +164,11 @@ public class TilemapGrid
             gridSystem.TriggerGridObjectChanged(x, y);
         }
 
-        public void UpdateTilemapSpriteAndSOAndMaterial(int newMaterialIndex, ObjectTypeSO newObjectTypeSO)
+        public void UpdateTilemapObject(int newMaterialIndex, ObjectTypeSO newObjectTypeSO, Vector3 newRotation)
         {
             materialIndex = newMaterialIndex;
             objectTypeSO = newObjectTypeSO;
+            rotation = newRotation;
             gridSystem.TriggerGridObjectChanged(x, y);
             Debug.Log($"material index: {materialIndex} | or: {newObjectTypeSO.materialIndex}");
         }
@@ -184,6 +188,7 @@ public class TilemapGrid
         public class SaveObject
         {
             public ObjectTypeSO objectTypeSO;
+            public Vector3 rotation;
             public int materialIndex;
             public int x;
             public int y;
@@ -195,6 +200,7 @@ public class TilemapGrid
             {
                 materialIndex = materialIndex,
                 objectTypeSO = objectTypeSO,
+                rotation = rotation,
                 x = x,
                 y = y
             };
@@ -204,6 +210,7 @@ public class TilemapGrid
         {
             materialIndex = saveObject.materialIndex;
             objectTypeSO = saveObject.objectTypeSO;
+            rotation = saveObject.rotation;
             x = saveObject.x;
             y = saveObject.y;
         }

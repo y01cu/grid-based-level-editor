@@ -1,3 +1,4 @@
+using UnityEditor.Compilation;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -19,24 +20,12 @@ public abstract class CellObject : MonoBehaviour
     /// <summary>
     /// Includes adjusting position, rotation and scale of the object.
     /// </summary>
-    public virtual void AdjustTransform()
-    {
-        AdjustPosition();
-        AdjustRotation();
-        AdjustScale();
-    }
+    public abstract void AdjustTransformForSetup();
 
-    protected virtual void AdjustPosition()
-    {
-    }
-
-    protected virtual void AdjustRotation()
-    {
-
-    }
-    protected virtual void AdjustScale()
-    {
-
-    }
+    /// <summary>
+    /// Rotate certain cell objects in the grid level editor.
+    /// </summary>
+    /// <param name="angle"></param>
+    public abstract void RotateByAngle(Vector3 angle);
 
 }

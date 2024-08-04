@@ -41,7 +41,8 @@ public class ObjectGhost : MonoBehaviour
     private void CreateNewObjectFromSO()
     {
         // TODO: Change initial rotation to a proper value
-        currentObject = Instantiate(prefab, spriteGameObject.transform.position, Quaternion.Euler(90, 0, 0));
+        //currentObject = Instantiate(prefab, spriteGameObject.transform.position, Quaternion.Euler(90, 0, 0));
+        currentObject = Instantiate(prefab, spriteGameObject.transform.position, prefab.transform.rotation);
         currentObject.transform.SetParent(spriteGameObject.transform);
         currentObject.transform.localScale = Vector3.one;
     }
@@ -102,6 +103,7 @@ public class ObjectGhost : MonoBehaviour
     public void SpawnAndAdjustPrefabOnPosition()
     {
         // TODO: Change instation rotation to object ghost's rotation
+
         var spawnedPrefab = Instantiate(prefab, spriteGameObject.transform.position, currentObject.transform.rotation);
         spawnedPrefab.transform.Translate(0, -2f, 0);
         spawnedPrefab.transform.localScale *= LevelEditorGridTesting.Instance.cellSize;
@@ -117,7 +119,6 @@ public class ObjectGhost : MonoBehaviour
     {
         spriteGameObject.SetActive(true);
     }
-
 
     private void SetSprite(Sprite newSprite)
     {
@@ -153,14 +154,16 @@ public class ObjectGhost : MonoBehaviour
 
         return raycastResults.Count > 0;
     }
+    // TODO: Turn the object 180 degrees on z axis when placed.
 
-    public void RotateCurrentObjectToTheRight()
+    public void RotateCurrentObjectWithAngle(Vector3 angle)
     {
-        currentObject.transform.Rotate(0, 90, 0);
+        currentObject.GetComponent<CellObject>().RotateByAngle(angle);
     }
 
-    public void RotateCurrentObjectToTheLeft()
+
+    public Vector3 GetCurrentObjectRotation()
     {
-        currentObject.transform.Rotate(0, -90, 0);
+        return currentObject.transform.rotation.eulerAngles;
     }
 }
