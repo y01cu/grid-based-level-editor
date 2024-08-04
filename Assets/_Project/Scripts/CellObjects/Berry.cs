@@ -130,33 +130,21 @@ public class Berry : Clickable
         return lineRenderer;
     }
 
-    // Expose necessary internal state for collision handling
+    // Expose necessary internal state for collision handling.
     public BoxCollider GetBoxCollider() => boxCollider;
 
-    public override void AdjustTransform()
-    {
-        AdjustPosition();
-        AdjustRotation();
-        AdjustScale();
-    }
-
-    protected override void AdjustPosition()
+    public override void AdjustTransformForSetup()
     {
         transform.Translate(0, 0.5f, 0);
-    }
-
-    protected override void AdjustRotation()
-    {
+        // ---
         var additionalRotation = new Vector3(180, 90, 0);
         Debug.Log($"rotation adjusted for berry {additionalRotation}");
         transform.Rotate(additionalRotation);
+        // ---
     }
-    protected override void AdjustScale()
+
+    public override void RotateByAngle(Vector3 angle)
     {
-
+        // Berry won't rotate in the level editor
     }
-
-
-
-
 }
