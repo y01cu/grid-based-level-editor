@@ -22,9 +22,19 @@ public class Arrow : CellObject
     {
         direction = newDirection;
     }
+    public override void AdjustTransformForSetup()
+    {
+        
+    }
 
     public Direction GetDirection()
     {
         return direction;
     }
+
+    public override void RotateByAngle(Vector3 angle)
+    {
+        transform.Translate(angle);
+    }
+
 }

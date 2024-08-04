@@ -48,11 +48,11 @@ public class MouseManager : IRMBListener
         Vector2 scrollValue = context.ReadValue<Vector2>();
         if (scrollValue.y >= 0)
         {
-            ObjectGhost.Instance.RotateCurrentObjectToTheRight();
+            ObjectGhost.Instance.RotateCurrentObjectWithAngle(new Vector3(0,90,0));
         }
         else if (scrollValue.y < 0)
         {
-            ObjectGhost.Instance.RotateCurrentObjectToTheLeft();
+            ObjectGhost.Instance.RotateCurrentObjectWithAngle(new Vector3(0, -90, 0));
         }
     }
 

@@ -58,23 +58,14 @@ public class Frog : Clickable
         skinnedMeshRenderer.material = normalMaterial;
     }
 
-    public override void AdjustTransform()
-    {
-        AdjustPosition();
-        AdjustRotation();
-        AdjustScale();
-    }
-    protected override void AdjustPosition()
+    public override void AdjustTransformForSetup()
     {
         transform.Translate(0, 0.5f, 0);
+        // ---
     }
 
-    protected override void AdjustRotation()
+    public override void RotateByAngle(Vector3 angle)
     {
-
-    }
-    protected override void AdjustScale()
-    {
-
+        transform.Rotate(angle);
     }
 }
