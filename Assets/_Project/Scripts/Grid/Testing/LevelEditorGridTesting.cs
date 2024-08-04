@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelEditorGridTesting : MonoBehaviour
@@ -49,8 +50,11 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         var gridSystem = tilemapGrid.gridSystem;
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
-        TilemapGrid.TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
+        Stack<TilemapGrid.TilemapObject> tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
 
+
+        Debug.Log($"obj type so: {tilemapObjectTypeSO} | or: {tilemapObject.Peek().GetObjectTypeSO()}");
+        Debug.Log($" material index: {tilemapObject.Peek().GetObjectTypeSO().materialIndex}");
         tilemapGrid.SetupTilemapObject(mouseWorldPosition, rotation, tilemapObjectTypeSO);
     }
 
