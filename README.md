@@ -1,2 +1,2 @@
 # funrado-case
- Case project for Funrado Games
+ This project started as case project for Funrado Games then become a grid based level editor.
