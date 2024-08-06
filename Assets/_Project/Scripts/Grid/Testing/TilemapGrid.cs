@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -66,16 +67,18 @@ public class TilemapGrid
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             var newPosition = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
 
-            bool isObjectNull = tilemapObject.GetObjectTypeSO() == null;
-            if (isObjectNull)
+            if (tilemapObject.GetObjectTypeSOList() == null || !tilemapObject.GetObjectTypeSOList().Any())
             {
                 continue;
             }
 
-            HandleCellWithTilemapObjectOnPosition(tilemapObject, newPosition);
+            //bool isObjectNull = tilemapObject.GetObjectTypeSOList() == null;
+            //if (isObjectNull)
+            //{
+            //    continue;
+            //}
 
-            var objectName = tilemapObject.GetObjectTypeSO().name;
-            int targetIndex = 0;
+            HandleCellWithTilemapObjectOnPosition(tilemapObject, newPosition);
         }
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
@@ -88,15 +91,18 @@ public class TilemapGrid
         var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         Debug.Log($"cell so loaded: {baseCellSO}", baseCellSO);
         var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition, initialAngleForCamera);
-        var cellObjectTypeSO = instantiatedCell.GetComponent<CellBase>().objectTypeSO;
-        cellObjectTypeSO = tilemapObject.GetObjectTypeSO();
-        //var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, initialAngleForCamera);
-        var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, Quaternion.Euler(tilemapObject.GetRotation()));
-        newObject.GetComponent<Renderer>().sharedMaterial = tilemapObject.GetObjectTypeSO().normalMaterials[tilemapObject.GetMaterialIndex()];
-        newObject.GetComponent<CellObject>().AdjustTransformForSetup();
+
+        for (int i = 0; i < tilemapObject.GetObjectTypeSOList().Count; i++)
+        {
+            var cellObjectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
+            var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition + new Vector3(0, 0, -i), Quaternion.Euler(tilemapObject.GetRotationList()[i]));
+            newObject.GetComponent<Renderer>().sharedMaterial = cellObjectTypeSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            newObject.GetComponent<CellObject>().AdjustTransformForSetup();
+
+        }
         var renderer = instantiatedCell.GetComponent<Renderer>();
         var materials = renderer.sharedMaterials;
-        materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndex()];
+        materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList().First()];
         renderer.sharedMaterials = materials;
     }
 
@@ -115,36 +121,39 @@ public class TilemapGrid
     public class TilemapObject
     {
         private GridSystem<TilemapObject> gridSystem;
-        private ObjectTypeSO objectTypeSO;
-        private Vector3 rotation;
+        private List<ObjectTypeSO> objectTypeSOList;
+        private List<Vector3> rotationList;
+        private List<int> materialIndexList;
         private int x;
         private int y;
-        private int materialIndex;
 
         public TilemapObject(GridSystem<TilemapObject> gridSystem, int x, int y)
         {
             this.gridSystem = gridSystem;
             this.x = x;
             this.y = y;
+            objectTypeSOList = new List<ObjectTypeSO>();
+            rotationList = new List<Vector3>();
+            materialIndexList = new List<int>();
         }
 
         public Vector3 GetPositionVector3()
         {
             return new Vector3(x, y);
         }
-        public Vector3 GetRotation()
+        public List<Vector3> GetRotationList()
         {
-            return rotation;
+            return rotationList;
         }
 
-        public ObjectTypeSO GetObjectTypeSO()
+        public List<ObjectTypeSO> GetObjectTypeSOList()
         {
-            return objectTypeSO;
+            return objectTypeSOList;
         }
 
-        public int GetMaterialIndex()
+        public List<int> GetMaterialIndexList()
         {
-            return materialIndex;
+            return materialIndexList;
         }
         public void SetTilemapSpriteAndType() // can have parameters for setting something on the tile
         {
@@ -153,30 +162,32 @@ public class TilemapGrid
 
         public void UpdateTilemapObject(int newMaterialIndex, ObjectTypeSO newObjectTypeSO, Vector3 newRotation)
         {
-            materialIndex = newMaterialIndex;
-            objectTypeSO = newObjectTypeSO;
-            rotation = newRotation;
+            materialIndexList.Add(newMaterialIndex);
+            objectTypeSOList.Add(newObjectTypeSO);
+            rotationList.Add(newRotation);
             gridSystem.TriggerGridObjectChanged(x, y);
-            Debug.Log($"material index: {materialIndex} | or: {newObjectTypeSO.materialIndex}");
+            Debug.Log($"material index: {newMaterialIndex} | or: {newObjectTypeSO.materialIndex}");
         }
 
         public void ClearSO()
         {
-            objectTypeSO = null;
+            objectTypeSOList.Clear();
+            rotationList.Clear();
+            materialIndexList.Clear();
             gridSystem.TriggerGridObjectChanged(x, y);
         }
 
         public override string ToString()
         {
-            return objectTypeSO == null ? $"" : $"{x} {y} {objectTypeSO.name}";
+            return objectTypeSOList.Count == 0 ? $"" : $"{x} {y} {string.Join(", ", objectTypeSOList.Select(o => o.name))}";
         }
 
         [Serializable]
         public class SaveObject
         {
-            public ObjectTypeSO objectTypeSO;
-            public Vector3 rotation;
-            public int materialIndex;
+            public List<ObjectTypeSO> objectTypeSOList;
+            public List<Vector3> rotationList;
+            public List<int> materialIndexList;
             public int x;
             public int y;
         }
@@ -185,9 +196,9 @@ public class TilemapGrid
         {
             return new SaveObject
             {
-                materialIndex = materialIndex,
-                objectTypeSO = objectTypeSO,
-                rotation = rotation,
+                materialIndexList = materialIndexList,
+                objectTypeSOList = objectTypeSOList,
+                rotationList = rotationList,
                 x = x,
                 y = y
             };
@@ -195,9 +206,9 @@ public class TilemapGrid
 
         public void Load(SaveObject saveObject)
         {
-            materialIndex = saveObject.materialIndex;
-            objectTypeSO = saveObject.objectTypeSO;
-            rotation = saveObject.rotation;
+            materialIndexList = saveObject.materialIndexList;
+            objectTypeSOList = saveObject.objectTypeSOList;
+            rotationList = saveObject.rotationList;
             x = saveObject.x;
             y = saveObject.y;
         }

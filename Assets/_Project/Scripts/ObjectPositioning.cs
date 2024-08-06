@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -68,6 +69,7 @@ public class ObjectPositioning : MonoBehaviour
         return hits[hits.Length - 1].collider.gameObject.GetComponent<Renderer>().material;
     }
 
+    // TODO: Fix the issue with removing proper object
     private void RemoveObject()
     {
         OnRemovingObjectStarted?.Invoke(this, EventArgs.Empty);
@@ -95,7 +97,7 @@ public class ObjectPositioning : MonoBehaviour
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         TilemapGrid.TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
         var objectRotation = ObjectGhost.Instance.GetCurrentObjectRotation();
-        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)?.UpdateTilemapObject(tilemapObject.GetObjectTypeSO().materialIndex, null, objectRotation);
+        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)?.UpdateTilemapObject(tilemapObject.GetObjectTypeSOList().First().materialIndex, null, objectRotation);
     }
 
 
