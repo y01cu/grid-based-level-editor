@@ -2,18 +2,21 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class CellBase : MonoBehaviour
 {
     public ObjectTypeSO objectTypeSO;
-     
+    public CellObject cellObject;
+    public int cellObjectMaterialIndex;
 
     public List<GameObject> CellObjectPrefabs;
     public ObjectColor objectColor;
     public ObjectType objectType;
     public Direction arrowDirection;
     public Vector3 additionalRotationVector3;
-    public OrderType orderType;     
+    public OrderType orderType;
+    public Vector3 cellObjectSpawnRotation;
 
     [SerializeField] private Transform objectTargetTransformFromChild;
     [SerializeField] private LayerMask collisionLayers;
@@ -53,12 +56,14 @@ public class CellBase : MonoBehaviour
         //    return;
         //}
 
-        //timer += Time.deltaTime;
 
-        //if (timer >= InitialWaitingTime && !isObjectSpawned)
-        //{
-        //    TrySpawnObject();
-        //}
+
+        timer += Time.deltaTime;
+
+        if (timer >= InitialWaitingTime && !isObjectSpawned)
+        {
+            TrySpawnObjectNew();
+        }
 
         if (timer >= DestructionWaitingTime && isObjectSpawned && !isDeathOrderGiven)
         {
@@ -77,6 +82,21 @@ public class CellBase : MonoBehaviour
                 Destroy(gameObject);
             };
         }
+    }
+
+    private void TrySpawnObjectNew()
+    {
+        Debug.DrawRay(transform.position, transform.up * 1f, Color.red);
+        if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
+        {
+            isObjectSpawned = true;
+            var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
+
+            Debug.Log($"spawn rotation this time: {objectTypeSO.spawnRotation}");
+            cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
+            cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+        }
+
     }
 
     private void TrySpawnObject()

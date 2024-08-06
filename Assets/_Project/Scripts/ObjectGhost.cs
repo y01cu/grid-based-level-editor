@@ -105,6 +105,8 @@ public class ObjectGhost : MonoBehaviour
         // TODO: Change instation rotation to object ghost's rotation
 
         var spawnedPrefab = Instantiate(prefab, spriteGameObject.transform.position, currentObject.transform.rotation);
+
+        Debug.Log($"spawned obj name: {spawnedPrefab.name} | pos: {spawnedPrefab.transform.position}");
         spawnedPrefab.transform.Translate(0, -2f, 0);
         spawnedPrefab.transform.localScale *= LevelEditorGridTesting.Instance.cellSize;
     }

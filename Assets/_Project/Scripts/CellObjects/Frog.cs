@@ -60,7 +60,7 @@ public class Frog : Clickable
 
     public override void AdjustTransformForSetup()
     {
-        transform.Translate(0, 0.5f, 0);
+        //transform.Translate(0, 0.5f, 0);
         // ---
     }
 

@@ -18,6 +18,8 @@ public class TilemapGrid
     public void SetupTilemapObject(Vector3 worldPosition, Vector3 rotation, ObjectTypeSO objectTypeSO)
     {
         TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
+
+        Debug.Log($"tilemap obj pos vec:{tilemapObject.GetPositionVector3()}");
         tilemapObject?.UpdateTilemapObject(objectTypeSO.materialIndex, objectTypeSO, rotation);
     }
 
@@ -67,16 +69,11 @@ public class TilemapGrid
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             var newPosition = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
 
-            if (tilemapObject.GetObjectTypeSOList() == null || !tilemapObject.GetObjectTypeSOList().Any())
+            var isObjectNull = tilemapObject.GetObjectTypeSOList() == null || !tilemapObject.GetObjectTypeSOList().Any();
+            if (isObjectNull)
             {
                 continue;
             }
-
-            //bool isObjectNull = tilemapObject.GetObjectTypeSOList() == null;
-            //if (isObjectNull)
-            //{
-            //    continue;
-            //}
 
             HandleCellWithTilemapObjectOnPosition(tilemapObject, newPosition);
         }
@@ -88,22 +85,39 @@ public class TilemapGrid
     {
         var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
 
-        var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
-        Debug.Log($"cell so loaded: {baseCellSO}", baseCellSO);
-        var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition, initialAngleForCamera);
+
 
         for (int i = 0; i < tilemapObject.GetObjectTypeSOList().Count; i++)
         {
-            var cellObjectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
-            var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition + new Vector3(0, 0, -i), Quaternion.Euler(tilemapObject.GetRotationList()[i]));
-            newObject.GetComponent<Renderer>().sharedMaterial = cellObjectTypeSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
-            newObject.GetComponent<CellObject>().AdjustTransformForSetup();
+            //tilemapObject.GetObjectTypeSOList()[i].materialIndex = tilemapObject.GetMaterialIndexList()[i];
+            //tilemapObject.GetObjectTypeSOList()[i].spawnRotation = tilemapObject.GetRotationList()[i];
+            // ---
 
+            var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
+            var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition + new Vector3(0, i * 0.1f, -i * 0.1f), initialAngleForCamera);
+            var currentCellBase = instantiatedCell.GetComponent<CellBase>();
+            currentCellBase.objectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
+            currentCellBase.cellObjectMaterialIndex = tilemapObject.GetMaterialIndexList()[i];
+            currentCellBase.cellObjectSpawnRotation = tilemapObject.GetRotationList()[i];
+
+
+            var cellObjectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
+            currentCellBase.cellObject = cellObjectTypeSO.prefab.GetComponent<CellObject>();
+            //currentCellBase.cellObject.AdjustTransformForSetup();
+
+            //currentCellBase.objectTypeSO.prefab.GetComponent<Renderer>().sharedMaterial = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            //currentCellBase.objectTypeSO.prefab.GetComponent<CellObject>().AdjustTransformForSetup();
+
+            //var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition + new Vector3(0, i * 0.15f, -i), Quaternion.Euler(tilemapObject.GetRotationList()[i]));
+            //newObject.GetComponent<Renderer>().sharedMaterial = cellObjectTypeSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            //newObject.GetComponent<CellObject>().AdjustTransformForSetup();
+
+            var renderer = instantiatedCell.GetComponent<Renderer>();
+            var materials = renderer.sharedMaterials;
+            // 0 index is what we want to modify
+            materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            renderer.sharedMaterials = materials;
         }
-        var renderer = instantiatedCell.GetComponent<Renderer>();
-        var materials = renderer.sharedMaterials;
-        materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList().First()];
-        renderer.sharedMaterials = materials;
     }
 
     private GameObject objectToInstantiate;

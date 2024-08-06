@@ -26,43 +26,43 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.29052547
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.04795264
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.6131494
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 1
+      value: 0.73303705
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 60.582
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -299.719
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 180
+      value: -99.289
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 42c30a692439a7b4290c34c6f1de6030, type: 2}
+      objectReference: {fileID: 2100000, guid: 6057b183565e305408c03d7414808aff, type: 2}
     - target: {fileID: 919132149155446097, guid: de02418ce4e01ac489d5e7ca2f5ac891,
         type: 3}
       propertyPath: m_Name
@@ -144,6 +144,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: 42c30a692439a7b4290c34c6f1de6030, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   objectTypeSO: {fileID: 11400000, guid: 9694ead2b07adce41a65f87703bc6516, type: 2}
+  spawnRotation: {x: 0, y: 0, z: 0}
   normalStateClip: {fileID: 8300000, guid: 5cae738135a18e142a8bdcb095144a64, type: 3}
   boxCollider: {fileID: 635213937580863160}
   meshRenderer: {fileID: 8889128839063627548}
