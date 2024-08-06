@@ -1,3 +1,4 @@
+using Mono.CSharp;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,10 +22,39 @@ public class TilemapGrid
 
     public void SetupTilemapObject(Vector3 worldPosition, Vector3 rotation, ObjectTypeSO objectTypeSO)
     {
-        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition).Peek();
-        tilemapObject?.UpdateTilemapSpriteAndSOAndMaterial(objectTypeSO.materialIndex, objectTypeSO);
-        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
+        var objectStack = gridSystem.GetGridObjectOnCoordinates(worldPosition);
+        LogStackObjectCountWithMessage(objectStack, "prev -");
+        //TilemapObject tilemapObject = objectStack.Peek();
+        TilemapObject tilemapObject = new TilemapObject(gridSystem, (int)worldPosition.x, (int)worldPosition.y);
         tilemapObject?.UpdateTilemapObject(objectTypeSO.materialIndex, objectTypeSO, rotation);
+        objectStack.Push(tilemapObject);
+        LogStackObjectCountWithMessage(objectStack, "new -");
+        //LogEveryObjectOfCurrentTileFromTopToBottom(gridSystem.GetGridObjectOnCoordinates(worldPosition));
+    }
+
+    private void LogStackObjectCountWithMessage(Stack<TilemapObject> objectStack, string initialMessage)
+    {
+        int objectCounter = 0;
+        foreach (var tilemapObject in objectStack)
+        {
+            if (tilemapObject.GetObjectTypeSO() != null)
+            {
+                objectCounter++;
+
+                Debug.Log($"obj pos: {tilemapObject.GetPositionVector3()}");
+            }
+        }
+        Debug.Log($"{initialMessage} obj count: {objectCounter}");
+    }
+
+    private void LogEveryObjectOfCurrentTileFromTopToBottom(Stack<TilemapObject> objectStack)
+    {
+        foreach (var tilemapObject in objectStack)
+        {
+            Debug.Log(tilemapObject);
+        }
+
+        Debug.Log("----------");
     }
 
     public void SetTilemapVisualGrid(TilemapGrid tilemapGrid, TilemapVisual tilemapVisual)
@@ -34,19 +64,19 @@ public class TilemapGrid
 
     public void Save()
     {
-        List<TilemapObject.SaveObject> tilemapObjectSaveObjectList = new List<TilemapObject.SaveObject>();
+        List<Stack<TilemapObject.SaveObject>> tilemapObjectSaveObjecStackList = new List<Stack<TilemapObject.SaveObject>>();
         for (int x = 0; x < gridSystem.Width; x++)
         {
             for (int y = 0; y < gridSystem.Height; y++)
             {
-                Stack<TilemapObject> tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y);
-                Debug.Log($"obj material index: {tilemapObject.Peek().GetMaterialIndex()}");
-                Debug.Log(tilemapObject.Peek().GetObjectTypeSO() ? $"saved obj so: {tilemapObject.Peek().GetObjectTypeSO().name}" : $"x: {x}, y: {y} is null ");
-                tilemapObjectSaveObjectList.Add(tilemapObject.Peek().Save());
+                Stack<TilemapObject> tilemapObjectStack = gridSystem.GetGridObjectOnCoordinates(x, y);
+                tilemapObjectSaveObjecStackList.Add(tilemapObjectStack.Peek().Save());
+                //Debug.Log($"obj material index: {tilemapObject.Peek().GetMaterialIndex()}");
+                //Debug.Log(tilemapObject.Peek().GetObjectTypeSO() ? $"saved obj so: {tilemapObject.Peek().GetObjectTypeSO().name}" : $"x: {x}, y: {y} is null ");
             }
         }
 
-        SaveObject saveObject = new SaveObject { tilemapObjectSaveObjectArray = tilemapObjectSaveObjectList.ToArray() };
+        SaveObject saveObject = new SaveObject { tilemapObjectSaveObjectArray = tilemapObjectSaveObjecStackList.ToArray() };
         SaveSystem.SaveObject(saveObject);
     }
 
@@ -56,10 +86,10 @@ public class TilemapGrid
 
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
-            var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.Peek().x, tilemapObjectSaveObject.Peek().y);
             Debug.Log("loaded tilemap object: " + tilemapObject);
             tilemapObject.Peek().Load(tilemapObjectSaveObject);
-            gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.Peek().x, tilemapObjectSaveObject.Peek().y);
         }
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
@@ -67,27 +97,35 @@ public class TilemapGrid
 
     public void LoadWithSO()
     {
+        
         SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
-        foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
+        for (int i = 0; i < saveObject.tilemapObjectSaveObjectArray.Length; i++)
         {
-            var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
-            tilemapObject.Peek().Load(tilemapObjectSaveObject);
+            var tilemapObjectSaveObject = saveObject.tilemapObjectSaveObjectArray[i].ToArray()[i];
+            var tilemapObjectStack = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            foreach (var tilemapObject in tilemapObjectStack)
+            {
+                tilemapObject.Load(saveObject.tilemapObjectSaveObjectArray[i]);
+
+                //Debug.Log(tilemapObject.GetObjectTypeSO() ? $"loaded obj so: {tilemapObject.GetObjectTypeSO().name}" : $"x: {tilemapObjectSaveObject.x}, y: {tilemapObjectSaveObject.y} is null ");
+            }
+            //tilemapObject.Peek().Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             var newPosition = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
 
-            bool isObjectNull = tilemapObject.Peek().GetObjectTypeSO() == null;
+            bool isObjectNull = tilemapObjectStack.Peek().GetObjectTypeSO() == null;
             if (isObjectNull)
             {
                 continue;
             }
 
-            Debug.Log(tilemapObject.Peek().GetObjectTypeSO() ? $"loaded obj so: {tilemapObject.Peek().GetObjectTypeSO().name}" : $"x: {tilemapObjectSaveObject.x}, y: {tilemapObjectSaveObject.y} is null ");
+            Debug.Log(tilemapObjectStack.Peek().GetObjectTypeSO() ? $"loaded obj so: {tilemapObjectStack.Peek().GetObjectTypeSO().name}" : $"x: {tilemapObjectSaveObject.x}, y: {tilemapObjectSaveObject.y} is null ");
 
-            Debug.Log($"material index: {tilemapObject.Peek().GetMaterialIndex()}");
+            Debug.Log($"material index: {tilemapObjectStack.Peek().GetMaterialIndex()}");
 
-            HandleCellWithTilemapObjectOnPosition(tilemapObject.Peek(), newPosition);
+            HandleCellWithTilemapObjectOnPosition(tilemapObjectStack.Peek(), newPosition);
 
-            var objectName = tilemapObject.Peek().GetObjectTypeSO().name;
+            var objectName = tilemapObjectStack.Peek().GetObjectTypeSO().name;
             int targetIndex = 0;
         }
 
@@ -122,7 +160,7 @@ public class TilemapGrid
 
     public class SaveObject
     {
-        public TilemapObject.SaveObject[] tilemapObjectSaveObjectArray;
+        public Stack<TilemapObject.SaveObject>[] tilemapObjectSaveObjectArray;
     }
 
     public class TilemapObject
@@ -194,25 +232,44 @@ public class TilemapGrid
             public int y;
         }
 
-        public SaveObject Save()
+        /// <summary>
+        /// Returns a stack of save objects on that grid object position
+        /// </summary>
+        /// <returns></returns>
+        public Stack<SaveObject> Save()
         {
-            return new SaveObject
+            Stack<SaveObject> saveObjectStack = new Stack<SaveObject>();
+
+            //Debug.Log($"gs obj: {gridSystem.GetGridObjectOnCoordinates(x, y)}");
+            for (int i = 0; i < gridSystem.GetGridObjectOnCoordinates(x, y).Count; i++)
             {
-                materialIndex = materialIndex,
-                objectTypeSO = objectTypeSO,
-                rotation = rotation,
-                x = x,
-                y = y
-            };
+                var tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y).ToArray()[i];
+                saveObjectStack.Push(new SaveObject
+                {
+                    materialIndex = tilemapObject.GetMaterialIndex(),
+                    objectTypeSO = tilemapObject.GetObjectTypeSO(),
+                    rotation = tilemapObject.GetRotation(),
+                    x = x,
+                    y = y
+                });
+            }
+
+            return saveObjectStack;
         }
 
-        public void Load(SaveObject saveObject)
+        public void Load(Stack<SaveObject> saveObjectStack)
         {
-            materialIndex = saveObject.materialIndex;
-            objectTypeSO = saveObject.objectTypeSO;
-            rotation = saveObject.rotation;
-            x = saveObject.x;
-            y = saveObject.y;
+            var tilemapObjectStack = gridSystem.GetGridObjectOnCoordinates(x, y);
+            tilemapObjectStack.ToArray();
+            
+            for(int i = 0; i < saveObjectStack.Count; i++)
+            {
+                tilemapObjectStack.ToArray()[i].materialIndex = saveObjectStack.ToArray()[i].materialIndex;
+                tilemapObjectStack.ToArray()[i].objectTypeSO = saveObjectStack.ToArray()[i].objectTypeSO;
+                tilemapObjectStack.ToArray()[i].rotation = saveObjectStack.ToArray()[i].rotation;
+                tilemapObjectStack.ToArray()[i].x = saveObjectStack.ToArray()[i].x;
+                tilemapObjectStack.ToArray()[i].y = saveObjectStack.ToArray()[i].y;
+            }
         }
     }
 }

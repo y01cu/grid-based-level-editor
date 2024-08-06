@@ -99,7 +99,6 @@ public class ObjectGhost : MonoBehaviour
         tempPosition = spriteGameObject.transform.position;
     }
 
-
     public void SpawnAndAdjustPrefabOnPosition()
     {
         // TODO: Change instation rotation to object ghost's rotation

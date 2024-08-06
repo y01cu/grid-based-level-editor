@@ -50,11 +50,10 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         var gridSystem = tilemapGrid.gridSystem;
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
-        Stack<TilemapGrid.TilemapObject> tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
+        Stack<TilemapGrid.TilemapObject> tilemapObjectStack = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
 
-
-        Debug.Log($"obj type so: {tilemapObjectTypeSO} | or: {tilemapObject.Peek().GetObjectTypeSO()}");
-        Debug.Log($" material index: {tilemapObject.Peek().GetObjectTypeSO().materialIndex}");
+        Debug.Log($"obj type so: {tilemapObjectTypeSO} | or: {tilemapObjectStack.Peek().GetObjectTypeSO()}");
+        //Debug.Log($" material index: {tilemapObject.Peek().GetObjectTypeSO().materialIndex}");
         tilemapGrid.SetupTilemapObject(mouseWorldPosition, rotation, tilemapObjectTypeSO);
     }
 

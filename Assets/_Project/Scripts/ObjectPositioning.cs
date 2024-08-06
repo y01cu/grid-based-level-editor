@@ -95,10 +95,9 @@ public class ObjectPositioning : MonoBehaviour
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         Stack<TilemapGrid.TilemapObject> tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
         var objectRotation = ObjectGhost.Instance.GetCurrentObjectRotation();
-        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint).Peek()?.UpdateTilemapSpriteAndSOAndMaterial(tilemapObject.Peek().GetObjectTypeSO().materialIndex, null, objectRotation);
+        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint).Peek()?.UpdateTilemapObject(tilemapObject.Peek().GetObjectTypeSO().materialIndex, null, objectRotation);
         
     }
-
 
     private void PlaceObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
     {
