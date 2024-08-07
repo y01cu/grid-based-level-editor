@@ -12,4 +12,5 @@ public class ObjectTypeSO : ScriptableObject
     public Material obstacleMaterial;
     public CellObject cellObjectType;
     public int materialIndex;
+    public Vector3 spawnRotation;
 }

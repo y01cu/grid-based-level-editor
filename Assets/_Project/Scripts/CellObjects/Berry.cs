@@ -135,11 +135,11 @@ public class Berry : Clickable
 
     public override void AdjustTransformForSetup()
     {
-        transform.Translate(0, 0.5f, 0);
-        // ---
-        var additionalRotation = new Vector3(180, 90, 0);
-        Debug.Log($"rotation adjusted for berry {additionalRotation}");
-        transform.Rotate(additionalRotation);
+        //transform.Translate(0, 0.5f, 0);
+        //// ---
+        //var additionalRotation = new Vector3(180, 90, 0);
+        //Debug.Log($"rotation adjusted for berry {additionalRotation}");
+        //transform.Rotate(additionalRotation);
         // ---
     }
 

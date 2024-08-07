@@ -9,6 +9,7 @@ public abstract class CellObject : MonoBehaviour
     public Material normalMaterial;
     public AudioClip obstacleStateClip;
     public ObjectTypeSO objectTypeSO;
+    public Vector3 spawnRotation;
 
     public abstract void HandleBeingObstacle();
 

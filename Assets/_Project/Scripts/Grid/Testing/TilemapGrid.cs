@@ -1,6 +1,7 @@
 using Mono.CSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -22,10 +23,11 @@ public class TilemapGrid
 
     public void SetupTilemapObject(Vector3 worldPosition, Vector3 rotation, ObjectTypeSO objectTypeSO)
     {
-        var objectStack = gridSystem.GetGridObjectOnCoordinates(worldPosition);
-        LogStackObjectCountWithMessage(objectStack, "prev -");
-        //TilemapObject tilemapObject = objectStack.Peek();
-        TilemapObject tilemapObject = new TilemapObject(gridSystem, (int)worldPosition.x, (int)worldPosition.y);
+
+        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
+
+        Debug.Log($"tilemap obj pos vec:{tilemapObject.GetPositionVector3()}");
+
         tilemapObject?.UpdateTilemapObject(objectTypeSO.materialIndex, objectTypeSO, rotation);
         objectStack.Push(tilemapObject);
         LogStackObjectCountWithMessage(objectStack, "new -");
@@ -113,20 +115,14 @@ public class TilemapGrid
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             var newPosition = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
 
-            bool isObjectNull = tilemapObjectStack.Peek().GetObjectTypeSO() == null;
+            var isObjectNull = tilemapObject.GetObjectTypeSOList() == null || !tilemapObject.GetObjectTypeSOList().Any();
+
             if (isObjectNull)
             {
                 continue;
             }
 
-            Debug.Log(tilemapObjectStack.Peek().GetObjectTypeSO() ? $"loaded obj so: {tilemapObjectStack.Peek().GetObjectTypeSO().name}" : $"x: {tilemapObjectSaveObject.x}, y: {tilemapObjectSaveObject.y} is null ");
-
-            Debug.Log($"material index: {tilemapObjectStack.Peek().GetMaterialIndex()}");
-
-            HandleCellWithTilemapObjectOnPosition(tilemapObjectStack.Peek(), newPosition);
-
-            var objectName = tilemapObjectStack.Peek().GetObjectTypeSO().name;
-            int targetIndex = 0;
+            HandleCellWithTilemapObjectOnPosition(tilemapObject, newPosition);
         }
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
@@ -136,19 +132,37 @@ public class TilemapGrid
     {
         var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
 
-        var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
-        Debug.Log($"cell so loaded: {baseCellSO}", baseCellSO);
-        var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition, initialAngleForCamera);
-        var cellObjectTypeSO = instantiatedCell.GetComponent<CellBase>().objectTypeSO;
-        cellObjectTypeSO = tilemapObject.GetObjectTypeSO();
-        //var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, initialAngleForCamera);
-        var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition, Quaternion.Euler(tilemapObject.GetRotation()));
-        newObject.GetComponent<Renderer>().sharedMaterial = tilemapObject.GetObjectTypeSO().normalMaterials[tilemapObject.GetMaterialIndex()];
-        newObject.GetComponent<CellObject>().AdjustTransformForSetup();
-        var renderer = instantiatedCell.GetComponent<Renderer>();
-        var materials = renderer.sharedMaterials;
-        materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndex()];
-        renderer.sharedMaterials = materials;
+        for (int i = 0; i < tilemapObject.GetObjectTypeSOList().Count; i++)
+        {
+            //tilemapObject.GetObjectTypeSOList()[i].materialIndex = tilemapObject.GetMaterialIndexList()[i];
+            //tilemapObject.GetObjectTypeSOList()[i].spawnRotation = tilemapObject.GetRotationList()[i];
+            // ---
+
+            var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
+            var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition + new Vector3(0, i * 0.1f, -i * 0.1f), initialAngleForCamera);
+            var currentCellBase = instantiatedCell.GetComponent<CellBase>();
+            currentCellBase.objectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
+            currentCellBase.cellObjectMaterialIndex = tilemapObject.GetMaterialIndexList()[i];
+            currentCellBase.cellObjectSpawnRotation = tilemapObject.GetRotationList()[i];
+
+
+            var cellObjectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
+            currentCellBase.cellObject = cellObjectTypeSO.prefab.GetComponent<CellObject>();
+            //currentCellBase.cellObject.AdjustTransformForSetup();
+
+            //currentCellBase.objectTypeSO.prefab.GetComponent<Renderer>().sharedMaterial = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            //currentCellBase.objectTypeSO.prefab.GetComponent<CellObject>().AdjustTransformForSetup();
+
+            //var newObject = Object.Instantiate(cellObjectTypeSO.prefab, newPosition + new Vector3(0, i * 0.15f, -i), Quaternion.Euler(tilemapObject.GetRotationList()[i]));
+            //newObject.GetComponent<Renderer>().sharedMaterial = cellObjectTypeSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            //newObject.GetComponent<CellObject>().AdjustTransformForSetup();
+
+            var renderer = instantiatedCell.GetComponent<Renderer>();
+            var materials = renderer.sharedMaterials;
+            // 0 index is what we want to modify
+            materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            renderer.sharedMaterials = materials;
+        }
     }
 
     private GameObject objectToInstantiate;
@@ -165,37 +179,40 @@ public class TilemapGrid
 
     public class TilemapObject
     {
-        private GridSystem<Stack<TilemapObject>> gridSystem;
-        private ObjectTypeSO objectTypeSO;
-        private Vector3 rotation;
+        private GridSystem<TilemapObject> gridSystem;
+        private List<ObjectTypeSO> objectTypeSOList;
+        private List<Vector3> rotationList;
+        private List<int> materialIndexList;
         private int x;
         private int y;
-        private int materialIndex;
 
         public TilemapObject(GridSystem<Stack<TilemapObject>> gridSystem, int x, int y)
         {
             this.gridSystem = gridSystem;
             this.x = x;
             this.y = y;
+            objectTypeSOList = new List<ObjectTypeSO>();
+            rotationList = new List<Vector3>();
+            materialIndexList = new List<int>();
         }
 
         public Vector3 GetPositionVector3()
         {
             return new Vector3(x, y);
         }
-        public Vector3 GetRotation()
+        public List<Vector3> GetRotationList()
         {
-            return rotation;
+            return rotationList;
         }
 
-        public ObjectTypeSO GetObjectTypeSO()
+        public List<ObjectTypeSO> GetObjectTypeSOList()
         {
-            return objectTypeSO;
+            return objectTypeSOList;
         }
 
-        public int GetMaterialIndex()
+        public List<int> GetMaterialIndexList()
         {
-            return materialIndex;
+            return materialIndexList;
         }
         public void SetTilemapSpriteAndType() // can have parameters for setting something on the tile
         {
@@ -204,30 +221,32 @@ public class TilemapGrid
 
         public void UpdateTilemapObject(int newMaterialIndex, ObjectTypeSO newObjectTypeSO, Vector3 newRotation)
         {
-            materialIndex = newMaterialIndex;
-            objectTypeSO = newObjectTypeSO;
-            rotation = newRotation;
+            materialIndexList.Add(newMaterialIndex);
+            objectTypeSOList.Add(newObjectTypeSO);
+            rotationList.Add(newRotation);
             gridSystem.TriggerGridObjectChanged(x, y);
-            Debug.Log($"material index: {materialIndex} | or: {newObjectTypeSO.materialIndex}");
+            Debug.Log($"material index: {newMaterialIndex} | or: {newObjectTypeSO.materialIndex}");
         }
 
         public void ClearSO()
         {
-            objectTypeSO = null;
+            objectTypeSOList.Clear();
+            rotationList.Clear();
+            materialIndexList.Clear();
             gridSystem.TriggerGridObjectChanged(x, y);
         }
 
         public override string ToString()
         {
-            return objectTypeSO == null ? $"" : $"{x} {y} {objectTypeSO.name}";
+            return objectTypeSOList.Count == 0 ? $"" : $"{x} {y} {string.Join(", ", objectTypeSOList.Select(o => o.name))}";
         }
 
         [Serializable]
         public class SaveObject
         {
-            public ObjectTypeSO objectTypeSO;
-            public Vector3 rotation;
-            public int materialIndex;
+            public List<ObjectTypeSO> objectTypeSOList;
+            public List<Vector3> rotationList;
+            public List<int> materialIndexList;
             public int x;
             public int y;
         }
@@ -243,33 +262,21 @@ public class TilemapGrid
             //Debug.Log($"gs obj: {gridSystem.GetGridObjectOnCoordinates(x, y)}");
             for (int i = 0; i < gridSystem.GetGridObjectOnCoordinates(x, y).Count; i++)
             {
-                var tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y).ToArray()[i];
-                saveObjectStack.Push(new SaveObject
-                {
-                    materialIndex = tilemapObject.GetMaterialIndex(),
-                    objectTypeSO = tilemapObject.GetObjectTypeSO(),
-                    rotation = tilemapObject.GetRotation(),
-                    x = x,
-                    y = y
-                });
-            }
-
-            return saveObjectStack;
+                materialIndexList = materialIndexList,
+                objectTypeSOList = objectTypeSOList,
+                rotationList = rotationList,
+                x = x,
+                y = y
+            };
         }
 
         public void Load(Stack<SaveObject> saveObjectStack)
         {
-            var tilemapObjectStack = gridSystem.GetGridObjectOnCoordinates(x, y);
-            tilemapObjectStack.ToArray();
-            
-            for(int i = 0; i < saveObjectStack.Count; i++)
-            {
-                tilemapObjectStack.ToArray()[i].materialIndex = saveObjectStack.ToArray()[i].materialIndex;
-                tilemapObjectStack.ToArray()[i].objectTypeSO = saveObjectStack.ToArray()[i].objectTypeSO;
-                tilemapObjectStack.ToArray()[i].rotation = saveObjectStack.ToArray()[i].rotation;
-                tilemapObjectStack.ToArray()[i].x = saveObjectStack.ToArray()[i].x;
-                tilemapObjectStack.ToArray()[i].y = saveObjectStack.ToArray()[i].y;
-            }
+            materialIndexList = saveObject.materialIndexList;
+            objectTypeSOList = saveObject.objectTypeSOList;
+            rotationList = saveObject.rotationList;
+            x = saveObject.x;
+            y = saveObject.y;
         }
     }
 }

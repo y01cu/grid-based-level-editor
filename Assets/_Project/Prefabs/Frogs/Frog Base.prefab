@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3282974889508013520}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.00000071525574, z: -6.0000005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -74,6 +74,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: aaac73df7660d97438aa9464842dd4d2, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   objectTypeSO: {fileID: 11400000, guid: 9a95101c6b7db4647be7386cfc962e1a, type: 2}
+  spawnRotation: {x: 0, y: 0, z: 0}
   lineManager: {fileID: 4966230339188152850}
   skinnedMeshRenderer: {fileID: 8020993406818840140}
 --- !u!54 &7492474550534420064
@@ -123,7 +124,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aaac73df7660d97438aa9464842dd4d2, type: 2}
+  - {fileID: 2100000, guid: a59b4965c2c302c41bd39d3e8afe75c8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1096,6 +1097,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: aaac73df7660d97438aa9464842dd4d2, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   objectTypeSO: {fileID: 11400000, guid: 9a95101c6b7db4647be7386cfc962e1a, type: 2}
+  spawnRotation: {x: 0, y: 0, z: 0}
   lineManager: {fileID: 4966230339188152850}
   skinnedMeshRenderer: {fileID: 8020993406818840140}
 --- !u!54 &3793282005698674255
