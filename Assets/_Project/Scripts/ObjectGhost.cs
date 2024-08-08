@@ -19,7 +19,7 @@ public class ObjectGhost : MonoBehaviour
         Hide();
     }
 
-    private void AdjustTypeButtonOnActiveObjectUpdated(object sender, OnActiveObjectTypeChangedEventArgs e)
+    private void AdjustTypeButton_OnActiveObjectUpdated(object sender, OnActiveObjectTypeChangedEventArgs e)
     {
         if (e.activeObjectTypeSO == null)
         {
@@ -43,7 +43,7 @@ public class ObjectGhost : MonoBehaviour
 
     private void Start()
     {
-        AdjustTypeButton.OnActiveObjectUpdated += AdjustTypeButtonOnActiveObjectUpdated;
+        AdjustTypeButton.OnActiveObjectUpdated += AdjustTypeButton_OnActiveObjectUpdated;
         LevelEditorGridTesting.OnGridPositionChanged += LevelEditorGridTesting_OnGridPositionChanged;
         var cellScale = LevelEditorGridTesting.Instance.cellSize;
         spriteTransform.localScale = new Vector3(cellScale, cellScale, cellScale);
@@ -64,13 +64,6 @@ public class ObjectGhost : MonoBehaviour
     private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)
     {
         // There was an audio clip playing here.
-    }
-
-    private bool IsGridHit()
-    {
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(ray, out RaycastHit hit);
-        return hit.collider != null;
     }
 
     private void Update()
