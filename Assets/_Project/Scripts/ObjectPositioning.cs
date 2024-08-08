@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,8 +7,8 @@ public class ObjectPositioning : MonoBehaviour
 {
     [SerializeField] private Camera camera;
 
-    public static event EventHandler OnRemovingObjectStarted;
-    public static event EventHandler OnRemovingObjectEnded;
+    public static event EventHandler OnStartedRemovingObject;
+    public static event EventHandler OnEndedRemovingObject;
 
     public static ObjectPositioning Instance { get; private set; }
 
@@ -27,83 +26,34 @@ public class ObjectPositioning : MonoBehaviour
 
     private void Update()
     {
-        var canObjectBePlaced = LevelEditorGridTesting.IsOnGrid && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0);
+        var canObjectBePlaced = LevelEditorManager.IsOnGrid && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0);
         if (canObjectBePlaced)
         {
-            Vector3 mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 objectRotation = ObjectGhost.Instance.GetCurrentObjectRotation();
-            PlaceObject(mouseWorldPosition, objectRotation);
+            PlaceObject(camera.ScreenToWorldPoint(Input.mousePosition), ObjectGhost.Instance.GetCurrentObjectRotation());
         }
-
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             RemoveObject();
         }
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            GetObjectMaterial();
-        }
     }
 
-    public Material GetObjectMaterial()
-    {
-
-        var hits = VectorHelper.GetRaycastHitsFromMousePosition(camera);
-
-        // Create a HashSet to store unique object names
-        HashSet<string> uniqueObjectNames = new HashSet<string>();
-
-        for (int i = 0; i < hits.Length; i++)
-        {
-            string objectName = hits[i].collider.gameObject.name;
-
-            // Check if the object name is already in the HashSet
-            if (!uniqueObjectNames.Contains(objectName))
-            {
-                uniqueObjectNames.Add(objectName);
-                // Debug.Log($"index: {i} {objectName}");
-            }
-        }
-
-        return hits[hits.Length - 1].collider.gameObject.GetComponent<Renderer>().material;
-    }
-
-    // TODO: Fix the issue with removing proper object
     private void RemoveObject()
     {
-        OnRemovingObjectStarted?.Invoke(this, EventArgs.Empty);
+        OnStartedRemovingObject?.Invoke(this, EventArgs.Empty);
 
         var hits = VectorHelper.GetRaycastHitsFromMousePosition(camera);
-        // Create a HashSet to store unique object names
-        HashSet<string> uniqueObjectNames = new HashSet<string>();
-
-        for (int i = 0; i < hits.Length; i++)
-        {
-            string objectName = hits[i].collider.gameObject.name;
-
-            // Check if the object name is already in the HashSet
-            if (!uniqueObjectNames.Contains(objectName))
-            {
-                uniqueObjectNames.Add(objectName);
-                Debug.Log($"index: {i} {objectName}");
-            }
-        }
-
-        OnRemovingObjectEnded?.Invoke(this, EventArgs.Empty);
         Destroy(hits[hits.Length - 1].collider.gameObject);
-
-        var gridSystem = LevelEditorGridTesting.tilemapGrid.gridSystem;
+        var gridSystem = LevelEditorManager.tilemapGrid.gridSystem;
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
-        TilemapGrid.TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
-        var objectRotation = ObjectGhost.Instance.GetCurrentObjectRotation();
-        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)?.UpdateTilemapObject(tilemapObject.GetObjectTypeSOList().First().materialIndex, null, objectRotation);
-    }
+        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
+        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)?.UpdateTilemapObject(tilemapObject.GetObjectTypeSOList().First().materialIndex, null, ObjectGhost.Instance.GetCurrentObjectRotation());
 
+        OnEndedRemovingObject?.Invoke(this, EventArgs.Empty);
+    }
 
     private void PlaceObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
     {
-        LevelEditorGridTesting.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
+        LevelEditorManager.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
         ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
     }
 }

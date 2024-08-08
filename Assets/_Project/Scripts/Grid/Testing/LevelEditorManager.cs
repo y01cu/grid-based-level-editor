@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelEditorGridTesting : MonoBehaviour
+public class LevelEditorManager : MonoBehaviour
 {
     public static EventHandler OnGridPositionChanged;
-    public static LevelEditorGridTesting Instance { get; private set; }
+    public static LevelEditorManager Instance { get; private set; }
 
     [field: SerializeField] public float cellSize { get; private set; }
 
@@ -39,7 +38,6 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
         tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero);
-        tilemapGrid.SetTilemapVisualGrid(tilemapGrid, tilemapVisual);
     }
 
     private void SetObjectTypeSO(object sender, OnActiveObjectTypeChangedEventArgs e)
@@ -48,10 +46,6 @@ public class LevelEditorGridTesting : MonoBehaviour
     }
     public void SetupObjectOnPosition(Vector3 mouseWorldPosition, Vector3 rotation)
     {
-        var gridSystem = tilemapGrid.gridSystem;
-        Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
-        TilemapGrid.TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
-
         tilemapGrid.SetupTilemapObject(mouseWorldPosition, rotation, tilemapObjectTypeSO);
     }
 
@@ -59,12 +53,6 @@ public class LevelEditorGridTesting : MonoBehaviour
     {
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         IsOnGrid = tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) != null;
-
-        #region Logging Grid Position
-        // Debug.Log($"IsOnGrid: {IsOnGrid} | obj: {tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)}");
-        // Debug.Log($"obj on grid: {tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)}");
-        // Debug.Log($"grid pos: {tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint)}");
-        #endregion
 
         if (currentGridPosition != tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint).vector3With0Z)
         {

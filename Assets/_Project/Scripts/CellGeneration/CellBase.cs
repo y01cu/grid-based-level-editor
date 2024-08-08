@@ -27,19 +27,6 @@ public class CellBase : MonoBehaviour
     private float timer;
     private bool isObjectSpawned;
     private bool isDeathOrderGiven;
-    private bool isSpawningFinalBerryForFrog;
-
-    private CellObjectFactory cellObjectFactory;
-
-    private void Awake()
-    {
-        cellObjectFactory = new CellObjectFactory(CellObjectPrefabs, objectTargetTransformFromChild);
-    }
-
-    public void SetAsSpawningFinalBerryForFrog()
-    {
-        isSpawningFinalBerryForFrog = true;
-    }
 
     private void Start()
     {
@@ -51,18 +38,11 @@ public class CellBase : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (objectColor == ObjectColor._Empty)
-        //{
-        //    return;
-        //}
-
-
-
         timer += Time.deltaTime;
 
         if (timer >= InitialWaitingTime && !isObjectSpawned)
         {
-            TrySpawnObjectNew();
+            TrySpawningObject();
         }
 
         if (timer >= DestructionWaitingTime && isObjectSpawned && !isDeathOrderGiven)
@@ -84,7 +64,7 @@ public class CellBase : MonoBehaviour
         }
     }
 
-    private void TrySpawnObjectNew()
+    private void TrySpawningObject()
     {
         Debug.DrawRay(transform.position, transform.up * 1f, Color.red);
         if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
@@ -97,21 +77,6 @@ public class CellBase : MonoBehaviour
             cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
         }
 
-    }
-
-    private void TrySpawnObject()
-    {
-        if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
-        {
-            isObjectSpawned = true;
-            var cellObject = cellObjectFactory.CreateCellObject(objectType, additionalRotationVector3, arrowDirection, orderType, objectColor);
-            timer = 0;
-
-            if (isSpawningFinalBerryForFrog)
-            {
-                cellObject.GetComponent<Berry>().SetAsLastBerryForFrog();
-            }
-        }
     }
 
     public void ChangeCellObjectType(ObjectType newObjectType)

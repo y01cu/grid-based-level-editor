@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class ObjectGhost : MonoBehaviour
 {
@@ -44,11 +42,11 @@ public class ObjectGhost : MonoBehaviour
     private void Start()
     {
         AdjustTypeButton.OnActiveObjectUpdated += AdjustTypeButton_OnActiveObjectUpdated;
-        LevelEditorGridTesting.OnGridPositionChanged += LevelEditorGridTesting_OnGridPositionChanged;
-        var cellScale = LevelEditorGridTesting.Instance.cellSize;
+        LevelEditorManager.OnGridPositionChanged += LevelEditorGridTesting_OnGridPositionChanged;
+        var cellScale = LevelEditorManager.Instance.cellSize;
         spriteTransform.localScale = new Vector3(cellScale, cellScale, cellScale);
-        ObjectPositioning.OnRemovingObjectStarted += HideGhost;
-        ObjectPositioning.OnRemovingObjectEnded += ShowGhost;
+        ObjectPositioning.OnStartedRemovingObject += HideGhost;
+        ObjectPositioning.OnEndedRemovingObject += ShowGhost;
     }
 
     private void HideGhost(object sender, EventArgs e)
@@ -68,8 +66,8 @@ public class ObjectGhost : MonoBehaviour
 
     private void Update()
     {
-        float cellSize = LevelEditorGridTesting.Instance.cellSize;
-        spriteTransform.position = LevelEditorGridTesting.IsOnGrid ? LevelEditorGridTesting.tilemapGrid.gridSystem
+        float cellSize = LevelEditorManager.Instance.cellSize;
+        spriteTransform.position = LevelEditorManager.IsOnGrid ? LevelEditorManager.tilemapGrid.gridSystem
         .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0)
             : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
     }
@@ -77,7 +75,7 @@ public class ObjectGhost : MonoBehaviour
     public void SpawnAndAdjustPrefabOnPosition()
     {
         var spawnedPrefab = Instantiate(prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
-        spawnedPrefab.transform.localScale *= LevelEditorGridTesting.Instance.cellSize;
+        spawnedPrefab.transform.localScale *= LevelEditorManager.Instance.cellSize;
     }
 
     private void Hide()

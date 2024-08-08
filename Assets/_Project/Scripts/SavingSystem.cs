@@ -6,13 +6,13 @@ public class SavingSystem : MonoBehaviour
 {
     public void Save()
     {
-        LevelEditorGridTesting.tilemapGrid.Save();
+        LevelEditorManager.tilemapGrid.Save();
         Debug.Log("saved!");
     }
 
     public void Load()
     {
-        LevelEditorGridTesting.tilemapGrid.Load();
+        LevelEditorManager.tilemapGrid.Load();
         Debug.Log("loaded!");
     }
 }
