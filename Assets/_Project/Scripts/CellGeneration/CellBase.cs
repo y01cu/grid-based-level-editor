@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class CellBase : MonoBehaviour
 {
+    #region Fields
     public ObjectTypeSO objectTypeSO;
     public CellObject cellObject;
     public int cellObjectMaterialIndex;
@@ -27,6 +28,8 @@ public class CellBase : MonoBehaviour
     private float timer;
     private bool isObjectSpawned;
     private bool isDeathOrderGiven;
+
+    #endregion
 
     private void Start()
     {
@@ -66,13 +69,12 @@ public class CellBase : MonoBehaviour
 
     private void TrySpawningObject()
     {
-        Debug.DrawRay(transform.position, transform.up * 1f, Color.red);
         if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
         {
-            isObjectSpawned = true;
             var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
             cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
             cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+            isObjectSpawned = true;
         }
     }
 

@@ -30,11 +30,12 @@ public class LineCollision : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            var hitObjSO = firstHit.GetComponent<CellObject>().objectTypeSO;
-            bool isDifferentColor = hitObjSO.normalMaterials[hitObjSO.materialIndex].name != frogColor;
-
+            var cellObject = firstHit.GetComponent<CellObject>();
+            var hitObjSO = cellObject.objectTypeSO;
+            bool isDifferentColor = firstHit.GetComponent<Renderer>().sharedMaterial.name != frogColor;
             if (isDifferentColor)
             {
+                Debug.Log($"f:{hitObjSO.normalMaterials[hitObjSO.materialIndex].name} s:{frogColor}");
                 Vector3 obstaclePoint;
 
                 obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.transform.localPosition);
@@ -87,6 +88,7 @@ public class LineCollision : MonoBehaviour
     {
         Berry berry = currentCollider.GetComponent<Berry>();
         var isBerryPickable = berry.GetComponent<Renderer>().sharedMaterial.name == frogColor && !berry.IsDetected();
+        Debug.Log($"names: {berry.GetComponent<Renderer>().sharedMaterial.name} | {frogColor}");
         if (isBerryPickable)
         {
             berry.SetAsDetected();
