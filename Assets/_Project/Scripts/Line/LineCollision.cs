@@ -32,22 +32,12 @@ public class LineCollision : MonoBehaviour
         {
             var hitObjSO = firstHit.GetComponent<CellObject>().objectTypeSO;
             bool isDifferentColor = hitObjSO.normalMaterials[hitObjSO.materialIndex].name != frogColor;
-            Debug.Log($"names: {hitObjSO.normalMaterials[hitObjSO.materialIndex].name} and {frogColor}");
 
             if (isDifferentColor)
             {
-                Debug.Log("hit something with a different color");
                 Vector3 obstaclePoint;
 
                 obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.transform.localPosition);
-                // if (firstHit.transform.parent != null)
-                // {
-                // }
-                // else
-                // {
-                //     obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.localPosition);
-                // }
-
                 detectedObjectStorage.detectedObjects.Add(firstHit.gameObject);
                 detectedObjectStorage.points.Add(obstaclePoint);
 

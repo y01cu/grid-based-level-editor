@@ -3413,6 +3413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
+  objectTypeSO: {fileID: 0}
   camera: {fileID: 1275355130}
 --- !u!4 &1691696850
 Transform:

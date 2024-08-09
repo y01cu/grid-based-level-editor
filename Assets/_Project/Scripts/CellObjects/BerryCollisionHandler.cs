@@ -50,7 +50,7 @@ public class BerryCollisionHandler
         berry.GetBoxCollider().isTrigger = true;
         var detectedBerries = other.GetComponent<Frog>().lineManager.GetDetectedBerries();
 
-        berry.transform.DOScale(Vector3.zero, .2f).SetEase(Ease.Linear).onComplete += () =>
+        berry.transform.DOScale(Vector3.zero, .3f).SetEase(Ease.Linear).onComplete += () =>
         {
             detectedBerries.Remove(berry);
             Object.Destroy(berry.gameObject);
@@ -68,7 +68,7 @@ public class BerryCollisionHandler
 
         Debug.Log("Tongue hit");
 
-        berry.OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
+        berry.OnClickedOverWithTargetScale(new Vector3(1.5f, 1.5f, 1.5f));
         berry.SetTongueHit();
 
         var frog = other.transform.parent.parent.GetComponent<Frog>();
