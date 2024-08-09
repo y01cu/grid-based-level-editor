@@ -14,6 +14,7 @@ public class BerryCollisionHandler
     {
         if (other.gameObject.CompareTag("Frog"))
         {
+            Debug.Log($"other's name {other.gameObject.name}");
             HandleFrogCollision(other.collider);
         }
         if (!other.gameObject.CompareTag("Berry")) return;
@@ -28,13 +29,8 @@ public class BerryCollisionHandler
 
     public void HandleTrigger(Collider other)
     {
-        if (other.gameObject.CompareTag("Frog"))
+        if (other.gameObject.CompareTag("Tongue"))
         {
-            Debug.Log($"other's frog {other.name}", other);
-        }
-        else if (other.gameObject.CompareTag("Tongue"))
-        {
-            Debug.Log($"other's tongue {other.name}", other);
             HandleTongueCollision(other);
         }
         else if (other.gameObject.CompareTag("Arrow"))
@@ -65,8 +61,6 @@ public class BerryCollisionHandler
     private void HandleTongueCollision(Collider other)
     {
         if (berry.IsTongueHit) return;
-
-        Debug.Log("Tongue hit");
 
         berry.OnClickedOverWithTargetScale(new Vector3(1.5f, 1.5f, 1.5f));
         berry.SetTongueHit();

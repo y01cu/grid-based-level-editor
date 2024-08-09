@@ -99,7 +99,6 @@ public class TilemapGrid
             var currentCellBase = instantiatedCell.GetComponent<CellBase>();
             currentCellBase.objectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
             currentCellBase.cellObjectMaterialIndex = tilemapObject.GetMaterialIndexList()[i];
-            Debug.Log($"material index: {currentCellBase.cellObjectMaterialIndex}");
             currentCellBase.cellObjectSpawnRotation = tilemapObject.GetRotationList()[i];
             // currentCellBase.objectTypeSO.materialIndex = tilemapObject.GetMaterialIndexList()[i];
 

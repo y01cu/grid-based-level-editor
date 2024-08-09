@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7664300010794382425}
   - component: {fileID: 5502589580156559654}
   - component: {fileID: 5579360527341219857}
-  - component: {fileID: 7492474550534420064}
   - component: {fileID: 7545161880544364332}
   m_Layer: 8
   m_Name: Frog Base
@@ -55,7 +54,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7858706, y: 0.6, z: 0.4648656}
+  m_Size: {x: 0.521289, y: 0.6, z: 0.4648656}
   m_Center: {x: 0, y: 0.099999994, z: -0.046885833}
 --- !u!114 &5579360527341219857
 MonoBehaviour:
@@ -77,33 +76,6 @@ MonoBehaviour:
   spawnRotation: {x: 0, y: 0, z: 0}
   lineManager: {fileID: 4966230339188152850}
   skinnedMeshRenderer: {fileID: 7545161880544364332}
---- !u!54 &7492474550534420064
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3282974889508013520}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
 --- !u!137 &7545161880544364332
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -967,19 +939,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1343093858538353406, guid: 3d3d12d25c4eb0244ad4a1503847d950, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6173914371398649308, guid: 3d3d12d25c4eb0244ad4a1503847d950,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6000498421802958090}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6838142932757061478, guid: 3d3d12d25c4eb0244ad4a1503847d950,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3793282005698674255}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d3d12d25c4eb0244ad4a1503847d950, type: 3}
 --- !u!4 &50744769734302582 stripped
 Transform:
@@ -1071,39 +1038,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4990896850648885667}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1992505260544882373 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6838142932757061478, guid: 3d3d12d25c4eb0244ad4a1503847d950,
-    type: 3}
-  m_PrefabInstance: {fileID: 4990896850648885667}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &3793282005698674255
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992505260544882373}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
 --- !u!4 &2349838119948456491 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7340717239864785800, guid: 3d3d12d25c4eb0244ad4a1503847d950,

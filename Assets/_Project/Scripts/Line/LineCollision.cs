@@ -88,7 +88,6 @@ public class LineCollision : MonoBehaviour
     {
         Berry berry = currentCollider.GetComponent<Berry>();
         var isBerryPickable = berry.GetComponent<Renderer>().sharedMaterial.name == frogColor && !berry.IsDetected();
-        Debug.Log($"names: {berry.GetComponent<Renderer>().sharedMaterial.name} | {frogColor}");
         if (isBerryPickable)
         {
             berry.SetAsDetected();
