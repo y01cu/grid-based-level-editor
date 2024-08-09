@@ -12,6 +12,10 @@ public class BerryCollisionHandler
 
     public void HandleCollision(Collision other)
     {
+        if (other.gameObject.CompareTag("Frog"))
+        {
+            HandleFrogCollision(other.collider);
+        }
         if (!other.gameObject.CompareTag("Berry")) return;
 
         Berry otherBerry = other.gameObject.GetComponent<Berry>();
@@ -24,33 +28,35 @@ public class BerryCollisionHandler
 
     public void HandleTrigger(Collider other)
     {
-        switch (other.tag)
+        if (other.gameObject.CompareTag("Frog"))
         {
-            case "Frog":
-                HandleFrogCollision(other);
-                break;
-            case "Tongue":
-                HandleTongueCollision(other);
-                break;
-            case "Arrow":
-                HandleArrowCollision(other);
-                break;
+            Debug.Log($"other's frog {other.name}", other);
+        }
+        else if (other.gameObject.CompareTag("Tongue"))
+        {
+            Debug.Log($"other's tongue {other.name}", other);
+            HandleTongueCollision(other);
+        }
+        else if (other.gameObject.CompareTag("Arrow"))
+        {
+            HandleArrowCollision(other);
         }
     }
 
     private void HandleFrogCollision(Collider other)
     {
+        Debug.Log("Frog hit");
+
         berry.GetBoxCollider().isTrigger = true;
         var detectedBerries = other.GetComponent<Frog>().lineManager.GetDetectedBerries();
 
-        berry.transform.SetParent(null);
-        berry.transform.DOScale(Vector3.zero, .5f).SetEase(Ease.Linear).onComplete += () =>
+        berry.transform.DOScale(Vector3.zero, .2f).SetEase(Ease.Linear).onComplete += () =>
         {
-            Object.Destroy(berry.gameObject);
             detectedBerries.Remove(berry);
+            Object.Destroy(berry.gameObject);
             if (detectedBerries.Count == 0)
             {
-                Object.Destroy(other.gameObject.transform.parent.gameObject);
+                // Object.Destroy(other.gameObject.transform.parent.gameObject);
                 Object.Destroy(other.gameObject);
             }
         };
@@ -60,10 +66,12 @@ public class BerryCollisionHandler
     {
         if (berry.IsTongueHit) return;
 
+        Debug.Log("Tongue hit");
+
         berry.OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
         berry.SetTongueHit();
 
-        var frog = other.transform.parent.GetComponent<Frog>();
+        var frog = other.transform.parent.parent.GetComponent<Frog>();
         frog.lineManager.GetDetectedBerries().Add(berry);
     }
 

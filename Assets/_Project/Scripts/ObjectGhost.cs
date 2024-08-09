@@ -6,6 +6,8 @@ public class ObjectGhost : MonoBehaviour
     public static ObjectGhost Instance { get; private set; }
     public GameObject prefab;
 
+    public ObjectTypeSO objectTypeSO;
+
     [SerializeField] private Camera camera;
     private Transform spriteTransform;
     private GameObject activeGhostGameObject;

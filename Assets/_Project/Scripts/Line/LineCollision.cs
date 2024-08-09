@@ -14,9 +14,10 @@ public class LineCollision : MonoBehaviour
         set => isObstacleHit = value;
     }
 
-    public void JustCheckCollision(Vector3 startPoint, Vector3 direction, OrderType orderType, ObjectColor objectColor)
+    public void JustCheckCollision(Vector3 startPoint, Vector3 direction, string frogColor)
     {
         Debug.DrawRay(startPoint, direction, Color.black, 3f);
+
         float distance = direction.magnitude;
         RaycastHit[] hits = Physics.RaycastAll(startPoint, direction, distance, collisionMask);
 
@@ -29,20 +30,23 @@ public class LineCollision : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            bool isDifferentColor = firstHit.transform.GetComponent<CellObject>().objectColor != objectColor;
+            var hitObjSO = firstHit.GetComponent<CellObject>().objectTypeSO;
+            bool isDifferentColor = hitObjSO.normalMaterials[hitObjSO.materialIndex].name != frogColor;
+            Debug.Log($"names: {hitObjSO.normalMaterials[hitObjSO.materialIndex].name} and {frogColor}");
 
             if (isDifferentColor)
             {
+                Debug.Log("hit something with a different color");
                 Vector3 obstaclePoint;
 
-                if (firstHit.transform.parent != null)
-                {
-                    obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.parent.transform.localPosition);
-                }
-                else
-                {
-                    obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.localPosition);
-                }
+                obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.transform.localPosition);
+                // if (firstHit.transform.parent != null)
+                // {
+                // }
+                // else
+                // {
+                //     obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.localPosition);
+                // }
 
                 detectedObjectStorage.detectedObjects.Add(firstHit.gameObject);
                 detectedObjectStorage.points.Add(obstaclePoint);
@@ -61,24 +65,24 @@ public class LineCollision : MonoBehaviour
 
             if (currentCollider.CompareTag("Arrow"))
             {
-                HandleArrowCollision(currentCollider, orderType, objectColor);
+                HandleArrowCollision(currentCollider, frogColor);
 
                 isAnyArrowHit = true;
             }
 
             if (currentCollider.CompareTag("Berry"))
             {
-                HandleBerryCollision(currentCollider, objectColor);
+                HandleBerryCollision(currentCollider, frogColor);
             }
         }
 
         if (hits.Length != 0 && !isAnyArrowHit && !isCollidedWithLastBerry && !IsObstacleHit)
         {
-            JustCheckCollision(startPoint + direction, direction, orderType, objectColor);
+            JustCheckCollision(startPoint + direction, direction, frogColor);
         }
     }
 
-    private void HandleArrowCollision(Collider currentCollider, OrderType orderType, ObjectColor objectColor)
+    private void HandleArrowCollision(Collider currentCollider, string frogColor)
     {
         Direction arrowDirection = currentCollider.GetComponent<Arrow>().GetDirection();
 
@@ -86,13 +90,13 @@ public class LineCollision : MonoBehaviour
         detectedObjectStorage.points.Add(newPoint);
 
         // Since arrows change direction and the movement continues check collision till finding last berry. 
-        JustCheckCollision(currentCollider.transform.position, VectorHelper.GetDirectionVector(arrowDirection), orderType, objectColor);
+        JustCheckCollision(currentCollider.transform.position, VectorHelper.GetDirectionVector(arrowDirection), frogColor);
     }
 
-    private void HandleBerryCollision(Collider currentCollider, ObjectColor objectColor)
+    private void HandleBerryCollision(Collider currentCollider, string frogColor)
     {
         Berry berry = currentCollider.GetComponent<Berry>();
-        var isBerryPickable = berry.objectColor == objectColor && !berry.IsDetected();
+        var isBerryPickable = berry.GetComponent<Renderer>().sharedMaterial.name == frogColor && !berry.IsDetected();
         if (isBerryPickable)
         {
             berry.SetAsDetected();

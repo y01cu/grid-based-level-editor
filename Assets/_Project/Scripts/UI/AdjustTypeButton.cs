@@ -112,7 +112,7 @@ public class AdjustTypeButton : MonoBehaviour
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
             objectTypeSO.materialIndex = buttonIndex; // Since the first material is the default material 
 
-            Debug.Log($"obj type so has material index: {objectTypeSO.materialIndex}");            
+            Debug.Log($"obj type so has material index: {objectTypeSO.materialIndex}");
 
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
             foreach (var spawnedButton in spawnedMaterialButtons)

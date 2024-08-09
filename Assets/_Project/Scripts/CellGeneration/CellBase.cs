@@ -71,12 +71,9 @@ public class CellBase : MonoBehaviour
         {
             isObjectSpawned = true;
             var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
-
-            Debug.Log($"spawn rotation this time: {objectTypeSO.spawnRotation}");
             cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
             cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
         }
-
     }
 
     public void ChangeCellObjectType(ObjectType newObjectType)

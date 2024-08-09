@@ -28,9 +28,9 @@ public class LineManager : MonoBehaviour
         lineRenderer.positionCount = 1;
     }
 
-    public void MoveTongueLine(Vector3 startPoint, Vector3 direction, OrderType orderType, ObjectColor objectColor)
+    public void MoveTongueLine(Vector3 startPoint, Vector3 direction, string frogColor)
     {
-        lineCollision.JustCheckCollision(startPoint, direction, orderType, objectColor);
+        lineCollision.JustCheckCollision(startPoint, direction, frogColor);
 
         if (lineCollision.detectedObjectStorage.detectedObjects.Count > 0)
         {

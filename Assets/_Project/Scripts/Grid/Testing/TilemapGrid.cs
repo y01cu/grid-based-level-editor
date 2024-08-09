@@ -95,7 +95,7 @@ public class TilemapGrid
             currentCellBase.objectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
             currentCellBase.cellObjectMaterialIndex = tilemapObject.GetMaterialIndexList()[i];
             currentCellBase.cellObjectSpawnRotation = tilemapObject.GetRotationList()[i];
-
+            currentCellBase.objectTypeSO.materialIndex = tilemapObject.GetMaterialIndexList()[i];
 
             var cellObjectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
             currentCellBase.cellObject = cellObjectTypeSO.prefab.GetComponent<CellObject>();

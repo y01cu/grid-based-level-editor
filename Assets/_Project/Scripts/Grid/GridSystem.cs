@@ -51,7 +51,7 @@ public class GridSystem<TGridObject>
 
         GameObject emptyObject = new GameObject();
 
-        bool isDebugMode = true;
+        bool isDebugMode = false;
         if (isDebugMode)
         {
             // TextMesh[,] debugTextArray = new TextMesh[width, height];
@@ -63,7 +63,7 @@ public class GridSystem<TGridObject>
                     newObject.AddComponent<MeshFilter>().mesh = UtilsClass.CreateWorldSpriteQuad(this.cellSize, Color.white);
                     newObject.AddComponent<MeshCollider>();
                     newObject.gameObject.name = "new obj";
-                    newObject.transform.SetParent(GameObject.Find("Canvas").transform);
+                    newObject.transform.SetParent(GameObject.Find("Canvas Object Types").transform);
                     newObject.transform.Rotate(0, 180, 0);
 
                     // debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 9, Color.white, TextAnchor.MiddleCenter);

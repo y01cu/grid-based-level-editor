@@ -21,6 +21,7 @@ public class Frog : Clickable
 
     public override void OnClickedOverWithTargetScale(Vector3 targetScale)
     {
+        // Disable the click event if the tongue is outside
         if (lineManager.IsLineOutside)
         {
             return;
@@ -29,7 +30,7 @@ public class Frog : Clickable
         base.OnClickedOverWithTargetScale(targetScale);
 
         Vector3 startPoint = transform.TransformPoint(lineManager.GetLineRenderer().GetPosition(0));
-        Vector3 rotation = transform.parent.localRotation.eulerAngles;
+        Vector3 rotation = transform.localRotation.eulerAngles;
 
         Vector3 direction = (int)rotation.y switch
         {
@@ -39,7 +40,7 @@ public class Frog : Clickable
             270 => Vector3.left,
         };
 
-        lineManager.MoveTongueLine(startPoint, direction, orderType, objectColor);
+        lineManager.MoveTongueLine(startPoint, direction, GetComponent<Renderer>().sharedMaterial.name);
     }
 
     public void SetOrderType(OrderType newOrderType)

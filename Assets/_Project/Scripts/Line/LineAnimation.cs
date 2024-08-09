@@ -45,7 +45,8 @@ public class LineAnimation
 
         sequence.AppendCallback(() =>
         {
-            if (!lineCollision.IsObstacleHit && lineCollision.detectedObjectStorage.detectedBerries[^1].IsLastBerryForFrog())
+            // if (!lineCollision.IsObstacleHit && lineCollision.detectedObjectStorage.detectedBerries[^1].IsLastBerryForFrog())
+            if (!lineCollision.IsObstacleHit)
             {
                 var lastBerry = lineCollision.detectedObjectStorage.detectedBerries[^1];
                 lastBerry.SetTargetBoxCollider(tongueBoxCollider);
