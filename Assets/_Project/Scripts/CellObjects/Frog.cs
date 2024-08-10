@@ -65,7 +65,7 @@ public class Frog : Clickable
         // ---
     }
 
-    public override void RotateByAngle(Vector3 angle)
+    public override void RotateByAngleInTheEditor(Vector3 angle)
     {
         transform.Rotate(angle);
     }

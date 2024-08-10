@@ -19,7 +19,6 @@ public class TilemapGrid
     {
         TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
 
-        Debug.Log($"tilemap obj pos vec:{tilemapObject.GetPositionVector3()}");
         tilemapObject?.UpdateTilemapObject(objectTypeSO.materialIndex, objectTypeSO, rotation);
     }
 

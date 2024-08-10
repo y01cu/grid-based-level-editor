@@ -56,7 +56,6 @@ public class TilemapObject
         objectTypeSOList.Add(newObjectTypeSO);
         rotationList.Add(newRotation);
         gridSystem.TriggerGridObjectChanged(x, y);
-        Debug.Log($"material index: {newMaterialIndex} | or: {newObjectTypeSO.materialIndex}");
     }
 
     public void ClearSO()

@@ -38,7 +38,8 @@ public class ObjectGhost : MonoBehaviour
     {
         activeGhostGameObject = Instantiate(objectTypeSO.prefab.gameObject, spriteTransform.position, objectTypeSO.prefab.rotation);
         activeGhostGameObject.transform.SetParent(spriteTransform);
-        activeGhostGameObject.transform.localScale = Vector3.one;
+        activeGhostGameObject.transform.localScale = objectTypeSO.prefab.localScale;
+        activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
     }
 
     private void Start()
@@ -78,6 +79,7 @@ public class ObjectGhost : MonoBehaviour
     {
         var spawnedPrefab = Instantiate(objectTypeSO.prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
         spawnedPrefab.transform.localScale *= LevelEditorManager.Instance.cellSize;
+        spawnedPrefab.GetComponent<CellObject>().IsInLevelEditor = true;
     }
 
     private void Hide()
@@ -97,7 +99,7 @@ public class ObjectGhost : MonoBehaviour
 
     public void RotateCurrentObjectWithAngle(Vector3 angle)
     {
-        activeGhostGameObject.GetComponent<CellObject>().RotateByAngle(angle);
+        activeGhostGameObject.GetComponent<CellObject>().RotateByAngleInTheEditor(angle);
     }
 
     public Vector3 GetCurrentObjectRotation()
