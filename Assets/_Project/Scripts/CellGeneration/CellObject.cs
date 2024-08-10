@@ -9,6 +9,8 @@ public abstract class CellObject : MonoBehaviour
     public ObjectTypeSO objectTypeSO;
     public Vector3 spawnRotation;
 
+    public bool IsInLevelEditor;
+
     public abstract void HandleBeingObstacle();
 
     public virtual void Initialize(ObjectColor objectColor)
@@ -25,6 +27,6 @@ public abstract class CellObject : MonoBehaviour
     /// Rotate certain cell objects in the grid level editor.
     /// </summary>
     /// <param name="angle"></param>
-    public abstract void RotateByAngle(Vector3 angle);
+    public abstract void RotateByAngleInTheEditor(Vector3 angle);
 
 }

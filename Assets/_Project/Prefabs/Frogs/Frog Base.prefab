@@ -74,6 +74,7 @@ MonoBehaviour:
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   objectTypeSO: {fileID: 11400000, guid: 9a95101c6b7db4647be7386cfc962e1a, type: 2}
   spawnRotation: {x: 0, y: 0, z: 0}
+  IsInLevelEditor: 0
   lineManager: {fileID: 4966230339188152850}
   skinnedMeshRenderer: {fileID: 7545161880544364332}
 --- !u!137 &7545161880544364332
