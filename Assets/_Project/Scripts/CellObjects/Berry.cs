@@ -41,11 +41,19 @@ public class Berry : Clickable
 
     private void OnCollisionEnter(Collision other)
     {
+        if (IsInLevelEditor)
+        {
+            return;
+        }
         collisionHandler.HandleCollision(other);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (IsInLevelEditor)
+        {
+            return;
+        }
         collisionHandler.HandleTrigger(other);
     }
 
@@ -143,7 +151,7 @@ public class Berry : Clickable
         // ---
     }
 
-    public override void RotateByAngle(Vector3 angle)
+    public override void RotateByAngleInTheEditor(Vector3 angle)
     {
         // Berry won't rotate in the level editor
     }

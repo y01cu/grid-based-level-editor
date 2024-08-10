@@ -19,7 +19,6 @@ public class TilemapGrid
     {
         TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(worldPosition);
 
-        Debug.Log($"tilemap obj pos vec:{tilemapObject.GetPositionVector3()}");
         tilemapObject?.UpdateTilemapObject(objectTypeSO.materialIndex, objectTypeSO, rotation);
     }
 
@@ -89,13 +88,18 @@ public class TilemapGrid
 
         for (int i = 0; i < tilemapObject.GetObjectTypeSOList().Count; i++)
         {
+            if (tilemapObject.GetObjectTypeSOList()[i] == null)
+            {
+                continue;
+            }
+
             var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
             var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition + new Vector3(0, i * 0.1f, -i * 0.1f), initialAngleForCamera);
             var currentCellBase = instantiatedCell.GetComponent<CellBase>();
             currentCellBase.objectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
             currentCellBase.cellObjectMaterialIndex = tilemapObject.GetMaterialIndexList()[i];
             currentCellBase.cellObjectSpawnRotation = tilemapObject.GetRotationList()[i];
-            currentCellBase.objectTypeSO.materialIndex = tilemapObject.GetMaterialIndexList()[i];
+            // currentCellBase.objectTypeSO.materialIndex = tilemapObject.GetMaterialIndexList()[i];
 
             var cellObjectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
             currentCellBase.cellObject = cellObjectTypeSO.prefab.GetComponent<CellObject>();

@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class CellBase : MonoBehaviour
 {
+    #region Fields
     public ObjectTypeSO objectTypeSO;
     public CellObject cellObject;
     public int cellObjectMaterialIndex;
@@ -21,12 +22,17 @@ public class CellBase : MonoBehaviour
     [SerializeField] private Transform objectTargetTransformFromChild;
     [SerializeField] private LayerMask collisionLayers;
 
-    private const float InitialWaitingTime = 2f;
-    private const float DestructionWaitingTime = 3.5f;
+    private const float InitialWaitingTimeForSpawn = 2f;
+    private const float InitialWaitingTimeForDestruction = 3.5f;
+    private const float DestructionDelay = 0.15f;
     private const float RayLength = 0.2f;
-    private float timer;
+    private float generalTimer;
+    private float destructionTimer;
     private bool isObjectSpawned;
     private bool isDeathOrderGiven;
+
+
+    #endregion
 
     private void Start()
     {
@@ -38,23 +44,29 @@ public class CellBase : MonoBehaviour
 
     private void FixedUpdate()
     {
-        timer += Time.deltaTime;
+        generalTimer += Time.deltaTime;
 
-        if (timer >= InitialWaitingTime && !isObjectSpawned)
+        if (generalTimer >= InitialWaitingTimeForSpawn && !isObjectSpawned)
         {
             TrySpawningObject();
         }
 
-        if (timer >= DestructionWaitingTime && isObjectSpawned && !isDeathOrderGiven)
+        if (generalTimer >= InitialWaitingTimeForDestruction && isObjectSpawned && !isDeathOrderGiven)
         {
-            TryDestroyObject();
+            TryDestroySelf();
         }
     }
 
-    private void TryDestroyObject()
+    private void TryDestroySelf()
     {
+
         if (!VectorHelper.CheckRaycastUp(RayLength * 2.75f, transform, collisionLayers))
         {
+            destructionTimer += Time.deltaTime;
+            if (destructionTimer < DestructionDelay)
+            {
+                return;
+            }
             isDeathOrderGiven = true;
             transform.DOScale(Vector3.zero, 1f).onComplete += () =>
             {
@@ -66,13 +78,12 @@ public class CellBase : MonoBehaviour
 
     private void TrySpawningObject()
     {
-        Debug.DrawRay(transform.position, transform.up * 1f, Color.red);
         if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
         {
-            isObjectSpawned = true;
             var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
             cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
             cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+            isObjectSpawned = true;
         }
     }
 

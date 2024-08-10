@@ -25,7 +25,6 @@ public class GridSystem<TGridObject>
     public int Height => height;
     public float CellSize => cellSize;
 
-
     private int width;
     private int height;
     private float cellSize;
@@ -48,29 +47,39 @@ public class GridSystem<TGridObject>
                 gridArray[x, y] = CreateGridObject(this, x, y);
             }
         }
+        for (int i = 0; i < gridArray.GetLength(0); i++)
+        {
+            LineDrawer<TGridObject>.DrawHorizontalLine(this, i);
+        }
+        for (int j = 0; j < gridArray.GetLength(1); j++)
+        {
+            LineDrawer<TGridObject>.DrawVerticalLine(this, j);
+        }
 
-        GameObject emptyObject = new GameObject();
+        LineDrawer<TGridObject>.DrawHorizontalLine(this, gridArray.GetLength(0));
+        LineDrawer<TGridObject>.DrawVerticalLine(this, gridArray.GetLength(1));
 
         bool isDebugMode = false;
         if (isDebugMode)
         {
             // TextMesh[,] debugTextArray = new TextMesh[width, height];
-            for (int x = 0; x < gridArray.GetLength(0); x++)
-            {
-                for (int y = 0; y < gridArray.GetLength(1); y++)
-                {
-                    var newObject = GameObject.Instantiate(emptyObject, GetWorldPosition(x, y) + new Vector3(this.cellSize / 2, this.cellSize / 2, 0), Quaternion.identity);
-                    newObject.AddComponent<MeshFilter>().mesh = UtilsClass.CreateWorldSpriteQuad(this.cellSize, Color.white);
-                    newObject.AddComponent<MeshCollider>();
-                    newObject.gameObject.name = "new obj";
-                    newObject.transform.SetParent(GameObject.Find("Canvas Object Types").transform);
-                    newObject.transform.Rotate(0, 180, 0);
+            // for (int x = 0; x < gridArray.GetLength(0); x++)
+            // {
+            //     for (int y = 0; y < gridArray.GetLength(1); y++)
+            //     {
 
-                    // debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 9, Color.white, TextAnchor.MiddleCenter);
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
-                }
-            }
+            //         var newObject = GameObject.Instantiate(emptyObject, GetWorldPosition(x, y) + new Vector3(this.cellSize / 2, this.cellSize / 2, 0), Quaternion.identity);
+            //         newObject.AddComponent<MeshFilter>().mesh = UtilsClass.CreateWorldSpriteQuad(this.cellSize, Color.white);
+            //         newObject.AddComponent<MeshCollider>();
+            //         newObject.gameObject.name = "new obj";
+            //         newObject.transform.SetParent(GameObject.Find("Canvas Object Types").transform);
+            //         newObject.transform.Rotate(0, 180, 0);
+
+            //         // debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 9, Color.white, TextAnchor.MiddleCenter);
+            //         Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
+            //         Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
+            //     }
+            // }
 
 
             Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
@@ -79,6 +88,9 @@ public class GridSystem<TGridObject>
             // OnGridObjectChanged += (sender, args) => { debugTextArray[args.x, args.y].text = gridArray[args.x, args.y]?.ToString(); };
         }
     }
+
+    public int Length0 { get => gridArray.GetLength(0); }
+    public int Length1 { get => gridArray.GetLength(1); }
 
     private void TranslateFromGridPositionToScreenPosition(Transform transform)
     {

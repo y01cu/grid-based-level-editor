@@ -30,24 +30,12 @@ public class LineCollision : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            var hitObjSO = firstHit.GetComponent<CellObject>().objectTypeSO;
-            bool isDifferentColor = hitObjSO.normalMaterials[hitObjSO.materialIndex].name != frogColor;
-            Debug.Log($"names: {hitObjSO.normalMaterials[hitObjSO.materialIndex].name} and {frogColor}");
-
+            var cellObject = firstHit.GetComponent<CellObject>();
+            var hitObjSO = cellObject.objectTypeSO;
+            bool isDifferentColor = firstHit.GetComponent<Renderer>().sharedMaterial.name != frogColor;
             if (isDifferentColor)
             {
-                Debug.Log("hit something with a different color");
-                Vector3 obstaclePoint;
-
-                obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.transform.localPosition);
-                // if (firstHit.transform.parent != null)
-                // {
-                // }
-                // else
-                // {
-                //     obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.localPosition);
-                // }
-
+                Vector3 obstaclePoint = transform.parent.InverseTransformPoint(firstHit.transform.transform.localPosition);
                 detectedObjectStorage.detectedObjects.Add(firstHit.gameObject);
                 detectedObjectStorage.points.Add(obstaclePoint);
 
@@ -84,7 +72,8 @@ public class LineCollision : MonoBehaviour
 
     private void HandleArrowCollision(Collider currentCollider, string frogColor)
     {
-        Direction arrowDirection = currentCollider.GetComponent<Arrow>().GetDirection();
+        Direction arrowDirection = currentCollider.GetComponent<Arrow>().CurrentDirection;
+        Debug.Log($"arrow direction: {arrowDirection}", currentCollider);
 
         Vector3 newPoint = transform.parent.InverseTransformPoint(currentCollider.transform.localPosition);
         detectedObjectStorage.points.Add(newPoint);

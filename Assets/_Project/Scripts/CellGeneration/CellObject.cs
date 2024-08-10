@@ -1,6 +1,4 @@
-using UnityEditor.Compilation;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public abstract class CellObject : MonoBehaviour
 {
@@ -10,6 +8,8 @@ public abstract class CellObject : MonoBehaviour
     public AudioClip obstacleStateClip;
     public ObjectTypeSO objectTypeSO;
     public Vector3 spawnRotation;
+
+    public bool IsInLevelEditor;
 
     public abstract void HandleBeingObstacle();
 
@@ -27,6 +27,6 @@ public abstract class CellObject : MonoBehaviour
     /// Rotate certain cell objects in the grid level editor.
     /// </summary>
     /// <param name="angle"></param>
-    public abstract void RotateByAngle(Vector3 angle);
+    public abstract void RotateByAngleInTheEditor(Vector3 angle);
 
 }

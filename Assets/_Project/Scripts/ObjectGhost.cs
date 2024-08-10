@@ -27,7 +27,7 @@ public class ObjectGhost : MonoBehaviour
         }
         else
         {
-            SetPrefab(e.activeObjectTypeSO.prefab.gameObject);
+            SetObjectTypeSO(e.activeObjectTypeSO);
         }
         Destroy(activeGhostGameObject);
         CreateNewObjectFromSO();
@@ -36,9 +36,10 @@ public class ObjectGhost : MonoBehaviour
 
     private void CreateNewObjectFromSO()
     {
-        activeGhostGameObject = Instantiate(prefab, spriteTransform.position, prefab.transform.rotation);
+        activeGhostGameObject = Instantiate(objectTypeSO.prefab.gameObject, spriteTransform.position, objectTypeSO.prefab.rotation);
         activeGhostGameObject.transform.SetParent(spriteTransform);
-        activeGhostGameObject.transform.localScale = Vector3.one;
+        activeGhostGameObject.transform.localScale = objectTypeSO.prefab.localScale;
+        activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
     }
 
     private void Start()
@@ -76,8 +77,9 @@ public class ObjectGhost : MonoBehaviour
 
     public void SpawnAndAdjustPrefabOnPosition()
     {
-        var spawnedPrefab = Instantiate(prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
+        var spawnedPrefab = Instantiate(objectTypeSO.prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
         spawnedPrefab.transform.localScale *= LevelEditorManager.Instance.cellSize;
+        spawnedPrefab.GetComponent<CellObject>().IsInLevelEditor = true;
     }
 
     private void Hide()
@@ -90,14 +92,14 @@ public class ObjectGhost : MonoBehaviour
         spriteTransform.gameObject.SetActive(true);
     }
 
-    private void SetPrefab(GameObject newPrefab)
+    private void SetObjectTypeSO(ObjectTypeSO newObjectTypeSO)
     {
-        prefab = newPrefab;
+        objectTypeSO = newObjectTypeSO;
     }
 
     public void RotateCurrentObjectWithAngle(Vector3 angle)
     {
-        activeGhostGameObject.GetComponent<CellObject>().RotateByAngle(angle);
+        activeGhostGameObject.GetComponent<CellObject>().RotateByAngleInTheEditor(angle);
     }
 
     public Vector3 GetCurrentObjectRotation()

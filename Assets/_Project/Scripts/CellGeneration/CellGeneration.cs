@@ -5,14 +5,14 @@ public class CellGeneration : MonoBehaviour
 {
     public static CellGeneration Instance { get; private set; }
 
-    public int Height
+    public int CellHeight
     {
-        get => height;
-        set => height = value;
+        get => cellHeight;
+        set => cellHeight = value;
     }
 
-    [SerializeField] private int width;
-    [SerializeField] private int height;
+    [SerializeField] private int cellWidth;
+    [SerializeField] private int cellHeight;
 
     private TilemapGrid tilemapGrid;
 
@@ -28,10 +28,9 @@ public class CellGeneration : MonoBehaviour
         }
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
-        yield return new WaitForSeconds(.2f);
-        tilemapGrid = new TilemapGrid(width, height, 3f, Vector3.zero);
+        tilemapGrid = new TilemapGrid(cellWidth, cellHeight, 3f, Vector3.zero);
         tilemapGrid.LoadWithSO();
     }
 }
