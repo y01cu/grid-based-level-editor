@@ -1,11 +1,14 @@
+using System;
 using System.Threading.Tasks;
+using QFSW.QC;
 using UnityEngine;
 
 public class Arrow : CellObject
 {
     [SerializeField] private MeshRenderer meshRenderer;
-    
-    private Direction direction;
+
+    private Direction currentDirection;
+    public Direction CurrentDirection { get => currentDirection; set => currentDirection = value; }
 
     public override async void HandleBeingObstacle()
     {
@@ -18,23 +21,28 @@ public class Arrow : CellObject
         meshRenderer.material = normalMaterial;
     }
 
-    public void SetDirection(Direction newDirection)
-    {
-        direction = newDirection;
-    }
     public override void AdjustTransformForSetup()
     {
-        
+        int moddedRotationValue = (Convert.ToInt32(transform.rotation.eulerAngles.z) + 360) % 360;
+        Direction direction = moddedRotationValue switch
+        {
+            0 => Direction.Left,
+            90 => Direction.Down,
+            180 => Direction.Right,
+            270 => Direction.Up
+        };
+        CurrentDirection = direction;
     }
 
-    public Direction GetDirection()
+    public override void RotateByAngleInTheEditor(Vector3 angle)
     {
-        return direction;
+        var properAngleForArrow = new Vector3(0, 0, angle.y);
+        transform.Rotate(properAngleForArrow);
     }
 
-    public override void RotateByAngle(Vector3 angle)
+    [ContextMenu("LogRotation")]
+    public void LogRotation()
     {
-        transform.Translate(angle);
+        Debug.Log($"Rotation: {transform.rotation.eulerAngles}", gameObject);
     }
-
 }
