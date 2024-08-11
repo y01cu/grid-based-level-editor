@@ -15,7 +15,7 @@ public class AdjustTypeButton : MonoBehaviour
     private Vector2 anchoredPosition;
     private List<Button> spawnedMaterialButtons = new();
 
-    private const float GapBetweenButtons = 60f;
+    private const float GapBetweenButtons = 100f;
 
     private void Start()
     {
@@ -26,7 +26,7 @@ public class AdjustTypeButton : MonoBehaviour
         AssignMaterialColorUsingSpecificPixelOfTexture();
         OnActiveObjectUpdated += (sender, args) =>
         {
-            if (!IsSelected) // if (args.activeObjectTypeSO != objectTypeSO)
+            if (!IsSelected)
             {
                 HideObjectMaterialButtons();
             }
@@ -82,6 +82,7 @@ public class AdjustTypeButton : MonoBehaviour
         IsSelected = true;
         SetupObjectMaterialColorButtons();
         OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
+        LevelEditorValueManager.Instance.currentTypeText.text = objectTypeSO.name;
     }
 
     private void HideObjectMaterialButtons()
@@ -138,7 +139,7 @@ public class AdjustTypeButton : MonoBehaviour
     private void SetButtonPosition(Button button, int buttonIndex)
     {
         button.transform.SetParent(targetTransformParent);
-        button.GetComponent<RectTransform>().anchoredPosition = anchoredPosition + new Vector2(0, -(buttonIndex + 1) * GapBetweenButtons);
+        button.GetComponent<RectTransform>().anchoredPosition = anchoredPosition + new Vector2((buttonIndex + 1) * GapBetweenButtons, 0);
     }
 
     #endregion

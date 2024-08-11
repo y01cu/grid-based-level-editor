@@ -12,8 +12,12 @@ public class MouseManager : IRMBListener
     private InputAction scrollAction;
     private InputAction rmbClickAction;
 
+    [SerializeField] private Texture2D cursorTexture2D;
+
     private void Start()
     {
+        Cursor.SetCursor(cursorTexture2D, Vector2.zero, CursorMode.Auto);
+
         // playerInput.onActionTriggered += context => RightClickInteract(context);
 
         if (!isSubscribed)
@@ -48,7 +52,7 @@ public class MouseManager : IRMBListener
         Vector2 scrollValue = context.ReadValue<Vector2>();
         if (scrollValue.y >= 0)
         {
-            ObjectGhost.Instance.RotateCurrentObjectWithAngle(new Vector3(0,90,0));
+            ObjectGhost.Instance.RotateCurrentObjectWithAngle(new Vector3(0, 90, 0));
         }
         else if (scrollValue.y < 0)
         {
@@ -75,7 +79,7 @@ public class MouseManager : IRMBListener
 
             if (hitObject.CompareTag("Berry"))
             {
-                hitObject.GetComponent<Berry>().OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
+                hitObject.GetComponent<Berry>().OnClickedOverWithTargetScale(new Vector3(1.5f, 1.5f, 1.5f));
             }
 
             if (hitObject.CompareTag("Frog"))

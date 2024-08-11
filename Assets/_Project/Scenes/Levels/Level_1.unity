@@ -1226,6 +1226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 303778330}
+  cursorTexture2D: {fileID: 0}
 --- !u!4 &1018096049
 Transform:
   m_ObjectHideFlags: 0
