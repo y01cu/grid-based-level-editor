@@ -79,7 +79,7 @@ public class MouseManager : IRMBListener
 
             if (hitObject.CompareTag("Berry"))
             {
-                hitObject.GetComponent<Berry>().OnClickedOverWithTargetScale(new Vector3(2, 2, 2));
+                hitObject.GetComponent<Berry>().OnClickedOverWithTargetScale(new Vector3(1.5f, 1.5f, 1.5f));
             }
 
             if (hitObject.CompareTag("Frog"))

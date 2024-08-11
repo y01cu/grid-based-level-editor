@@ -783,7 +783,7 @@ GameObject:
   - component: {fileID: 321253876}
   - component: {fileID: 321253878}
   m_Layer: 0
-  m_Name: New Testing
+  m_Name: Level Editor Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
