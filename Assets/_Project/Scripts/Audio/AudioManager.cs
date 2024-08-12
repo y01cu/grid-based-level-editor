@@ -5,6 +5,7 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance;
 
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip basicButtonClickSound;
 
     #region Singleton
 
@@ -22,8 +23,13 @@ public class AudioManager : MonoBehaviour
 
     #endregion
 
-    public void PlayAudioClip(AudioClip audioClip)
+    public void PlayCustomAudioClip(AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip);
+    }
+
+    public void PlayBasicButtonClickSound()
+    {
+        audioSource.PlayOneShot(basicButtonClickSound);
     }
 }

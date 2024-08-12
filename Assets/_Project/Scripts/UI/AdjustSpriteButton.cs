@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class AdjustSpriteButton : MonoBehaviour
+public class AdjustSpriteButton : BasicButton
 {
     public int materialIndex;
 

@@ -79,12 +79,12 @@ public class Berry : Clickable
         if (IsTongueHit) return;
 
         base.OnClickedOverWithTargetScale(targetScale);
-        AudioManager.Instance.PlayAudioClip(normalStateClip);
+        AudioManager.Instance.PlayCustomAudioClip(normalStateClip);
     }
 
     public override async void HandleBeingObstacle()
     {
-        AudioManager.Instance.PlayAudioClip(obstacleStateClip);
+        AudioManager.Instance.PlayCustomAudioClip(obstacleStateClip);
         meshRenderer.material = obstacleMaterial;
         await Task.Delay(1000);
         meshRenderer.material = normalMaterial;

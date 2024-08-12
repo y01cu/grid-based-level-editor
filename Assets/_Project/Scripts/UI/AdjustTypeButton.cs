@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AdjustTypeButton : MonoBehaviour
+public class AdjustTypeButton : BasicButton
 {
     public static event EventHandler<OnActiveObjectTypeChangedEventArgs> OnActiveObjectUpdated;
     public static event EventHandler OnHideAllMaterialButtons;

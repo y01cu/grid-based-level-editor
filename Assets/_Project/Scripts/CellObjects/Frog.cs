@@ -50,7 +50,7 @@ public class Frog : Clickable
 
     public override async void HandleBeingObstacle()
     {
-        AudioManager.Instance.PlayAudioClip(obstacleStateClip);
+        AudioManager.Instance.PlayCustomAudioClip(obstacleStateClip);
 
         skinnedMeshRenderer.material = obstacleMaterial;
 
