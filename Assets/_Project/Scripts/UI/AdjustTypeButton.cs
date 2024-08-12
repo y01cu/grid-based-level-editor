@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ public class AdjustTypeButton : MonoBehaviour
 
     private void Start()
     {
+        AssignName();
         GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
         // Every type's initial material index must be set to 0
         objectTypeSO.materialIndex = 0;
@@ -36,6 +38,11 @@ public class AdjustTypeButton : MonoBehaviour
         {
             HideObjectMaterialButtons();
         };
+    }
+
+    private void AssignName()
+    {
+        GetComponentInChildren<TextMeshProUGUI>().text = objectTypeSO.name;
     }
 
     private void SetupObjectMaterialColorButtons()

@@ -274,9 +274,77 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -910, y: 490}
+  m_AnchoredPosition: {x: -846.7, y: 488.1}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &142018081
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4868591164883455391, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_Name
+      value: Audio Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410491341167224099, guid: 4868b53c5d397704cbc15047a76824d5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4868b53c5d397704cbc15047a76824d5, type: 3}
 --- !u!1 &151239919
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,7 +433,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: B
+  m_text: Berry
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -525,8 +593,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -110}
-  m_SizeDelta: {x: 75, y: 75}
+  m_AnchoredPosition: {x: 30, y: -20}
+  m_SizeDelta: {x: 146.21, y: 75}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &216259763
 MonoBehaviour:
@@ -1072,7 +1140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: A
+  m_text: Arrow
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1255,7 +1323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &637911637
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1656,7 +1724,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &865596854
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1788,7 +1856,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -885, y: 410}
+  m_AnchoredPosition: {x: -814.3, y: 428.5}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1039018421
@@ -2806,8 +2874,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -310}
-  m_SizeDelta: {x: 75, y: 75}
+  m_AnchoredPosition: {x: 30, y: -220}
+  m_SizeDelta: {x: 146.21, y: 75}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1290823420
 MonoBehaviour:
@@ -3001,7 +3069,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: F
+  m_text: Frog
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3387,8 +3455,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -890.00006, y: 0}
-  m_SizeDelta: {x: -1779.9999, y: 0}
+  m_AnchoredPosition: {x: -855.00006, y: 0}
+  m_SizeDelta: {x: -1709.9999, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1709915458
 MonoBehaviour:
@@ -3749,8 +3817,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -210}
-  m_SizeDelta: {x: 75, y: 75}
+  m_AnchoredPosition: {x: 30, y: -120}
+  m_SizeDelta: {x: 146.21, y: 75}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1866566340
 MonoBehaviour:
@@ -4130,6 +4198,7 @@ SceneRoots:
   - {fileID: 321253877}
   - {fileID: 2111650631}
   - {fileID: 2085880460}
+  - {fileID: 142018081}
   - {fileID: 294974428}
   - {fileID: 1765942967}
   - {fileID: 790612846}
