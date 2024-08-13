@@ -44,8 +44,12 @@ public class AdjustTypeButton : BasicButton
     {
         foreach (Transform buttonTransform in transform.parent)
         {
+            if (buttonTransform == transform && transform.Find("Outline").gameObject.activeSelf)
+            {
+                continue;
+            }
             buttonTransform.Find("Outline").gameObject.SetActive(false);
-            // buttonTransform.GetComponent<AdjustTypeButton>().IsSelected = false;
+            buttonTransform.GetComponent<AdjustTypeButton>().IsSelected = false;
         }
         transform.Find("Outline").gameObject.SetActive(true);
         // IsSelected = true;
