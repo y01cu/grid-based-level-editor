@@ -75,11 +75,11 @@ public class ObjectGhost : MonoBehaviour
         // There was an audio clip playing here.
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         float cellSize = LevelEditorManager.Instance.cellSize;
-        spriteTransform.position = LevelEditorManager.IsOnGrid ? LevelEditorManager.tilemapGrid.gridSystem
-        .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0)
+        spriteTransform.position = LevelEditorManager.IsOnGrid ? Vector3.Lerp(spriteTransform.position, LevelEditorManager.tilemapGrid.gridSystem
+        .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0), Time.deltaTime * 20)
             : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
     }
 

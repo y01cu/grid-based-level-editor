@@ -49,6 +49,8 @@ public class LevelEditorManager : MonoBehaviour
         tilemapGrid.SetupTilemapObject(mouseWorldPosition, rotation, tilemapObjectTypeSO);
     }
 
+
+
     private void Update()
     {
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
