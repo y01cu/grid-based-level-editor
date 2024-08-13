@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AdjustTypeButton : MonoBehaviour
+public class AdjustTypeButton : BasicButton
 {
     public static event EventHandler<OnActiveObjectTypeChangedEventArgs> OnActiveObjectUpdated;
     public static event EventHandler OnHideAllMaterialButtons;
@@ -19,23 +20,57 @@ public class AdjustTypeButton : MonoBehaviour
 
     private void Start()
     {
+        AssignName();
+        AssignMaterialColorUsingSpecificPixelOfTexture();
         GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
+
         // Every type's initial material index must be set to 0
         objectTypeSO.materialIndex = 0;
 
-        AssignMaterialColorUsingSpecificPixelOfTexture();
-        OnActiveObjectUpdated += (sender, args) =>
-        {
-            if (!IsSelected)
-            {
-                HideObjectMaterialButtons();
-            }
-        };
+        OnActiveObjectUpdated += AdjustTypeButton_OnActiveObjectUpdated;
 
         OnHideAllMaterialButtons += (sender, args) =>
         {
             HideObjectMaterialButtons();
         };
+    }
+
+    private void AssignName()
+    {
+        GetComponentInChildren<TextMeshProUGUI>().text = objectTypeSO.name;
+    }
+
+    private void UpdateOtherAdjustTypeButtons()
+    {
+        foreach (Transform buttonTransform in transform.parent)
+        {
+            if (buttonTransform == transform && transform.Find("Outline").gameObject.activeSelf)
+            {
+                continue;
+            }
+            buttonTransform.Find("Outline").gameObject.SetActive(false);
+            buttonTransform.GetComponent<AdjustTypeButton>().IsSelected = false;
+        }
+        transform.Find("Outline").gameObject.SetActive(true);
+        // IsSelected = true;
+    }
+
+    private void AdjustTypeButton_OnActiveObjectUpdated(object sender, OnActiveObjectTypeChangedEventArgs args)
+    {
+        // if (!IsSelected)
+        // {
+        //     HideObjectMaterialButtons();
+        // }
+        //---
+        // if (args.activeObjectTypeSO == objectTypeSO)
+        // {
+        //     transform.Find("Outline").gameObject.SetActive(true);
+        // }
+        //---
+        // else
+        // {
+        //     transform.Find("Outline").gameObject.SetActive(false);
+        // }
     }
 
     private void SetupObjectMaterialColorButtons()
@@ -72,7 +107,9 @@ public class AdjustTypeButton : MonoBehaviour
 
     public void UpdateAsSelected()
     {
+        UpdateOtherAdjustTypeButtons();
         OnHideAllMaterialButtons?.Invoke(this, EventArgs.Empty);
+        OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
         if (IsSelected)
         {
             IsSelected = false;
@@ -81,8 +118,7 @@ public class AdjustTypeButton : MonoBehaviour
         }
         IsSelected = true;
         SetupObjectMaterialColorButtons();
-        OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
-        LevelEditorValueManager.Instance.currentTypeText.text = objectTypeSO.name;
+        // OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
     }
 
     private void HideObjectMaterialButtons()

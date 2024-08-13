@@ -12,7 +12,7 @@ public class Arrow : CellObject
 
     public override async void HandleBeingObstacle()
     {
-        AudioManager.Instance.PlayAudioClip(obstacleStateClip);
+        AudioManager.Instance.PlayCustomAudioClip(obstacleStateClip);
 
         meshRenderer.material = obstacleMaterial;
 
