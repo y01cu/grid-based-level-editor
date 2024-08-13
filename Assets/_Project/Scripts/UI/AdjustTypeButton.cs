@@ -8,7 +8,7 @@ public class AdjustTypeButton : BasicButton
 {
     public static event EventHandler<OnActiveObjectTypeChangedEventArgs> OnActiveObjectUpdated;
     public static event EventHandler OnHideAllMaterialButtons;
-
+    public static event EventHandler OnObjectSelected;
     [SerializeField] private ObjectTypeSO objectTypeSO;
     [SerializeField] private Button colorButtonTemplate;
     [SerializeField] private Transform targetTransformParent;
@@ -24,6 +24,7 @@ public class AdjustTypeButton : BasicButton
         AssignMaterialColorUsingSpecificPixelOfTexture();
         GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
 
+        PanelObjectControl.OnTimeToHideObject += PanelObjectControl_OnTimeToHideObject;
         // Every type's initial material index must be set to 0
         objectTypeSO.materialIndex = 0;
 
@@ -31,6 +32,11 @@ public class AdjustTypeButton : BasicButton
         {
             HideObjectMaterialButtons();
         };
+    }
+
+    private void PanelObjectControl_OnTimeToHideObject(object sender, EventArgs e)
+    {
+        HideObjectMaterialButtons();
     }
 
     private void AssignName()
@@ -86,6 +92,7 @@ public class AdjustTypeButton : BasicButton
 
     public void UpdateAsSelected()
     {
+        OnObjectSelected?.Invoke(this, EventArgs.Empty);
         UpdateOtherAdjustTypeButtons();
         OnHideAllMaterialButtons?.Invoke(this, EventArgs.Empty);
         OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
