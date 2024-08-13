@@ -788,7 +788,7 @@ GameObject:
   - component: {fileID: 272738546}
   - component: {fileID: 272738545}
   m_Layer: 5
-  m_Name: Canvas Saving
+  m_Name: Canvas Saving and Loading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3574,6 +3574,7 @@ GameObject:
   - component: {fileID: 1709915457}
   - component: {fileID: 1709915459}
   - component: {fileID: 1709915458}
+  - component: {fileID: 1709915460}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -3639,6 +3640,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709915456}
   m_CullTransparentMesh: 1
+--- !u!114 &1709915460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709915456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c93d0fcc3917b447989bd513c2ab0cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 1709915458}
 --- !u!1 &1719306095
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,8 @@ public abstract class CellObject : MonoBehaviour
 
     public bool IsInLevelEditor;
 
+    protected bool isRotating;
+
     public abstract void HandleBeingObstacle();
 
     public virtual void Initialize(ObjectColor objectColor)

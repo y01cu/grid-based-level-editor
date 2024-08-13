@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class ObjectGhost : MonoBehaviour
@@ -46,10 +47,17 @@ public class ObjectGhost : MonoBehaviour
     {
         AdjustTypeButton.OnActiveObjectUpdated += AdjustTypeButton_OnActiveObjectUpdated;
         LevelEditorManager.OnGridPositionChanged += LevelEditorGridTesting_OnGridPositionChanged;
+        PanelObjectControl.OnTimeToHideObject += PanelObjectControl_OnTimeToHideObject;
         var cellScale = LevelEditorManager.Instance.cellSize;
         spriteTransform.localScale = new Vector3(cellScale, cellScale, cellScale);
         ObjectPositioning.OnStartedRemovingObject += HideGhost;
         ObjectPositioning.OnEndedRemovingObject += ShowGhost;
+    }
+
+    private void PanelObjectControl_OnTimeToHideObject(object sender, EventArgs e)
+    {
+        Hide();
+        objectTypeSO = null;
     }
 
     private void HideGhost(object sender, EventArgs e)
@@ -67,11 +75,11 @@ public class ObjectGhost : MonoBehaviour
         // There was an audio clip playing here.
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         float cellSize = LevelEditorManager.Instance.cellSize;
-        spriteTransform.position = LevelEditorManager.IsOnGrid ? LevelEditorManager.tilemapGrid.gridSystem
-        .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0)
+        spriteTransform.position = LevelEditorManager.IsOnGrid ? Vector3.Lerp(spriteTransform.position, LevelEditorManager.tilemapGrid.gridSystem
+        .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0), Time.deltaTime * 20)
             : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
     }
 
@@ -80,6 +88,10 @@ public class ObjectGhost : MonoBehaviour
         var spawnedPrefab = Instantiate(objectTypeSO.prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
         spawnedPrefab.transform.localScale *= LevelEditorManager.Instance.cellSize;
         spawnedPrefab.GetComponent<CellObject>().IsInLevelEditor = true;
+        // spawnedPrefab.transform.DOScale(transform.localScale * 1.2f, 0.05f).OnComplete(() =>
+        // {
+        //     transform.DOScale(transform.localScale, 0.05f);
+        // });
     }
 
     private void Hide()
@@ -104,6 +116,10 @@ public class ObjectGhost : MonoBehaviour
 
     public Vector3 GetCurrentObjectRotation()
     {
+        if (activeGhostGameObject == null)
+        {
+            return Vector3.zero;
+        }
         return activeGhostGameObject.transform.rotation.eulerAngles;
     }
 }

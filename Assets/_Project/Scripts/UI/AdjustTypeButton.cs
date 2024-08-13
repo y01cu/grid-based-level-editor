@@ -8,7 +8,7 @@ public class AdjustTypeButton : BasicButton
 {
     public static event EventHandler<OnActiveObjectTypeChangedEventArgs> OnActiveObjectUpdated;
     public static event EventHandler OnHideAllMaterialButtons;
-
+    public static event EventHandler OnObjectSelected;
     [SerializeField] private ObjectTypeSO objectTypeSO;
     [SerializeField] private Button colorButtonTemplate;
     [SerializeField] private Transform targetTransformParent;
@@ -24,15 +24,19 @@ public class AdjustTypeButton : BasicButton
         AssignMaterialColorUsingSpecificPixelOfTexture();
         GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
 
+        PanelObjectControl.OnTimeToHideObject += PanelObjectControl_OnTimeToHideObject;
         // Every type's initial material index must be set to 0
         objectTypeSO.materialIndex = 0;
-
-        OnActiveObjectUpdated += AdjustTypeButton_OnActiveObjectUpdated;
 
         OnHideAllMaterialButtons += (sender, args) =>
         {
             HideObjectMaterialButtons();
         };
+    }
+
+    private void PanelObjectControl_OnTimeToHideObject(object sender, EventArgs e)
+    {
+        HideObjectMaterialButtons();
     }
 
     private void AssignName()
@@ -52,25 +56,6 @@ public class AdjustTypeButton : BasicButton
             buttonTransform.GetComponent<AdjustTypeButton>().IsSelected = false;
         }
         transform.Find("Outline").gameObject.SetActive(true);
-        // IsSelected = true;
-    }
-
-    private void AdjustTypeButton_OnActiveObjectUpdated(object sender, OnActiveObjectTypeChangedEventArgs args)
-    {
-        // if (!IsSelected)
-        // {
-        //     HideObjectMaterialButtons();
-        // }
-        //---
-        // if (args.activeObjectTypeSO == objectTypeSO)
-        // {
-        //     transform.Find("Outline").gameObject.SetActive(true);
-        // }
-        //---
-        // else
-        // {
-        //     transform.Find("Outline").gameObject.SetActive(false);
-        // }
     }
 
     private void SetupObjectMaterialColorButtons()
@@ -107,6 +92,7 @@ public class AdjustTypeButton : BasicButton
 
     public void UpdateAsSelected()
     {
+        OnObjectSelected?.Invoke(this, EventArgs.Empty);
         UpdateOtherAdjustTypeButtons();
         OnHideAllMaterialButtons?.Invoke(this, EventArgs.Empty);
         OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
@@ -118,7 +104,6 @@ public class AdjustTypeButton : BasicButton
         }
         IsSelected = true;
         SetupObjectMaterialColorButtons();
-        // OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
     }
 
     private void HideObjectMaterialButtons()
@@ -148,8 +133,6 @@ public class AdjustTypeButton : BasicButton
         {
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
             objectTypeSO.materialIndex = buttonIndex; // Since the first material is the default material 
-
-            Debug.Log($"obj type so has material index: {objectTypeSO.materialIndex}");
 
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
             foreach (var spawnedButton in spawnedMaterialButtons)

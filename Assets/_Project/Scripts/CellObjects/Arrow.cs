@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DG.Tweening;
 using QFSW.QC;
 using UnityEngine;
 
@@ -36,13 +37,11 @@ public class Arrow : CellObject
 
     public override void RotateByAngleInTheEditor(Vector3 angle)
     {
-        var properAngleForArrow = new Vector3(0, 0, angle.y);
-        transform.Rotate(properAngleForArrow);
-    }
-
-    [ContextMenu("LogRotation")]
-    public void LogRotation()
-    {
-        Debug.Log($"Rotation: {transform.rotation.eulerAngles}", gameObject);
+        if (isRotating == false)
+        {
+            isRotating = true;
+            var properAngleForArrow = new Vector3(0, 0, angle.y);
+            transform.DORotate(transform.rotation.eulerAngles + properAngleForArrow, 0.2f).onComplete += () => isRotating = false;
+        }
     }
 }
