@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 public class Frog : Clickable
@@ -61,12 +62,16 @@ public class Frog : Clickable
 
     public override void AdjustTransformForSetup()
     {
-        //transform.Translate(0, 0.5f, 0);
-        // ---
     }
 
     public override void RotateByAngleInTheEditor(Vector3 angle)
     {
-        transform.Rotate(angle);
+        if (isRotating == false)
+        {
+            isRotating = true;
+
+            Quaternion finalRotation = transform.rotation * Quaternion.Euler(angle);
+            transform.DORotate(finalRotation.eulerAngles, 0.2f).onComplete += () => isRotating = false;
+        }
     }
 }
