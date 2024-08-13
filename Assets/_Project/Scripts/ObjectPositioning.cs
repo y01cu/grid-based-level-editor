@@ -45,9 +45,7 @@ public class ObjectPositioning : MonoBehaviour
         Destroy(hits[hits.Length - 1].collider.gameObject);
         var gridSystem = LevelEditorManager.tilemapGrid.gridSystem;
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
-        TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint);
-        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)?.UpdateTilemapObject(tilemapObject.GetObjectTypeSOList().First().materialIndex, null, ObjectGhost.Instance.GetCurrentObjectRotation());
-
+        gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)?.DeleteLastTilemapObject();
         OnEndedRemovingObject?.Invoke(this, EventArgs.Empty);
     }
 

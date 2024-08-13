@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class ObjectGhost : MonoBehaviour
@@ -80,6 +81,10 @@ public class ObjectGhost : MonoBehaviour
         var spawnedPrefab = Instantiate(objectTypeSO.prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
         spawnedPrefab.transform.localScale *= LevelEditorManager.Instance.cellSize;
         spawnedPrefab.GetComponent<CellObject>().IsInLevelEditor = true;
+        spawnedPrefab.transform.DOScale(transform.localScale * 1.2f, 0.05f).OnComplete(() =>
+        {
+            transform.DOScale(transform.localScale, 0.05f);
+        });
     }
 
     private void Hide()

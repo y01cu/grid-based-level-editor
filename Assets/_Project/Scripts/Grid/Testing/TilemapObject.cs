@@ -58,6 +58,14 @@ public class TilemapObject
         gridSystem.TriggerGridObjectChanged(x, y);
     }
 
+    public void DeleteLastTilemapObject()
+    {
+        materialIndexList.Remove(materialIndexList[materialIndexList.Count - 1]);
+        objectTypeSOList.Remove(objectTypeSOList[objectTypeSOList.Count - 1]);
+        rotationList.Remove(rotationList[rotationList.Count - 1]);
+        gridSystem.TriggerGridObjectChanged(x, y);
+    }
+
     public void ClearSO()
     {
         objectTypeSOList.Clear();

@@ -27,8 +27,6 @@ public class AdjustTypeButton : BasicButton
         // Every type's initial material index must be set to 0
         objectTypeSO.materialIndex = 0;
 
-        OnActiveObjectUpdated += AdjustTypeButton_OnActiveObjectUpdated;
-
         OnHideAllMaterialButtons += (sender, args) =>
         {
             HideObjectMaterialButtons();
@@ -52,25 +50,6 @@ public class AdjustTypeButton : BasicButton
             buttonTransform.GetComponent<AdjustTypeButton>().IsSelected = false;
         }
         transform.Find("Outline").gameObject.SetActive(true);
-        // IsSelected = true;
-    }
-
-    private void AdjustTypeButton_OnActiveObjectUpdated(object sender, OnActiveObjectTypeChangedEventArgs args)
-    {
-        // if (!IsSelected)
-        // {
-        //     HideObjectMaterialButtons();
-        // }
-        //---
-        // if (args.activeObjectTypeSO == objectTypeSO)
-        // {
-        //     transform.Find("Outline").gameObject.SetActive(true);
-        // }
-        //---
-        // else
-        // {
-        //     transform.Find("Outline").gameObject.SetActive(false);
-        // }
     }
 
     private void SetupObjectMaterialColorButtons()
@@ -118,7 +97,6 @@ public class AdjustTypeButton : BasicButton
         }
         IsSelected = true;
         SetupObjectMaterialColorButtons();
-        // OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
     }
 
     private void HideObjectMaterialButtons()
@@ -148,8 +126,6 @@ public class AdjustTypeButton : BasicButton
         {
             objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
             objectTypeSO.materialIndex = buttonIndex; // Since the first material is the default material 
-
-            Debug.Log($"obj type so has material index: {objectTypeSO.materialIndex}");
 
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });
             foreach (var spawnedButton in spawnedMaterialButtons)
