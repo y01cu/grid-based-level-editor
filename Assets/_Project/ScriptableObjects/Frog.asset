@@ -24,3 +24,5 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a59b4965c2c302c41bd39d3e8afe75c8, type: 2}
   obstacleMaterial: {fileID: 0}
   cellObjectType: {fileID: 0}
+  materialIndex: 0
+  spawnRotation: {x: 0, y: 0, z: 0}

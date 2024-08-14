@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class CellBase : MonoBehaviour
 {
@@ -19,10 +17,12 @@ public class CellBase : MonoBehaviour
     public OrderType orderType;
     public Vector3 cellObjectSpawnRotation;
 
+    public bool isInLevelEditor;
+
     [SerializeField] private Transform objectTargetTransformFromChild;
     [SerializeField] private LayerMask collisionLayers;
 
-    private const float InitialWaitingTimeForSpawn = 2f;
+    private const float InitialWaitingTimeForSpawn = 0.5f;
     private const float InitialWaitingTimeForDestruction = 3.5f;
     private const float DestructionDelay = 0.15f;
     private const float RayLength = 0.2f;
@@ -38,7 +38,7 @@ public class CellBase : MonoBehaviour
     {
         if (objectColor != ObjectColor._Empty)
         {
-            LevelManager.Instance.IncreaseActiveNonGrayCellCount();
+            LevelManager.Instance?.IncreaseActiveNonGrayCellCount();
         }
     }
 
@@ -59,8 +59,7 @@ public class CellBase : MonoBehaviour
 
     private void TryDestroySelf()
     {
-
-        if (!VectorHelper.CheckRaycastUp(RayLength * 2.75f, transform, collisionLayers))
+        if (!VectorHelper.CheckRaycastUp(RayLength * 10f, transform, collisionLayers))
         {
             destructionTimer += Time.deltaTime;
             if (destructionTimer < DestructionDelay)
@@ -74,16 +73,32 @@ public class CellBase : MonoBehaviour
                 Destroy(gameObject);
             };
         }
+
+        return;
     }
 
     private void TrySpawningObject()
     {
         if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
         {
-            var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
-            cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
-            cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
             isObjectSpawned = true;
+            var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
+            if (isInLevelEditor)
+            {
+                cellObject.transform.Rotate(cellObject.GetComponent<CellObject>().spawnRotation);
+                cellObject.GetComponent<CellObject>().IsInLevelEditor = true;
+            }
+            cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
+
+            if (LevelEditorManager.Instance != null)
+            {
+                cellObject.transform.localScale *= LevelEditorManager.Instance.cellSize;
+            }
+
+            cellObject.transform.DOScale(cellObject.transform.localScale, 0.5f).From(Vector3.zero).onComplete += () =>
+            {
+                cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+            };
         }
     }
 

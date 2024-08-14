@@ -1,10 +1,15 @@
 using System;
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
 public class ObjectGhost : MonoBehaviour
 {
     public static ObjectGhost Instance { get; private set; }
+    private bool isObjectReadyToBePlaced;
+
+    public bool IsObjectReadyToBePlaced { get => isObjectReadyToBePlaced; }
+
     public GameObject prefab;
 
     public ObjectTypeSO objectTypeSO;
@@ -35,12 +40,17 @@ public class ObjectGhost : MonoBehaviour
         Show();
     }
 
-    private void CreateNewObjectFromSO()
+    private async void CreateNewObjectFromSO()
     {
+        const int initialMaterialAssignmentDelayForPrecision = 100; // milliseconds
+        await Task.Delay(initialMaterialAssignmentDelayForPrecision);
+        // var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         activeGhostGameObject = Instantiate(objectTypeSO.prefab.gameObject, spriteTransform.position, objectTypeSO.prefab.rotation);
         activeGhostGameObject.transform.SetParent(spriteTransform);
         activeGhostGameObject.transform.localScale = objectTypeSO.prefab.localScale;
         activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
+        activeGhostGameObject.GetComponent<Renderer>().sharedMaterials[0] = objectTypeSO.normalMaterials[objectTypeSO.materialIndex];
+
     }
 
     private void Start()
@@ -75,23 +85,64 @@ public class ObjectGhost : MonoBehaviour
         // There was an audio clip playing here.
     }
 
+
     private void LateUpdate()
     {
         float cellSize = LevelEditorManager.Instance.cellSize;
+
         spriteTransform.position = LevelEditorManager.IsOnGrid ? Vector3.Lerp(spriteTransform.position, LevelEditorManager.tilemapGrid.gridSystem
-        .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0), Time.deltaTime * 20)
+        .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0), Time.deltaTime * 50)
             : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
+
+
+        if (spriteTransform.position != LevelEditorManager.tilemapGrid.gridSystem.GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0))
+        {
+            isObjectReadyToBePlaced = false;
+        }
+        else
+        {
+            isObjectReadyToBePlaced = true;
+        }
+
+        // Vector3 targetPosition = LevelEditorManager.tilemapGrid.gridSystem
+        // .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0);
+
+        // if (LevelEditorManager.IsOnGrid)
+        // {
+        //     Vector3 newPosition = Vector3.Lerp(spriteTransform.position, targetPosition, Time.deltaTime * 20);
+        //     isObjectReadyToBePlaced = Vector3.Distance(newPosition, targetPosition) < 0.01f;
+        // }
+        // else
+        // {
+        //     spriteTransform.position = UtilsBase.GetMouseWorldPosition3OnCamera(camera);
+        // }
+
     }
 
-    public void SpawnAndAdjustPrefabOnPosition()
+    public void SpawnAndAdjustPrefabOnPosition(Vector3 objectRotation)
     {
-        var spawnedPrefab = Instantiate(objectTypeSO.prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
-        spawnedPrefab.transform.localScale *= LevelEditorManager.Instance.cellSize;
-        spawnedPrefab.GetComponent<CellObject>().IsInLevelEditor = true;
-        // spawnedPrefab.transform.DOScale(transform.localScale * 1.2f, 0.05f).OnComplete(() =>
+        // if (!IsObjectReadyToBePlaced)
         // {
-        //     transform.DOScale(transform.localScale, 0.05f);
-        // });
+        //     return;
+        // }
+
+        var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
+        var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
+
+        var spawnedCell = Instantiate(baseCellSO.prefab, spriteTransform.position, initialAngleForCamera);
+        var cellBase = spawnedCell.GetComponent<CellBase>();
+        cellBase.isInLevelEditor = true;
+        cellBase.objectTypeSO = objectTypeSO;
+        cellBase.objectTypeSO.prefab.GetComponent<CellObject>().spawnRotation = objectRotation;
+        cellBase.cellObjectMaterialIndex = objectTypeSO.materialIndex;
+        spawnedCell.transform.localScale *= LevelEditorManager.Instance.cellSize;
+        spawnedCell.transform.DOScale(spawnedCell.transform.localScale, 0.5f).From(Vector3.zero);
+
+        var renderer = spawnedCell.GetComponent<Renderer>();
+        var materials = renderer.sharedMaterials;
+        materials[0] = baseCellSO.normalMaterials[objectTypeSO.materialIndex];
+        renderer.materials = materials;
+        Debug.Log($"material 0 should be {baseCellSO.normalMaterials[objectTypeSO.materialIndex].name}");
     }
 
     private void Hide()

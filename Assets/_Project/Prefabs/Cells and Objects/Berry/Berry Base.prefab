@@ -154,7 +154,8 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: 42c30a692439a7b4290c34c6f1de6030, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   objectTypeSO: {fileID: 11400000, guid: 9694ead2b07adce41a65f87703bc6516, type: 2}
-  spawnRotation: {x: 0, y: 0, z: 0}
+  spawnRotation: {x: 64.7413, y: 88.56744, z: 292.3643}
+  materialIndex: 0
   IsInLevelEditor: 0
   normalStateClip: {fileID: 8300000, guid: 5cae738135a18e142a8bdcb095144a64, type: 3}
   boxCollider: {fileID: 635213937580863160}

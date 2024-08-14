@@ -51,11 +51,11 @@ public class ObjectPositioning : MonoBehaviour
 
     private void TryPlacingObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
     {
-        if (ObjectGhost.Instance.objectTypeSO == null)
+        if (ObjectGhost.Instance.objectTypeSO == null || ObjectGhost.Instance.IsObjectReadyToBePlaced == false)
         {
             return;
         }
         LevelEditorManager.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
-        ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
+        ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition(objectRotation);
     }
 }
