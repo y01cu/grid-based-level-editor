@@ -9,6 +9,8 @@ public abstract class CellObject : MonoBehaviour
     public ObjectTypeSO objectTypeSO;
     public Vector3 spawnRotation;
 
+    public int materialIndex;
+
     public bool IsInLevelEditor;
 
     protected bool isRotating;

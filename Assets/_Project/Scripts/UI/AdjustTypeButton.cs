@@ -18,15 +18,19 @@ public class AdjustTypeButton : BasicButton
 
     private const float GapBetweenButtons = 100f;
 
+    private void Awake()
+    {
+        // Every type's initial material index must be set to 0
+        objectTypeSO.materialIndex = 0;
+    }
     private void Start()
     {
+
         AssignName();
         AssignMaterialColorUsingSpecificPixelOfTexture();
         GetComponent<Button>().onClick.AddListener(UpdateAsSelected);
 
         PanelObjectControl.OnTimeToHideObject += PanelObjectControl_OnTimeToHideObject;
-        // Every type's initial material index must be set to 0
-        objectTypeSO.materialIndex = 0;
 
         OnHideAllMaterialButtons += (sender, args) =>
         {
@@ -131,7 +135,9 @@ public class AdjustTypeButton : BasicButton
     {
         materialButton.onClick.AddListener(() =>
         {
-            objectTypeSO.prefab.gameObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
+            objectTypeSO.prefab.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[buttonIndex];
+            // var cellBase = objectTypeSO.prefab.GetComponent<CellBase>();
+            // cellBase.cellObjectMaterialIndex = buttonIndex;
             objectTypeSO.materialIndex = buttonIndex; // Since the first material is the default material 
 
             OnActiveObjectUpdated?.Invoke(this, new OnActiveObjectTypeChangedEventArgs { activeObjectTypeSO = objectTypeSO });

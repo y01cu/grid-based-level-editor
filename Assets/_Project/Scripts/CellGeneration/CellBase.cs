@@ -19,6 +19,8 @@ public class CellBase : MonoBehaviour
     public OrderType orderType;
     public Vector3 cellObjectSpawnRotation;
 
+    public bool isInLevelEditor;
+
     [SerializeField] private Transform objectTargetTransformFromChild;
     [SerializeField] private LayerMask collisionLayers;
 
@@ -38,7 +40,7 @@ public class CellBase : MonoBehaviour
     {
         if (objectColor != ObjectColor._Empty)
         {
-            LevelManager.Instance.IncreaseActiveNonGrayCellCount();
+            LevelManager.Instance?.IncreaseActiveNonGrayCellCount();
         }
     }
 
@@ -59,7 +61,6 @@ public class CellBase : MonoBehaviour
 
     private void TryDestroySelf()
     {
-
         if (!VectorHelper.CheckRaycastUp(RayLength * 2.75f, transform, collisionLayers))
         {
             destructionTimer += Time.deltaTime;
@@ -80,11 +81,24 @@ public class CellBase : MonoBehaviour
     {
         if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
         {
-            var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
-            cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
-            cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
-            cellObject.transform.DOScale(cellObject.transform.localScale, 0.5f).From(Vector3.zero);
             isObjectSpawned = true;
+            var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
+            if (isInLevelEditor)
+            {
+                cellObject.transform.Rotate(cellObject.GetComponent<CellObject>().spawnRotation);
+                cellObject.GetComponent<CellObject>().IsInLevelEditor = true;
+            }
+            cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
+
+            if (LevelEditorManager.Instance != null)
+            {
+                cellObject.transform.localScale *= LevelEditorManager.Instance.cellSize;
+            }
+
+            cellObject.transform.DOScale(cellObject.transform.localScale, 0.5f).From(Vector3.zero).onComplete += () =>
+            {
+                // cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+            };
         }
     }
 

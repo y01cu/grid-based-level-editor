@@ -64,6 +64,7 @@ public class TilemapGrid
     public void LoadWithSO()
     {
         SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
+        Debug.Log($"save object array length: {saveObject.tilemapObjectSaveObjectArray.Length}");
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
@@ -86,8 +87,6 @@ public class TilemapGrid
     private void HandleCellWithTilemapObjectOnPosition(TilemapObject tilemapObject, Vector3 newPosition)
     {
         var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
-
-
 
         for (int i = 0; i < tilemapObject.GetObjectTypeSOList().Count; i++)
         {

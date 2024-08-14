@@ -29,6 +29,7 @@ public class ObjectPositioning : MonoBehaviour
         var canObjectBePlaced = LevelEditorManager.IsOnGrid && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0);
         if (canObjectBePlaced)
         {
+            Debug.Log($"0: {camera.ScreenToWorldPoint(Input.mousePosition)} | 1: {ObjectGhost.Instance.GetCurrentObjectRotation()}");
             TryPlacingObject(camera.ScreenToWorldPoint(Input.mousePosition), ObjectGhost.Instance.GetCurrentObjectRotation());
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -51,11 +52,11 @@ public class ObjectPositioning : MonoBehaviour
 
     private void TryPlacingObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
     {
-        if (ObjectGhost.Instance.objectTypeSO == null)
+        if (ObjectGhost.Instance.objectTypeSO == null || ObjectGhost.Instance.IsObjectReadyToBePlaced == false)
         {
             return;
         }
         LevelEditorManager.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
-        ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition();
+        ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition(objectRotation);
     }
 }

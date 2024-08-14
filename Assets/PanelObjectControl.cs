@@ -52,7 +52,6 @@ public class PanelObjectControl : MonoBehaviour
     {
         if (RectTransformUtility.RectangleContainsScreenPoint(image.rectTransform, Input.mousePosition))
         {
-            Debug.Log("cursor returned back to panel");
             OnTimeToHideObject?.Invoke(this, EventArgs.Empty);
             ResetValuesBackToNormal();
         }
