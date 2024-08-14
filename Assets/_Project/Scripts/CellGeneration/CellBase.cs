@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class CellBase : MonoBehaviour
 {
@@ -61,7 +59,7 @@ public class CellBase : MonoBehaviour
 
     private void TryDestroySelf()
     {
-        if (!VectorHelper.CheckRaycastUp(RayLength * 2.75f, transform, collisionLayers))
+        if (!VectorHelper.CheckRaycastUp(RayLength * 10f, transform, collisionLayers))
         {
             destructionTimer += Time.deltaTime;
             if (destructionTimer < DestructionDelay)
@@ -75,6 +73,8 @@ public class CellBase : MonoBehaviour
                 Destroy(gameObject);
             };
         }
+
+        return;
     }
 
     private void TrySpawningObject()
@@ -97,7 +97,7 @@ public class CellBase : MonoBehaviour
 
             cellObject.transform.DOScale(cellObject.transform.localScale, 0.5f).From(Vector3.zero).onComplete += () =>
             {
-                // cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+                cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
             };
         }
     }

@@ -50,7 +50,7 @@ public class ObjectGhost : MonoBehaviour
         activeGhostGameObject.transform.localScale = objectTypeSO.prefab.localScale;
         activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
         activeGhostGameObject.GetComponent<Renderer>().sharedMaterials[0] = objectTypeSO.normalMaterials[objectTypeSO.materialIndex];
-        Debug.Log($"material 0  of {activeGhostGameObject.name} should be {objectTypeSO.normalMaterials[objectTypeSO.materialIndex].name}");
+
     }
 
     private void Start()

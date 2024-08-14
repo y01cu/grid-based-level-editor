@@ -29,7 +29,6 @@ public class ObjectPositioning : MonoBehaviour
         var canObjectBePlaced = LevelEditorManager.IsOnGrid && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0);
         if (canObjectBePlaced)
         {
-            Debug.Log($"0: {camera.ScreenToWorldPoint(Input.mousePosition)} | 1: {ObjectGhost.Instance.GetCurrentObjectRotation()}");
             TryPlacingObject(camera.ScreenToWorldPoint(Input.mousePosition), ObjectGhost.Instance.GetCurrentObjectRotation());
         }
         if (Input.GetKeyDown(KeyCode.Space))
