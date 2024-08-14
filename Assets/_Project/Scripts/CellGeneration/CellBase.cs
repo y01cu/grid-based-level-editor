@@ -22,7 +22,7 @@ public class CellBase : MonoBehaviour
     [SerializeField] private Transform objectTargetTransformFromChild;
     [SerializeField] private LayerMask collisionLayers;
 
-    private const float InitialWaitingTimeForSpawn = 2f;
+    private const float InitialWaitingTimeForSpawn = 0.5f;
     private const float InitialWaitingTimeForDestruction = 3.5f;
     private const float DestructionDelay = 0.15f;
     private const float RayLength = 0.2f;
@@ -83,6 +83,7 @@ public class CellBase : MonoBehaviour
             var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
             cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
             cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+            cellObject.transform.DOScale(cellObject.transform.localScale, 0.5f).From(Vector3.zero);
             isObjectSpawned = true;
         }
     }

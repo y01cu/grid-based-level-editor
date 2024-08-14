@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ public class ObjectGhost : MonoBehaviour
         activeGhostGameObject = Instantiate(objectTypeSO.prefab.gameObject, spriteTransform.position, objectTypeSO.prefab.rotation);
         activeGhostGameObject.transform.SetParent(spriteTransform);
         activeGhostGameObject.transform.localScale = objectTypeSO.prefab.localScale;
-        activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
+        // activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
     }
 
     private void Start()
@@ -88,10 +89,13 @@ public class ObjectGhost : MonoBehaviour
         var spawnedPrefab = Instantiate(objectTypeSO.prefab, spriteTransform.position, activeGhostGameObject.transform.rotation);
         spawnedPrefab.transform.localScale *= LevelEditorManager.Instance.cellSize;
         spawnedPrefab.GetComponent<CellObject>().IsInLevelEditor = true;
-        // spawnedPrefab.transform.DOScale(transform.localScale * 1.2f, 0.05f).OnComplete(() =>
-        // {
-        //     transform.DOScale(transform.localScale, 0.05f);
-        // });
+        spawnedPrefab.transform.DOScale(spawnedPrefab.transform.localScale * 1.15f, 0.2f).onComplete += () =>
+        {
+            spawnedPrefab.transform.DOScale(spawnedPrefab.transform.localScale / 1.15f, 0.2f);
+        };
+        // var cellBase = spawnedPrefab.GetComponent<CellBase>();
+        // cellBase.objectTypeSO = objectTypeSO;
+        // cellBase.cellObjectMaterialIndex = 
     }
 
     private void Hide()

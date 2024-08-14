@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -98,6 +99,7 @@ public class TilemapGrid
             var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
             var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition + new Vector3(0, i * 0.1f, -i * 0.1f), initialAngleForCamera);
             var currentCellBase = instantiatedCell.GetComponent<CellBase>();
+            instantiatedCell.transform.DOScale(instantiatedCell.transform.localScale, 0.5f).From(Vector3.zero);
             currentCellBase.objectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
             currentCellBase.cellObjectMaterialIndex = tilemapObject.GetMaterialIndexList()[i];
             currentCellBase.cellObjectSpawnRotation = tilemapObject.GetRotationList()[i];
