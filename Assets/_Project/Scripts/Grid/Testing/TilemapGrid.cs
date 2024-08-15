@@ -64,7 +64,6 @@ public class TilemapGrid
     public void LoadWithSO()
     {
         SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
-        Debug.Log($"save object array length: {saveObject.tilemapObjectSaveObjectArray.Length}");
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);

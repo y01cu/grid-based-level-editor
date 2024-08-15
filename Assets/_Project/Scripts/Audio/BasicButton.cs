@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// </summary>
 public class BasicButton : MonoBehaviour
 {
-    private void Awake()
+    protected void Awake()
     {
         GetComponent<Button>().onClick.AddListener(() =>
         {
