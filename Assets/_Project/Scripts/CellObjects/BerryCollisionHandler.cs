@@ -48,10 +48,13 @@ public class BerryCollisionHandler
 
         berry.transform.DOScale(Vector3.zero, .3f).SetEase(Ease.Linear).onComplete += () =>
         {
+            Debug.Log($"detected berries count before: {detectedBerries.Count}");
             detectedBerries.Remove(berry);
+            Debug.Log($"Detected berries count after: {detectedBerries.Count}");
             Object.Destroy(berry.gameObject);
             if (detectedBerries.Count == 0)
             {
+                Debug.Log("Detected berries count is 0");
                 // Object.Destroy(other.gameObject.transform.parent.gameObject);
                 Object.Destroy(other.gameObject);
             }
