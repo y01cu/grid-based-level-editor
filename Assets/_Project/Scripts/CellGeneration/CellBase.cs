@@ -8,7 +8,6 @@ public class CellBase : MonoBehaviour
     public ObjectTypeSO objectTypeSO;
     public CellObject cellObject;
     public int cellObjectMaterialIndex;
-
     public List<GameObject> CellObjectPrefabs;
     public ObjectColor objectColor;
     public ObjectType objectType;
@@ -16,12 +15,9 @@ public class CellBase : MonoBehaviour
     public Vector3 additionalRotationVector3;
     public OrderType orderType;
     public Vector3 cellObjectSpawnRotation;
-
     public bool isInLevelEditor;
-
     [SerializeField] private Transform objectTargetTransformFromChild;
     [SerializeField] private LayerMask collisionLayers;
-
     private const float InitialWaitingTimeForSpawn = 0.5f;
     private const float InitialWaitingTimeForDestruction = 3.5f;
     private const float DestructionDelay = 0.15f;
@@ -30,7 +26,6 @@ public class CellBase : MonoBehaviour
     private float destructionTimer;
     private bool isObjectSpawned;
     private bool isDeathOrderGiven;
-
 
     #endregion
 
@@ -46,7 +41,7 @@ public class CellBase : MonoBehaviour
     {
         generalTimer += Time.deltaTime;
 
-        if (generalTimer >= InitialWaitingTimeForSpawn && !isObjectSpawned)
+        if (generalTimer >= InitialWaitingTimeForSpawn && !isObjectSpawned && !VectorHelper.CheckRaycastUp(RayLength * 10f, transform, collisionLayers))
         {
             TrySpawningObject();
         }
@@ -82,22 +77,24 @@ public class CellBase : MonoBehaviour
         if (!VectorHelper.CheckRaycastUp(RayLength, transform, collisionLayers))
         {
             isObjectSpawned = true;
-            var cellObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
+            var spawnedObject = Instantiate(objectTypeSO.prefab, objectTargetTransformFromChild.position, Quaternion.Euler(cellObjectSpawnRotation));
+            cellObject = spawnedObject.GetComponent<CellObject>();
+
             if (isInLevelEditor)
             {
-                cellObject.transform.Rotate(cellObject.GetComponent<CellObject>().spawnRotation);
-                cellObject.GetComponent<CellObject>().IsInLevelEditor = true;
+                spawnedObject.transform.Rotate(spawnedObject.GetComponent<CellObject>().spawnRotation);
+                cellObject.IsInLevelEditor = true;
             }
-            cellObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
+            spawnedObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
 
             if (LevelEditorManager.Instance != null)
             {
-                cellObject.transform.localScale *= LevelEditorManager.Instance.cellSize;
+                spawnedObject.transform.localScale *= LevelEditorManager.Instance.cellSize;
             }
 
-            cellObject.transform.DOScale(cellObject.transform.localScale, 0.5f).From(Vector3.zero).onComplete += () =>
+            spawnedObject.transform.DOScale(spawnedObject.transform.localScale, 0.5f).From(Vector3.zero).onComplete += () =>
             {
-                cellObject.GetComponent<CellObject>().AdjustTransformForSetup();
+                cellObject.AdjustTransformForSetup();
             };
         }
     }
@@ -105,5 +102,17 @@ public class CellBase : MonoBehaviour
     public void ChangeCellObjectType(ObjectType newObjectType)
     {
         objectType = newObjectType;
+    }
+
+    public void ResetBackToInitialState()
+    {
+        if (cellObject != null)
+        {
+            Destroy(cellObject.gameObject);
+        }
+        generalTimer = 0;
+        destructionTimer = 0;
+        isObjectSpawned = false;
+        isDeathOrderGiven = false;
     }
 }

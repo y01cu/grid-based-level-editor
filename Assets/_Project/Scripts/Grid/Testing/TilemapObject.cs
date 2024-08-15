@@ -56,6 +56,10 @@ public class TilemapObject
         objectTypeSOList.Add(newObjectTypeSO);
         rotationList.Add(newRotation);
         gridSystem.TriggerGridObjectChanged(x, y);
+
+        ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition(newRotation, objectTypeSOList.Count);
+
+        // Debug.Log($"total obj count in this tile: {}");
     }
 
     public void DeleteLastTilemapObject()
