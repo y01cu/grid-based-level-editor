@@ -33,15 +33,21 @@ public class Frog : Clickable
         Vector3 startPoint = transform.TransformPoint(lineManager.GetLineRenderer().GetPosition(0));
         Vector3 rotation = transform.localRotation.eulerAngles;
 
-        Vector3 direction = (int)rotation.y switch
+        Vector3 direction = RoundToNearestMultipleOf90(rotation.y) switch
         {
             0 => Vector3.up,
             90 => Vector3.right,
             180 => Vector3.down,
             270 => Vector3.left,
+            _ => Vector3.up,
         };
 
         lineManager.MoveTongueLine(startPoint, direction, GetComponent<Renderer>().sharedMaterial.name);
+    }
+
+    private int RoundToNearestMultipleOf90(float angle)
+    {
+        return Mathf.RoundToInt(angle / 90) * 90;
     }
 
     public void SetOrderType(OrderType newOrderType)

@@ -86,11 +86,33 @@ public class LineCollision : MonoBehaviour
     {
         Berry berry = currentCollider.GetComponent<Berry>();
         var isBerryPickable = berry.GetComponent<Renderer>().sharedMaterial.name == frogColor && !berry.IsDetected();
-        if (isBerryPickable)
+        if (isBerryPickable && !berry.IsDetected())
         {
             berry.SetAsDetected();
             detectedObjectStorage.detectedObjects.Add(berry.gameObject);
-            detectedObjectStorage.detectedBerries.Add(berry);
+            // check if berry exists in detectedObjectStorage.detectedBerries
+
+            bool isNewBerryNeverAddedBefore = true;
+            foreach (var detectedBerry in detectedObjectStorage.detectedBerries)
+            {
+                if (detectedBerry == berry)
+                {
+                    isNewBerryNeverAddedBefore = false;
+                }
+            }
+            if (!isNewBerryNeverAddedBefore)
+            {
+                detectedObjectStorage.detectedBerries.Add(berry);
+            }
+
+
+
+
+            // if (!detectedObjectStorage.detectedBerries.Contains(berry))
+            // {
+            //     detectedObjectStorage.detectedBerries.Add(berry);
+            //     Debug.Log("Berry added to detectedBerries");
+            // }
         }
 
         if (berry.IsLastBerryForFrog())

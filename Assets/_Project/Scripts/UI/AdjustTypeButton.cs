@@ -20,6 +20,7 @@ public class AdjustTypeButton : BasicButton
 
     private void Awake()
     {
+        base.Awake();
         // Every type's initial material index must be set to 0
         objectTypeSO.materialIndex = 0;
     }

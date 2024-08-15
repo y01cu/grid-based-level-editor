@@ -40,13 +40,37 @@ public class ObjectPositioning : MonoBehaviour
     private void RemoveObject()
     {
         OnStartedRemovingObject?.Invoke(this, EventArgs.Empty);
-
         var hits = VectorHelper.GetRaycastHitsFromMousePosition(camera);
-        Destroy(hits[hits.Length - 1].collider.gameObject);
+        Destroy(GetCellObjectFromHits(hits));
         var gridSystem = LevelEditorManager.tilemapGrid.gridSystem;
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint)?.DeleteLastTilemapObject();
         OnEndedRemovingObject?.Invoke(this, EventArgs.Empty);
+    }
+
+    private GameObject GetCellObjectFromHits(RaycastHit[] hits)
+    {
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider.gameObject.GetComponent<CellObject>() != null)
+            {
+                return hits[i].collider.gameObject;
+            }
+        }
+        return null;
+    }
+
+    private void DeactivateCellObjectsOfCellBases(RaycastHit[] hits)
+    {
+        for (int i = 0; i < hits.Length; i++)
+        {
+            var currentCellBase = hits[i].collider.gameObject.GetComponent<CellBase>();
+            if (currentCellBase != null)
+            {
+                currentCellBase.ResetBackToInitialState();
+            }
+        }
+
     }
 
     private void TryPlacingObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
@@ -55,7 +79,7 @@ public class ObjectPositioning : MonoBehaviour
         {
             return;
         }
+        DeactivateCellObjectsOfCellBases(VectorHelper.GetRaycastHitsFromMousePosition(camera));
         LevelEditorManager.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
-        ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition(objectRotation);
     }
 }

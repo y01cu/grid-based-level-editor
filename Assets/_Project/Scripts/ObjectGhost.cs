@@ -103,33 +103,17 @@ public class ObjectGhost : MonoBehaviour
         {
             isObjectReadyToBePlaced = true;
         }
-
-        // Vector3 targetPosition = LevelEditorManager.tilemapGrid.gridSystem
-        // .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0);
-
-        // if (LevelEditorManager.IsOnGrid)
-        // {
-        //     Vector3 newPosition = Vector3.Lerp(spriteTransform.position, targetPosition, Time.deltaTime * 20);
-        //     isObjectReadyToBePlaced = Vector3.Distance(newPosition, targetPosition) < 0.01f;
-        // }
-        // else
-        // {
-        //     spriteTransform.position = UtilsBase.GetMouseWorldPosition3OnCamera(camera);
-        // }
-
     }
 
-    public void SpawnAndAdjustPrefabOnPosition(Vector3 objectRotation)
+    public void SpawnAndAdjustPrefabOnPosition(Vector3 objectRotation, int objCountAfterPlacingThisOne)
     {
-        // if (!IsObjectReadyToBePlaced)
-        // {
-        //     return;
-        // }
+        // divide it to cellsize
+        float positionOffset = (objCountAfterPlacingThisOne - 1) / LevelEditorManager.Instance.cellSize;
 
         var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
 
-        var spawnedCell = Instantiate(baseCellSO.prefab, spriteTransform.position, initialAngleForCamera);
+        var spawnedCell = Instantiate(baseCellSO.prefab, spriteTransform.position + new Vector3(0, positionOffset, -positionOffset), initialAngleForCamera);
         var cellBase = spawnedCell.GetComponent<CellBase>();
         cellBase.isInLevelEditor = true;
         cellBase.objectTypeSO = objectTypeSO;
@@ -142,7 +126,6 @@ public class ObjectGhost : MonoBehaviour
         var materials = renderer.sharedMaterials;
         materials[0] = baseCellSO.normalMaterials[objectTypeSO.materialIndex];
         renderer.materials = materials;
-        Debug.Log($"material 0 should be {baseCellSO.normalMaterials[objectTypeSO.materialIndex].name}");
     }
 
     private void Hide()

@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelEditorManager : MonoBehaviour
 {
@@ -49,8 +51,6 @@ public class LevelEditorManager : MonoBehaviour
         tilemapGrid.SetupTilemapObject(mouseWorldPosition, rotation, tilemapObjectTypeSO);
     }
 
-
-
     private void Update()
     {
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
@@ -67,6 +67,18 @@ public class LevelEditorManager : MonoBehaviour
             }
         }
     }
+
+    public void ChangeScene()
+    {
+        SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+        // StartCoroutine(LoadSceneAdditively(0));
+    }
+
+    // private IEnumerator LoadSceneAdditively(int sceneIndex)
+    // {
+
+
+    // }
 
     private void OnDestroy()
     {
