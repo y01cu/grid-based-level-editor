@@ -26,6 +26,7 @@ public class CellBase : MonoBehaviour
     private float destructionTimer;
     private bool isObjectSpawned;
     private bool isDeathOrderGiven;
+    public bool isLoading;
 
     #endregion
 
@@ -82,8 +83,11 @@ public class CellBase : MonoBehaviour
 
             if (isInLevelEditor)
             {
-                spawnedObject.transform.Rotate(spawnedObject.GetComponent<CellObject>().spawnRotation);
                 cellObject.IsInLevelEditor = true;
+                if (!isLoading)
+                {
+                    spawnedObject.transform.Rotate(spawnedObject.GetComponent<CellObject>().spawnRotation);
+                }
             }
             spawnedObject.GetComponent<Renderer>().sharedMaterial = objectTypeSO.normalMaterials[cellObjectMaterialIndex];
 

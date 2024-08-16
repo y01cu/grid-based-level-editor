@@ -11,9 +11,9 @@ public class TilemapGrid
 
     public GridSystem<TilemapObject> gridSystem { get; private set; }
 
-    public TilemapGrid(int width, int height, float cellSize, Vector3 originPosition)
+    public TilemapGrid(int width, int height, float cellSize, Vector3 originPosition, bool isEditorMode)
     {
-        gridSystem = new GridSystem<TilemapObject>(width, height, cellSize, originPosition, (GridSystem<TilemapObject> g, int x, int y) => new TilemapObject(g, x, y));
+        gridSystem = new GridSystem<TilemapObject>(width, height, cellSize, originPosition, isEditorMode, (GridSystem<TilemapObject> g, int x, int y) => new TilemapObject(g, x, y));
     }
 
     public void SetupTilemapObject(Vector3 worldPosition, Vector3 rotation, ObjectTypeSO objectTypeSO)
@@ -47,7 +47,7 @@ public class TilemapGrid
         SaveSystem.SaveObject(saveObject);
     }
 
-    public void Load()
+    public void LoadForEditor()
     {
         SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
 
@@ -56,6 +56,14 @@ public class TilemapGrid
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
             tilemapObject.Load(tilemapObjectSaveObject);
             gridSystem.TriggerGridObjectChanged(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
+            var newPosition = new Vector3(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y, 0);
+
+            var isObjectNull = tilemapObject.GetObjectTypeSOList() == null || !tilemapObject.GetObjectTypeSOList().Any();
+            if (isObjectNull)
+            {
+                continue;
+            }
+            HandleCellWithTilemapObjectOnPositionForEditor(tilemapObject, newPosition);
         }
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
@@ -81,6 +89,42 @@ public class TilemapGrid
         }
 
         OnLoaded?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void HandleCellWithTilemapObjectOnPositionForEditor(TilemapObject tilemapObject, Vector3 newPosition)
+    {
+        var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
+
+        for (int i = 0; i < tilemapObject.GetObjectTypeSOList().Count; i++)
+        {
+            if (tilemapObject.GetObjectTypeSOList()[i] == null)
+            {
+                continue;
+            }
+
+            var cellSizeAddition = LevelEditorManager.Instance.cellSize;
+            var halfCellSize = cellSizeAddition / 2;
+            var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
+            var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition * cellSizeAddition + new Vector3(0, i * 0.1f, -i * 0.1f) + new Vector3(halfCellSize, halfCellSize, halfCellSize), initialAngleForCamera);
+            var currentCellBase = instantiatedCell.GetComponent<CellBase>();
+            currentCellBase.isInLevelEditor = true;
+            currentCellBase.isLoading = true;
+            instantiatedCell.transform.localScale *= LevelEditorManager.Instance.cellSize;
+            instantiatedCell.transform.DOScale(instantiatedCell.transform.localScale, 0.5f).From(Vector3.zero);
+            currentCellBase.objectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
+            currentCellBase.cellObjectMaterialIndex = tilemapObject.GetMaterialIndexList()[i];
+            currentCellBase.cellObjectSpawnRotation = tilemapObject.GetRotationList()[i];
+
+            var cellObjectTypeSO = tilemapObject.GetObjectTypeSOList()[i];
+            currentCellBase.cellObject = cellObjectTypeSO.prefab.GetComponent<CellObject>();
+
+            var renderer = instantiatedCell.GetComponent<Renderer>();
+            var materials = renderer.sharedMaterials;
+            // 0 index is what we want to modify
+            materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
+            renderer.sharedMaterials = materials;
+
+        }
     }
 
     private void HandleCellWithTilemapObjectOnPosition(TilemapObject tilemapObject, Vector3 newPosition)

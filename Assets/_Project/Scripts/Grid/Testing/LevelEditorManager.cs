@@ -39,7 +39,7 @@ public class LevelEditorManager : MonoBehaviour
     private void Start()
     {
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
-        tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero);
+        tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero, true);
     }
 
     private void SetObjectTypeSO(object sender, OnActiveObjectTypeChangedEventArgs e)
@@ -71,14 +71,7 @@ public class LevelEditorManager : MonoBehaviour
     public void ChangeScene()
     {
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
-        // StartCoroutine(LoadSceneAdditively(0));
     }
-
-    // private IEnumerator LoadSceneAdditively(int sceneIndex)
-    // {
-
-
-    // }
 
     private void OnDestroy()
     {

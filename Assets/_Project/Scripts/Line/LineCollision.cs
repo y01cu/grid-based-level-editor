@@ -73,8 +73,6 @@ public class LineCollision : MonoBehaviour
     private void HandleArrowCollision(Collider currentCollider, string frogColor)
     {
         Direction arrowDirection = currentCollider.GetComponent<Arrow>().CurrentDirection;
-        Debug.Log($"arrow direction: {arrowDirection}", currentCollider);
-
         Vector3 newPoint = transform.parent.InverseTransformPoint(currentCollider.transform.localPosition);
         detectedObjectStorage.points.Add(newPoint);
 
@@ -104,15 +102,6 @@ public class LineCollision : MonoBehaviour
             {
                 detectedObjectStorage.detectedBerries.Add(berry);
             }
-
-
-
-
-            // if (!detectedObjectStorage.detectedBerries.Contains(berry))
-            // {
-            //     detectedObjectStorage.detectedBerries.Add(berry);
-            //     Debug.Log("Berry added to detectedBerries");
-            // }
         }
 
         if (berry.IsLastBerryForFrog())

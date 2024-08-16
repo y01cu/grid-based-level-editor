@@ -30,6 +30,11 @@ public class Frog : Clickable
 
         base.OnClickedOverWithTargetScale(targetScale);
 
+        if (IsInLevelEditor)
+        {
+            return;
+        }
+
         Vector3 startPoint = transform.TransformPoint(lineManager.GetLineRenderer().GetPosition(0));
         Vector3 rotation = transform.localRotation.eulerAngles;
 
@@ -41,7 +46,7 @@ public class Frog : Clickable
             270 => Vector3.left,
             _ => Vector3.up,
         };
-
+        Debug.Log("started moving tongue line");
         lineManager.MoveTongueLine(startPoint, direction, GetComponent<Renderer>().sharedMaterial.name);
     }
 

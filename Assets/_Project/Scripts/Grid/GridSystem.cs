@@ -31,7 +31,7 @@ public class GridSystem<TGridObject>
     private TGridObject[,] gridArray;
     private Vector3 originPosition;
 
-    public GridSystem(int width, int height, float cellSize, Vector3 originPosition, Func<GridSystem<TGridObject>, int, int, TGridObject> CreateGridObject)
+    public GridSystem(int width, int height, float cellSize, Vector3 originPosition, bool isEditorMode, Func<GridSystem<TGridObject>, int, int, TGridObject> CreateGridObject)
     {
         this.width = width;
         this.height = height;
@@ -47,17 +47,21 @@ public class GridSystem<TGridObject>
                 gridArray[x, y] = CreateGridObject(this, x, y);
             }
         }
-        for (int i = 0; i < gridArray.GetLength(0); i++)
-        {
-            LineDrawer<TGridObject>.DrawHorizontalLine(this, i);
-        }
-        for (int j = 0; j < gridArray.GetLength(1); j++)
-        {
-            LineDrawer<TGridObject>.DrawVerticalLine(this, j);
-        }
 
-        LineDrawer<TGridObject>.DrawHorizontalLine(this, gridArray.GetLength(0));
-        LineDrawer<TGridObject>.DrawVerticalLine(this, gridArray.GetLength(1));
+        if (isEditorMode)
+        {
+            for (int i = 0; i < gridArray.GetLength(0); i++)
+            {
+                LineDrawer<TGridObject>.DrawHorizontalLine(this, i);
+            }
+            for (int j = 0; j < gridArray.GetLength(1); j++)
+            {
+                LineDrawer<TGridObject>.DrawVerticalLine(this, j);
+            }
+
+            LineDrawer<TGridObject>.DrawHorizontalLine(this, gridArray.GetLength(0));
+            LineDrawer<TGridObject>.DrawVerticalLine(this, gridArray.GetLength(1));
+        }
 
         bool isDebugMode = false;
         if (isDebugMode)

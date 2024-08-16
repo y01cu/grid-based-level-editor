@@ -15,7 +15,7 @@ public class TestingGenericHeatmapGrid : MonoBehaviour
     private void Start()
     {
         // gridSystem = new GridSystem<HeatMapGridObject>(100, 100, 2f, Vector3.zero, (GridSystem<HeatMapGridObject> g, int x, int y) => new HeatMapGridObject(g, x, y));
-        stringGridSystem = new GridSystem<StringGridObject>(100, 100, 2f, Vector3.zero, (GridSystem<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));
+        stringGridSystem = new GridSystem<StringGridObject>(100, 100, 2f, Vector3.zero, true, (GridSystem<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));
         // heatMapVisual.SetGridSystem(gridSystem);
         // heatMapVisual.SetGridSystem(gridSystem);
     }

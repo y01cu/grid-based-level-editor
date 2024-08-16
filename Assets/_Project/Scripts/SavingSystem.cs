@@ -12,7 +12,7 @@ public class SavingSystem : MonoBehaviour
 
     public void Load()
     {
-        LevelEditorManager.tilemapGrid.Load();
+        LevelEditorManager.tilemapGrid.LoadForEditor();
         Debug.Log("loaded!");
     }
 }

@@ -30,7 +30,7 @@ public class CellGeneration : MonoBehaviour
 
     private void Start()
     {
-        tilemapGrid = new TilemapGrid(cellWidth, cellHeight, 3f, Vector3.zero);
+        tilemapGrid = new TilemapGrid(cellWidth, cellHeight, 3f, new Vector3(50, 50, 50), false);
         tilemapGrid.LoadWithSO();
     }
 }
