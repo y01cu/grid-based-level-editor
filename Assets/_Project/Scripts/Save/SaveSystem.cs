@@ -2,6 +2,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SaveSystem
 {
@@ -107,6 +108,36 @@ public class SaveSystem
         }
     }
 
+    public static int GetHighestLevel()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(SAVE_FOLDER);
+        FileInfo[] saveFiles = directoryInfo.GetFiles("*." + SAVE_EXTENSION);
+        int highestLevel = 0;
+        foreach (var fileInfo in saveFiles)
+        {
+            string[] splitFileName = fileInfo.Name.Split('_');
+            if (splitFileName.Length > 1)
+            {
+                string secondPart = splitFileName[1];
+                int levelIndex = int.Parse(secondPart[0].ToString());
+                if (levelIndex > highestLevel)
+                {
+                    highestLevel = levelIndex;
+                }
+                else
+                {
+                    Debug.LogWarning($"Failed to parse level index from file name: {fileInfo.Name}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Unexpected file name format: {fileInfo.Name}");
+            }
+        }
+        Debug.Log($"highest saved level is {highestLevel}");
+        return highestLevel;
+    }
+
     public static void SaveObject(object saveObject, int levelIndex)
     {
         SaveObject($"save_{LevelEditorManager.Instance.LevelIndex}", saveObject, true, levelIndex);
@@ -119,7 +150,7 @@ public class SaveSystem
         Save(fileName, json, overwrite, levelIndex);
     }
 
-    public static TSaveObject LoadMostRecentObject<TSaveObject>()
+    public static TSaveObject LoadSaveObject<TSaveObject>()
     {
         Initiate();
         // string saveString = LoadMostRecentFile();

@@ -45,6 +45,7 @@ public class LevelEditorManager : MonoBehaviour
         SetupInitialValues();
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
         tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero, true);
+        SavingSystem.Load();
     }
 
     private void SetupInitialValues()

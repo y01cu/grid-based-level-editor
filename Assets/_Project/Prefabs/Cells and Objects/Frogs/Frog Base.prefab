@@ -73,7 +73,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 2100000, guid: aaac73df7660d97438aa9464842dd4d2, type: 2}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   objectTypeSO: {fileID: 11400000, guid: 9a95101c6b7db4647be7386cfc962e1a, type: 2}
-  spawnRotation: {x: -0, y: 90.00001, z: 270}
+  spawnRotation: {x: -0, y: 270, z: 90}
   materialIndex: 0
   IsInLevelEditor: 0
   lineManager: {fileID: 4966230339188152850}
@@ -98,7 +98,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8413bf28a7c37dd41b8bbc9e8ffb6021, type: 2}
+  - {fileID: 2100000, guid: aaac73df7660d97438aa9464842dd4d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

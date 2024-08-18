@@ -9,6 +9,7 @@ public class LevelButton : BasicButton
         Debug.Log("Level index: " + levelIndex);
         LevelEditorManager.Instance.LevelIndex = levelIndex;
         LevelEditorManager.Instance.activeLevelText.text = $"LEVEL {levelIndex}";
+        SavingSystem.Load();
     }
 
     public void UpdateOutLine()

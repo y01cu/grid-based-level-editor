@@ -9,7 +9,7 @@ public class AddingNewLevel : MonoBehaviour
     [SerializeField] private Button addLevelButton;
     [SerializeField] private Button newLevelButton;
     [SerializeField] private Transform parentTransform;
-    private int buttonCounter;
+    private int buttonCounter = 1;
 
     private void Start()
     {
@@ -37,9 +37,8 @@ public class AddingNewLevel : MonoBehaviour
 
     private async void AssignNumbersToLevelButtons()
     {
-        await Task.Delay(400);
-
-        for (int i = 0; i < 6; i++)
+        int highestLevel = SaveSystem.GetHighestLevel();
+        for (int i = 0; i < highestLevel; i++)
         {
             await Task.Delay(300);
             AddNewLevel();

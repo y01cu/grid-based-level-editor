@@ -48,7 +48,7 @@ public class TilemapGrid
 
     public void LoadForEditor()
     {
-        SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
+        SaveObject saveObject = SaveSystem.LoadSaveObject<SaveObject>();
 
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
@@ -70,7 +70,7 @@ public class TilemapGrid
 
     public void LoadWithSO()
     {
-        SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
+        SaveObject saveObject = SaveSystem.LoadSaveObject<SaveObject>();
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
