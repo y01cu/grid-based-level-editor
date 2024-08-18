@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,7 @@ public class LevelEditorManager : MonoBehaviour
     public int LevelIndex { get => levelIndex; set => levelIndex = value; }
     public static EventHandler OnGridPositionChanged;
     public static LevelEditorManager Instance { get; private set; }
+    public TextMeshProUGUI activeLevelText;
     [field: SerializeField] public float cellSize { get; private set; }
     public static TilemapGrid tilemapGrid { get; private set; }
     [SerializeField] private Camera camera;
@@ -40,11 +42,16 @@ public class LevelEditorManager : MonoBehaviour
 
     private void Start()
     {
+        SetupInitialValues();
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
         tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero, true);
-        levelIndex = 1;
     }
 
+    private void SetupInitialValues()
+    {
+        levelIndex = 1;
+        activeLevelText.text = $"LEVEL {levelIndex}";
+    }
     private void SetObjectTypeSO(object sender, OnActiveObjectTypeChangedEventArgs e)
     {
         tilemapObjectTypeSO = e.activeObjectTypeSO;

@@ -8,6 +8,7 @@ public class LevelButton : BasicButton
         int levelIndex = transform.GetSiblingIndex() + 1;
         Debug.Log("Level index: " + levelIndex);
         LevelEditorManager.Instance.LevelIndex = levelIndex;
+        LevelEditorManager.Instance.activeLevelText.text = $"LEVEL {levelIndex}";
     }
 
     public void UpdateOutLine()
