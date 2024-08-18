@@ -82,7 +82,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a81f284864448e7419dc4734ac271c8f, type: 2}
+      objectReference: {fileID: 2100000, guid: 1c053c6bf83343d46817510fca559681, type: 2}
     - target: {fileID: -7511558181221131132, guid: 5cbb0a21ec573b546917cf2c9decf8e0,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -160,7 +160,7 @@ MonoBehaviour:
   normalMaterial: {fileID: 0}
   obstacleStateClip: {fileID: 8300000, guid: 897e8c6e26b4430478c3a1c9db1e3fdc, type: 3}
   objectTypeSO: {fileID: 11400000, guid: a43135c196b24dc41b880e9269acfad6, type: 2}
-  spawnRotation: {x: 0, y: 0, z: 270}
+  spawnRotation: {x: -0, y: 0, z: 270}
   materialIndex: 0
   IsInLevelEditor: 0
   meshRenderer: {fileID: 0}

@@ -24,23 +24,25 @@ public class SaveSystem
         }
     }
 
-
-    public static void Save(string fileName, string saveString, bool overwrite)
+    public static void Save(string fileName, string saveString, bool overwrite, int levelIndex)
     {
         Initiate();
         string saveFileName = fileName;
-        if (!overwrite)
-        {
-            int saveNumber = 1;
+        // if (!overwrite)
+        // {
+        //     // int saveNumber = 1;
 
-            while (File.Exists(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION))
-            {
-                saveNumber++;
-                saveFileName = fileName + "_" + saveNumber;
-            }
-        }
+        //     while (File.Exists(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION))
+        //     {
+
+        //         // saveNumber++;
+        //         // saveFileName = fileName + "_" + levelIndex;
+        //     }
+        // }
 
         File.WriteAllText(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION, saveString);
+
+        Debug.Log($"saved with level index of {levelIndex}");
     }
 
     public static string Load(string fileName)
@@ -55,6 +57,22 @@ public class SaveSystem
         {
             return null;
         }
+    }
+
+    public static string LoadSpecificFile(string fileName)
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(SAVE_FOLDER);
+        FileInfo[] saveFiles = directoryInfo.GetFiles("*." + SAVE_EXTENSION);
+        string saveString = null;
+        foreach (var fileInfo in saveFiles)
+        {
+            if (fileInfo.Name == fileName)
+            {
+                saveString = File.ReadAllText(fileInfo.FullName);
+                return saveString;
+            }
+        }
+        return saveString;
     }
 
     public static string LoadMostRecentFile()
@@ -89,22 +107,23 @@ public class SaveSystem
         }
     }
 
-    public static void SaveObject(object saveObject)
+    public static void SaveObject(object saveObject, int levelIndex)
     {
-        SaveObject("save", saveObject, false);
+        SaveObject($"save_{LevelEditorManager.Instance.LevelIndex}", saveObject, true, levelIndex);
     }
 
-    public static void SaveObject(string fileName, object saveObject, bool overwrite)
+    public static void SaveObject(string fileName, object saveObject, bool overwrite, int levelIndex)
     {
         Initiate();
         string json = JsonUtility.ToJson(saveObject);
-        Save(fileName, json, overwrite);
+        Save(fileName, json, overwrite, levelIndex);
     }
 
     public static TSaveObject LoadMostRecentObject<TSaveObject>()
     {
         Initiate();
-        string saveString = LoadMostRecentFile();
+        // string saveString = LoadMostRecentFile();
+        string saveString = LoadSpecificFile($"save_{LevelEditorManager.Instance.LevelIndex}.txt");
         if (saveString != null)
         {
             TSaveObject saveObject = JsonUtility.FromJson<TSaveObject>(saveString);

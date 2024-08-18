@@ -5,13 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class LevelEditorManager : MonoBehaviour
 {
+    public int LevelIndex { get => levelIndex; set => levelIndex = value; }
     public static EventHandler OnGridPositionChanged;
     public static LevelEditorManager Instance { get; private set; }
-
     [field: SerializeField] public float cellSize { get; private set; }
-
     public static TilemapGrid tilemapGrid { get; private set; }
-
     [SerializeField] private Camera camera;
     [SerializeField] private TilemapVisual tilemapVisual;
     [SerializeField] private AudioSource audioSource;
@@ -23,6 +21,10 @@ public class LevelEditorManager : MonoBehaviour
     private Vector3 currentGridPosition = new();
 
     public static bool IsOnGrid { get; set; }
+    /// <summary>
+    /// Starts with 1
+    /// </summary>
+    private int levelIndex;
 
     private void Awake()
     {
@@ -40,6 +42,7 @@ public class LevelEditorManager : MonoBehaviour
     {
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
         tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero, true);
+        levelIndex = 1;
     }
 
     private void SetObjectTypeSO(object sender, OnActiveObjectTypeChangedEventArgs e)

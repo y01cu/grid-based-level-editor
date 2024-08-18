@@ -28,7 +28,7 @@ public class TilemapGrid
         tilemapVisual.SetGridSystem(tilemapGrid, gridSystem);
     }
 
-    public void Save()
+    public void SaveLevelWithIndex(int levelIndex)
     {
         List<TilemapObject.SaveObject> tilemapObjectSaveObjectList = new List<TilemapObject.SaveObject>();
         for (int x = 0; x < gridSystem.Width; x++)
@@ -38,13 +38,12 @@ public class TilemapGrid
                 TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y);
                 tilemapObjectSaveObjectList.Add(tilemapObject.Save());
                 Debug.Log($"object type so list count {tilemapObject.GetObjectTypeSOList().Count}");
-
             }
         }
 
         SaveObject saveObject = new SaveObject { tilemapObjectSaveObjectArray = tilemapObjectSaveObjectList.ToArray() };
 
-        SaveSystem.SaveObject(saveObject);
+        SaveSystem.SaveObject(saveObject, levelIndex);
     }
 
     public void LoadForEditor()

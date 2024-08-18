@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SavingSystem : MonoBehaviour
 {
     public void Save()
     {
-        LevelEditorManager.tilemapGrid.Save();
+        LevelEditorManager.tilemapGrid.SaveLevelWithIndex(LevelEditorManager.Instance.LevelIndex);
         Debug.Log("saved!");
     }
 

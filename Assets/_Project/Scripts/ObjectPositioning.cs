@@ -69,7 +69,6 @@ public class ObjectPositioning : MonoBehaviour
                 currentCellBase.ResetBackToInitialState();
             }
         }
-
     }
 
     private void TryPlacingObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
