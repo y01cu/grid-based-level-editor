@@ -104,7 +104,7 @@ public class TilemapGrid
             var cellSizeAddition = LevelEditorManager.Instance.cellSize;
             var halfCellSize = cellSizeAddition / 2;
             var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
-            var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition * cellSizeAddition + new Vector3(0, i * 0.1f, -i * 0.1f) + new Vector3(halfCellSize, halfCellSize, halfCellSize), initialAngleForCamera);
+            var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition * cellSizeAddition + new Vector3(0, i * 0.1f * cellSizeAddition, -i * 0.1f * cellSizeAddition) + new Vector3(halfCellSize, halfCellSize, halfCellSize), initialAngleForCamera);
             var currentCellBase = instantiatedCell.GetComponent<CellBase>();
             currentCellBase.isInLevelEditor = true;
             currentCellBase.isLoading = true;

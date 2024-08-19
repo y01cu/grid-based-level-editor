@@ -3,6 +3,15 @@ using UnityEngine.UI;
 
 public class LevelButton : BasicButton
 {
+    private void Start()
+    {
+        GetComponent<Button>().onClick.AddListener(() =>
+        {
+            UpdateLevel();
+            UpdateOutLine();
+        });
+    }
+
     public void UpdateLevel()
     {
         int levelIndex = transform.GetSiblingIndex() + 1;

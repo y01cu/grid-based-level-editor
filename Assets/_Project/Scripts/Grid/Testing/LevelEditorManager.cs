@@ -17,12 +17,9 @@ public class LevelEditorManager : MonoBehaviour
     [SerializeField] private AudioClip objectPlacedAudioClip;
     [SerializeField] private int width;
     [SerializeField] private int height;
-
     public Transform tileObjectParentTransform;
-
     private ObjectTypeSO tilemapObjectTypeSO;
     private Vector3 currentGridPosition = new();
-
     public static bool IsOnGrid { get; set; }
     /// <summary>
     /// Starts with 1
@@ -46,6 +43,7 @@ public class LevelEditorManager : MonoBehaviour
         SetupInitialValues();
         AdjustTypeButton.OnActiveObjectUpdated += SetObjectTypeSO;
         tilemapGrid = new TilemapGrid(width, height, cellSize, Vector3.zero, true);
+        SavingSystem.SaveTemplate();
         SavingSystem.Load();
     }
 

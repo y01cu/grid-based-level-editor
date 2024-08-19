@@ -25,6 +25,12 @@ public class SaveSystem
         }
     }
 
+    public static void SaveTemplate(string fileName, string saveString)
+    {
+        Initiate();
+        File.WriteAllText(SAVE_FOLDER + fileName + "." + SAVE_EXTENSION, saveString);
+    }
+
     public static void Save(string fileName, string saveString, bool overwrite, int levelIndex)
     {
         Initiate();
@@ -42,6 +48,7 @@ public class SaveSystem
         // }
 
         File.WriteAllText(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION, saveString);
+        // close the file
 
         Debug.Log($"saved with level index of {levelIndex}");
     }
@@ -60,6 +67,21 @@ public class SaveSystem
         }
     }
 
+    // private static bool CheckFile(string fileName)
+    // {
+    //     if (!File.Exists(SAVE_FOLDER + fileName + "." + SAVE_EXTENSION))
+    //     {
+    //         Debug.LogWarning("File does not exist");
+
+    //         // create a new file with given name
+    //         File.Create(SAVE_FOLDER + fileName + "." + SAVE_EXTENSION);
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("File exists");
+    //     }
+    // }
+
     public static string LoadSpecificFile(string fileName)
     {
         DirectoryInfo directoryInfo = new DirectoryInfo(SAVE_FOLDER);
@@ -73,7 +95,16 @@ public class SaveSystem
                 return saveString;
             }
         }
-        return saveString;
+        Debug.Log($"Failed to find file with name {fileName}");
+        // then create a new one
+        string newFilePath = Path.Combine(SAVE_FOLDER, fileName);
+        using (FileStream fs = File.Create(newFilePath))
+        {
+
+        }
+        var baseSaveString = File.ReadAllText(SAVE_FOLDER + "save_-1.txt");
+        File.WriteAllText(SAVE_FOLDER + fileName, baseSaveString);
+        return baseSaveString;
     }
 
     public static string LoadMostRecentFile()
@@ -140,21 +171,32 @@ public class SaveSystem
 
     public static void SaveObject(object saveObject, int levelIndex)
     {
-        SaveObject($"save_{LevelEditorManager.Instance.LevelIndex}", saveObject, true, levelIndex);
+        SaveObject(saveObject, true, levelIndex);
     }
 
-    public static void SaveObject(string fileName, object saveObject, bool overwrite, int levelIndex)
+    public static void SaveObject(object saveObject, bool overwrite, int levelIndex)
     {
         Initiate();
         string json = JsonUtility.ToJson(saveObject);
-        Save(fileName, json, overwrite, levelIndex);
+        Save($"save_{levelIndex}", json, overwrite, levelIndex);
     }
 
     public static TSaveObject LoadSaveObject<TSaveObject>()
     {
-        Initiate();
+        // Initiate();
         // string saveString = LoadMostRecentFile();
-        string saveString = LoadSpecificFile($"save_{LevelEditorManager.Instance.LevelIndex}.txt");
+        int levelIndex;
+
+        if (LevelEditorManager.Instance == null)
+        {
+            levelIndex = CellGeneration.Instance.levelIndex;
+        }
+        else
+        {
+            levelIndex = LevelEditorManager.Instance.LevelIndex;
+        }
+
+        string saveString = LoadSpecificFile($"save_{levelIndex}.txt");
         if (saveString != null)
         {
             TSaveObject saveObject = JsonUtility.FromJson<TSaveObject>(saveString);

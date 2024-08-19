@@ -5,6 +5,7 @@ public class CellGeneration : MonoBehaviour
 {
     public static CellGeneration Instance { get; private set; }
 
+    public int levelIndex;
     public int CellHeight
     {
         get => cellHeight;

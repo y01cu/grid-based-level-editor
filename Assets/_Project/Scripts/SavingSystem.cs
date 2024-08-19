@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SavingSystem : MonoBehaviour
@@ -12,5 +13,10 @@ public class SavingSystem : MonoBehaviour
     {
         LevelEditorManager.tilemapGrid.LoadForEditor();
         Debug.Log("loaded!");
+    }
+
+    public static void SaveTemplate()
+    {
+        LevelEditorManager.tilemapGrid.SaveLevelWithIndex(-1);
     }
 }

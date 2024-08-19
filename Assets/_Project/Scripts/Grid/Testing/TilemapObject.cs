@@ -69,11 +69,11 @@ public class TilemapObject
 
     public void DeleteLastTilemapObject()
     {
-        materialIndexList.Remove(materialIndexList[materialIndexList.Count - 1]);
-        objectTypeSOList.Remove(objectTypeSOList[objectTypeSOList.Count - 1]);
-        rotationList.Remove(rotationList[rotationList.Count - 1]);
-        gridSystem.TriggerGridObjectChanged(x, y);
-        cellBaseList.Remove(cellBaseList[cellBaseList.Count - 1]);
+        materialIndexList?.Remove(materialIndexList[materialIndexList.Count - 1]);
+        objectTypeSOList?.Remove(objectTypeSOList[objectTypeSOList.Count - 1]);
+        rotationList?.Remove(rotationList[rotationList.Count - 1]);
+        gridSystem?.TriggerGridObjectChanged(x, y);
+        cellBaseList?.Remove(cellBaseList[cellBaseList.Count - 1]);
     }
 
     public void ClearAllLists()
@@ -81,15 +81,18 @@ public class TilemapObject
         objectTypeSOList.Clear();
         rotationList.Clear();
         materialIndexList.Clear();
-        foreach (CellBase cellBase in cellBaseList)
+        if (cellBaseList.Count != 0)
         {
-            Debug.Log($"cell base {cellBase.name} is being destroyed soon");
+            foreach (CellBase cellBase in cellBaseList)
+            {
+                Debug.Log($"cell base {cellBase.name} is being destroyed soon");
+            }
+            foreach (CellBase cellBase in cellBaseList)
+            {
+                UnityEngine.Object.Destroy(cellBase.gameObject);
+            }
+            cellBaseList.Clear();
         }
-        foreach (CellBase cellBase in cellBaseList)
-        {
-            UnityEngine.Object.Destroy(cellBase.gameObject);
-        }
-        cellBaseList.Clear();
         gridSystem.TriggerGridObjectChanged(x, y);
     }
 
