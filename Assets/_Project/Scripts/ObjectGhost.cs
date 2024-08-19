@@ -105,7 +105,7 @@ public class ObjectGhost : MonoBehaviour
         }
     }
 
-    public void SpawnAndAdjustPrefabOnPosition(Vector3 objectRotation, int objCountAfterPlacingThisOne)
+    public CellBase SpawnAdjustAndGetPrefabOnPosition(Vector3 objectRotation, int objCountAfterPlacingThisOne)
     {
         // divide it to cellsize
         float positionOffset = (objCountAfterPlacingThisOne - 1) / LevelEditorManager.Instance.cellSize;
@@ -114,6 +114,7 @@ public class ObjectGhost : MonoBehaviour
         var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
 
         var spawnedCell = Instantiate(baseCellSO.prefab, spriteTransform.position + new Vector3(0, positionOffset, -positionOffset), initialAngleForCamera);
+        // spawnedCell.transform.parent = LevelEditorManager.Instance.tileObjectParentTransform;
         var cellBase = spawnedCell.GetComponent<CellBase>();
         cellBase.isInLevelEditor = true;
         cellBase.objectTypeSO = objectTypeSO;
@@ -126,6 +127,8 @@ public class ObjectGhost : MonoBehaviour
         var materials = renderer.sharedMaterials;
         materials[0] = baseCellSO.normalMaterials[objectTypeSO.materialIndex];
         renderer.materials = materials;
+
+        return cellBase;
     }
 
     private void Hide()

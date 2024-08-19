@@ -65,7 +65,8 @@ public class CellBase : MonoBehaviour
             isDeathOrderGiven = true;
             transform.DOScale(Vector3.zero, 1f).onComplete += () =>
             {
-                LevelManager.Instance.DecreaseActiveNonGrayCellCount();
+                LevelManager.Instance?.DecreaseActiveNonGrayCellCount();
+                Debug.Log("CellBase destroyed");
                 Destroy(gameObject);
             };
         }
@@ -118,5 +119,12 @@ public class CellBase : MonoBehaviour
         destructionTimer = 0;
         isObjectSpawned = false;
         isDeathOrderGiven = false;
+    }
+    private void OnDestroy()
+    {
+        if (cellObject != null)
+        {
+            Destroy(cellObject.gameObject);
+        }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,6 +17,8 @@ public class LevelEditorManager : MonoBehaviour
     [SerializeField] private AudioClip objectPlacedAudioClip;
     [SerializeField] private int width;
     [SerializeField] private int height;
+
+    public Transform tileObjectParentTransform;
 
     private ObjectTypeSO tilemapObjectTypeSO;
     private Vector3 currentGridPosition = new();
@@ -79,9 +80,30 @@ public class LevelEditorManager : MonoBehaviour
         }
     }
 
+    [ContextMenu("Clear All")]
+    public void ClearAll()
+    {
+        // iterate through every tilemapobject and clear its lists
+
+        for (int i = 0; i < tilemapGrid.gridSystem.Width; i++)
+        {
+            for (int j = 0; j < tilemapGrid.gridSystem.Height; j++)
+            {
+                tilemapGrid.gridSystem.GetGridObjectOnCoordinates(i, j).ClearAllLists();
+            }
+        }
+        SavingSystem.Save();
+    }
+
     public void ChangeScene()
     {
+        SavingSystem.Save();
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+    }
+
+    public void ResetAllTiles()
+    {
+        // tilemapGrid.ResetAllTiles();
     }
 
     private void OnDestroy()
