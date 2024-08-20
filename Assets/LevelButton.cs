@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ public class LevelButton : BasicButton
         Debug.Log("Level index: " + levelIndex);
         LevelEditorManager.Instance.LevelIndex = levelIndex;
         LevelEditorManager.Instance.activeLevelText.text = $"LEVEL {levelIndex}";
+        LevelEditorManager.Instance.ClearAllTilesForNextLevel();
         SavingSystem.Load();
     }
 

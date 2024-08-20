@@ -150,7 +150,7 @@ public class SaveSystem
             if (splitFileName.Length > 1)
             {
                 string secondPart = splitFileName[1];
-                int levelIndex = int.Parse(secondPart[0].ToString());
+                int levelIndex = int.Parse(secondPart.Split('.')[0]);
                 if (levelIndex > highestLevel)
                 {
                     highestLevel = levelIndex;

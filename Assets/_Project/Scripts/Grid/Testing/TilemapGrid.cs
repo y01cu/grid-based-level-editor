@@ -123,6 +123,7 @@ public class TilemapGrid
             materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
             renderer.sharedMaterials = materials;
 
+            instantiatedCell.transform.SetParent(LevelEditorManager.Instance.parentOfCells.transform);
         }
     }
 

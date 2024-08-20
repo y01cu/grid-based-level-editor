@@ -128,6 +128,8 @@ public class ObjectGhost : MonoBehaviour
         materials[0] = baseCellSO.normalMaterials[objectTypeSO.materialIndex];
         renderer.materials = materials;
 
+        spawnedCell.transform.SetParent(LevelEditorManager.Instance.parentOfCells.transform);
+
         return cellBase;
     }
 

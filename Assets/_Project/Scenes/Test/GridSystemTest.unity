@@ -1020,6 +1020,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeLevelText: {fileID: 669062884}
+  parentOfCells: {fileID: 723562918}
   <cellSize>k__BackingField: 4
   camera: {fileID: 1275355130}
   tilemapVisual: {fileID: 0}
@@ -2142,7 +2143,7 @@ GameObject:
   m_Component:
   - component: {fileID: 723562918}
   m_Layer: 0
-  m_Name: Tile Objects
+  m_Name: Parent of Cells
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -9,6 +9,7 @@ public class LevelEditorManager : MonoBehaviour
     public static EventHandler OnGridPositionChanged;
     public static LevelEditorManager Instance { get; private set; }
     public TextMeshProUGUI activeLevelText;
+    public Transform parentOfCells;
     [field: SerializeField] public float cellSize { get; private set; }
     public static TilemapGrid tilemapGrid { get; private set; }
     [SerializeField] private Camera camera;
@@ -78,8 +79,8 @@ public class LevelEditorManager : MonoBehaviour
         }
     }
 
-    [ContextMenu("Clear All")]
-    public void ClearAll()
+    [ContextMenu("Clear All and Save")]
+    public void ClearAllAndSave()
     {
         // iterate through every tilemapobject and clear its lists
 
@@ -96,12 +97,15 @@ public class LevelEditorManager : MonoBehaviour
     public void ChangeScene()
     {
         SavingSystem.Save();
-        SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+        SceneManager.LoadScene(levelIndex - 1, LoadSceneMode.Single);
     }
 
-    public void ResetAllTiles()
+    public void ClearAllTilesForNextLevel()
     {
-        // tilemapGrid.ResetAllTiles();
+        foreach (Transform cellChild in parentOfCells)
+        {
+            Destroy(cellChild.gameObject);
+        }
     }
 
     private void OnDestroy()

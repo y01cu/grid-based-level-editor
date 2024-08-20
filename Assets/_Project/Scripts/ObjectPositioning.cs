@@ -8,7 +8,6 @@ public class ObjectPositioning : MonoBehaviour
 
     public static event EventHandler OnStartedRemovingObject;
     public static event EventHandler OnEndedRemovingObject;
-
     public static ObjectPositioning Instance { get; private set; }
 
     private void Awake()

@@ -85,11 +85,18 @@ public class TilemapObject
         {
             foreach (CellBase cellBase in cellBaseList)
             {
-                Debug.Log($"cell base {cellBase.name} is being destroyed soon");
+                if (cellBase != null)
+                {
+                    Debug.Log($"cell base {cellBase.name} is being destroyed soon");
+
+                }
             }
             foreach (CellBase cellBase in cellBaseList)
             {
-                UnityEngine.Object.Destroy(cellBase.gameObject);
+                if (cellBase != null)
+                {
+                    UnityEngine.Object.Destroy(cellBase.gameObject);
+                }
             }
             cellBaseList.Clear();
         }
