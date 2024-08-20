@@ -29,9 +29,10 @@ public class ObjectPositioning : MonoBehaviour
         {
             TryPlacingObject(camera.ScreenToWorldPoint(Input.mousePosition), ObjectGhost.Instance.GetCurrentObjectRotation());
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Delete))
         {
             RemoveObject();
+            SavingSystem.Save();
         }
     }
 
@@ -78,5 +79,6 @@ public class ObjectPositioning : MonoBehaviour
         }
         DeactivateCellObjectsOfCellBases(VectorHelper.GetRaycastHitsFromMousePosition(camera));
         LevelEditorManager.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
+        SavingSystem.Save();
     }
 }

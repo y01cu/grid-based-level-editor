@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class SaveSystem
 {
@@ -183,13 +184,13 @@ public class SaveSystem
 
     public static TSaveObject LoadSaveObject<TSaveObject>()
     {
-        // Initiate();
-        // string saveString = LoadMostRecentFile();
         int levelIndex;
 
         if (LevelEditorManager.Instance == null)
         {
-            levelIndex = CellGeneration.Instance.levelIndex;
+            string activeSceneName = SceneManager.GetActiveScene().name;
+            int.TryParse(activeSceneName[activeSceneName.Length - 1].ToString(), out int currentLevelIndex);
+            levelIndex = currentLevelIndex;
         }
         else
         {
@@ -205,7 +206,6 @@ public class SaveSystem
 
         return default;
     }
-
 
     public static TSaveObject LoadObect<TSaveObject>(string fileName)
     {
