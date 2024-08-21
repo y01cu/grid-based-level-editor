@@ -24,4 +24,5 @@ The game is about frogs collecting berries with their tongue. Frog throws its to
 
 Link of the game I've cloned as a case project: https://play.google.com/store/apps/details?id=com.funrado.frogfeedorder 
 
-![Image Sequence_004_0000](https://github.com/user-attachments/assets/f8d36872-b27c-4e54-b9d2-2fc7ce964cc7)
+![Image Sequence_005_0000](https://github.com/user-attachments/assets/8c1a8d35-c070-43b8-b1ce-602261cdc49a)
+
