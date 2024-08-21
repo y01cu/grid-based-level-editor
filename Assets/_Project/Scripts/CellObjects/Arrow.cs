@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
 using QFSW.QC;
@@ -20,6 +21,17 @@ public class Arrow : CellObject
         await Task.Delay(500);
 
         meshRenderer.material = normalMaterial;
+    }
+
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(0.2f);
+        AssignNormalMaterial();
+    }
+
+    private void AssignNormalMaterial()
+    {
+        normalMaterial = meshRenderer.material;
     }
 
     public override void AdjustTransformForSetup()

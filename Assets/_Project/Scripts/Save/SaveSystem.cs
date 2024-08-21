@@ -36,22 +36,7 @@ public class SaveSystem
     {
         Initiate();
         string saveFileName = fileName;
-        // if (!overwrite)
-        // {
-        //     // int saveNumber = 1;
-
-        //     while (File.Exists(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION))
-        //     {
-
-        //         // saveNumber++;
-        //         // saveFileName = fileName + "_" + levelIndex;
-        //     }
-        // }
-
         File.WriteAllText(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION, saveString);
-        // close the file
-
-        Debug.Log($"saved with level index of {levelIndex}");
     }
 
     public static string Load(string fileName)
@@ -67,22 +52,6 @@ public class SaveSystem
             return null;
         }
     }
-
-    // private static bool CheckFile(string fileName)
-    // {
-    //     if (!File.Exists(SAVE_FOLDER + fileName + "." + SAVE_EXTENSION))
-    //     {
-    //         Debug.LogWarning("File does not exist");
-
-    //         // create a new file with given name
-    //         File.Create(SAVE_FOLDER + fileName + "." + SAVE_EXTENSION);
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("File exists");
-    //     }
-    // }
-
     public static string LoadSpecificFile(string fileName)
     {
         DirectoryInfo directoryInfo = new DirectoryInfo(SAVE_FOLDER);

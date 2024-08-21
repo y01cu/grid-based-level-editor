@@ -29,7 +29,21 @@ public class CellGeneration : MonoBehaviour
 
     private void Start()
     {
+        CreateEmptyCells();
         tilemapGrid = new TilemapGrid(cellWidth, cellHeight, 3f, new Vector3(50, 50, 50), false);
         tilemapGrid.LoadWithSO();
+    }
+
+    private void CreateEmptyCells()
+    {
+        var emptyCell = Resources.Load("Cell Empty") as GameObject;
+        for (int i = 0; i < cellWidth; i++)
+        {
+            for (int j = 0; j < cellHeight; j++)
+            {
+                var cellBase = Instantiate(emptyCell, new Vector3(i, j, 0.1f), Quaternion.Euler(270, 0, 0));
+                cellBase.GetComponent<CellBase>().isEmpty = true;
+            }
+        }
     }
 }

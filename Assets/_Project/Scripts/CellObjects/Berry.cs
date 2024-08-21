@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
@@ -27,9 +28,17 @@ public class Berry : Clickable
         collisionHandler = new BerryCollisionHandler(this);
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         isTweenable = true;
+        yield return new WaitForSeconds(0.2f);
+        AssignNormalMaterial();
+
+    }
+
+    private void AssignNormalMaterial()
+    {
+        normalMaterial = meshRenderer.material;
     }
 
     private void Update()

@@ -101,23 +101,6 @@ public class ObjectGhost : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        CheckCells();
-    }
-
-    private void CheckCells()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] hits;
-        hits = Physics.RaycastAll(ray);
-        Debug.Log("hits count: " + hits.Length);
-        foreach (var hitObj in hits)
-        {
-            Debug.Log(hitObj.collider.gameObject.name);
-        }
-    }
-
     public CellBase SpawnAdjustAndGetPrefabOnPosition(Vector3 objectRotation, int objCountAfterPlacingThisOne)
     {
         // divide it to cellsize
@@ -125,7 +108,7 @@ public class ObjectGhost : MonoBehaviour
 
         var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
-
+        Debug.Log("positionOffset: " + positionOffset);
         var spawnedCell = Instantiate(baseCellSO.prefab, spriteTransform.position + new Vector3(0, positionOffset, -positionOffset), initialAngleForCamera);
         // spawnedCell.transform.parent = LevelEditorManager.Instance.tileObjectParentTransform;
         var cellBase = spawnedCell.GetComponent<CellBase>();

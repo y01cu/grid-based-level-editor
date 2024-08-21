@@ -28,6 +28,8 @@ public class CellBase : MonoBehaviour
     private bool isDeathOrderGiven;
     public bool isLoading;
 
+    public bool isEmpty;
+
     #endregion
 
     private void Start()
@@ -55,7 +57,7 @@ public class CellBase : MonoBehaviour
 
     private void TryDestroySelf()
     {
-        if (!VectorHelper.CheckRaycastUp(RayLength * 10f, transform, collisionLayers))
+        if (!VectorHelper.CheckRaycastUp(RayLength * 10f, transform, collisionLayers) && !isEmpty)
         {
             destructionTimer += Time.deltaTime;
             if (destructionTimer < DestructionDelay)

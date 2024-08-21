@@ -19,6 +19,7 @@ public class Frog : Clickable
         isTweenable = false;
         yield return initialDelayForClick;
         isTweenable = true;
+        AssignNormalMaterial();
     }
 
     public override void OnClickedOverWithTargetScale(Vector3 targetScale)
@@ -54,6 +55,11 @@ public class Frog : Clickable
     private int RoundToNearestMultipleOf90(float angle)
     {
         return Mathf.RoundToInt(angle / 90) * 90;
+    }
+
+    private void AssignNormalMaterial()
+    {
+        normalMaterial = skinnedMeshRenderer.material;
     }
 
     public void SetOrderType(OrderType newOrderType)
