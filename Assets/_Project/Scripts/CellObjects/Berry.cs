@@ -155,4 +155,10 @@ public class Berry : Clickable
     {
         // Berry won't rotate in the level editor
     }
+
+    public override void ActivateIndicator()
+    {
+        indicatorObjectTransform = transform.Find("Cylinder");
+        indicatorObjectTransform.gameObject.SetActive(true);
+    }
 }

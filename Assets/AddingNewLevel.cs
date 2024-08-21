@@ -38,7 +38,8 @@ public class AddingNewLevel : MonoBehaviour
     private async void AssignNumbersToLevelButtons()
     {
         int highestLevel = SaveSystem.GetHighestLevel();
-        for (int i = 0; i < highestLevel; i++)
+        Debug.Log("Highest level: " + highestLevel);
+        for (int i = 1; i < highestLevel; i++)
         {
             await Task.Delay(300);
             AddNewLevel();

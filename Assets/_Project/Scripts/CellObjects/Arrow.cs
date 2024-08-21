@@ -44,4 +44,10 @@ public class Arrow : CellObject
             transform.DORotate(transform.rotation.eulerAngles + properAngleForArrow, 0.2f).onComplete += () => isRotating = false;
         }
     }
+
+    public override void ActivateIndicator()
+    {
+        indicatorObjectTransform = transform.Find("Cylinder");
+        indicatorObjectTransform.gameObject.SetActive(true);
+    }
 }

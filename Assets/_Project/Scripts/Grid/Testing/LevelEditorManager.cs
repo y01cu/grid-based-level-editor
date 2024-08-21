@@ -22,6 +22,8 @@ public class LevelEditorManager : MonoBehaviour
     private ObjectTypeSO tilemapObjectTypeSO;
     private Vector3 currentGridPosition = new();
     public static bool IsOnGrid { get; set; }
+
+    public int currentTileObjectCount;
     /// <summary>
     /// Starts with 1
     /// </summary>
@@ -66,12 +68,14 @@ public class LevelEditorManager : MonoBehaviour
     {
         Vector3 cameraToWorldPoint = camera.ScreenToWorldPoint(Input.mousePosition);
         IsOnGrid = tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint) != null;
-
+        if (IsOnGrid)
+        {
+            currentTileObjectCount = tilemapGrid.gridSystem.GetGridObjectOnCoordinates(cameraToWorldPoint).GetObjectTypeSOList().Count;
+        }
         if (currentGridPosition != tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint).vector3With0Z)
         {
             currentGridPosition = tilemapGrid.gridSystem.GetGridPosition(cameraToWorldPoint)
                 .vector3With0Z;
-
             if (IsOnGrid)
             {
                 OnGridPositionChanged?.Invoke(this, EventArgs.Empty);

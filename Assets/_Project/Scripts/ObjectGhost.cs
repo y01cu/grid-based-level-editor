@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -7,13 +8,9 @@ public class ObjectGhost : MonoBehaviour
 {
     public static ObjectGhost Instance { get; private set; }
     private bool isObjectReadyToBePlaced;
-
     public bool IsObjectReadyToBePlaced { get => isObjectReadyToBePlaced; }
-
     public GameObject prefab;
-
     public ObjectTypeSO objectTypeSO;
-
     [SerializeField] private Camera camera;
     private Transform spriteTransform;
     private GameObject activeGhostGameObject;
@@ -44,11 +41,12 @@ public class ObjectGhost : MonoBehaviour
     {
         const int initialMaterialAssignmentDelayForPrecision = 100; // milliseconds
         await Task.Delay(initialMaterialAssignmentDelayForPrecision);
-        // var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         activeGhostGameObject = Instantiate(objectTypeSO.prefab.gameObject, spriteTransform.position, objectTypeSO.prefab.rotation);
         activeGhostGameObject.transform.SetParent(spriteTransform);
         activeGhostGameObject.transform.localScale = objectTypeSO.prefab.localScale;
-        activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
+        var cellObject = activeGhostGameObject.GetComponent<CellObject>();
+        cellObject.IsInLevelEditor = true;
+        cellObject.ActivateIndicator();
         activeGhostGameObject.GetComponent<Renderer>().sharedMaterials[0] = objectTypeSO.normalMaterials[objectTypeSO.materialIndex];
 
     }
@@ -85,11 +83,9 @@ public class ObjectGhost : MonoBehaviour
         // There was an audio clip playing here.
     }
 
-
     private void LateUpdate()
     {
         float cellSize = LevelEditorManager.Instance.cellSize;
-
         spriteTransform.position = LevelEditorManager.IsOnGrid ? Vector3.Lerp(spriteTransform.position, LevelEditorManager.tilemapGrid.gridSystem
         .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0), Time.deltaTime * 50)
             : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
@@ -102,6 +98,23 @@ public class ObjectGhost : MonoBehaviour
         else
         {
             isObjectReadyToBePlaced = true;
+        }
+    }
+
+    private void Update()
+    {
+        CheckCells();
+    }
+
+    private void CheckCells()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(ray);
+        Debug.Log("hits count: " + hits.Length);
+        foreach (var hitObj in hits)
+        {
+            Debug.Log(hitObj.collider.gameObject.name);
         }
     }
 
