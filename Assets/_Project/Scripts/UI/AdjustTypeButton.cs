@@ -115,7 +115,10 @@ public class AdjustTypeButton : BasicButton
     {
         foreach (var spawnedMaterialButton in spawnedMaterialButtons)
         {
-            spawnedMaterialButton.gameObject.SetActive(false);
+            if (spawnedMaterialButton != null)
+            {
+                spawnedMaterialButton.gameObject?.SetActive(false);
+            }
         }
     }
 

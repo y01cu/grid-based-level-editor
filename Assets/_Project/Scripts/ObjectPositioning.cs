@@ -8,7 +8,6 @@ public class ObjectPositioning : MonoBehaviour
 
     public static event EventHandler OnStartedRemovingObject;
     public static event EventHandler OnEndedRemovingObject;
-
     public static ObjectPositioning Instance { get; private set; }
 
     private void Awake()
@@ -30,9 +29,10 @@ public class ObjectPositioning : MonoBehaviour
         {
             TryPlacingObject(camera.ScreenToWorldPoint(Input.mousePosition), ObjectGhost.Instance.GetCurrentObjectRotation());
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Delete))
         {
             RemoveObject();
+            SavingSystem.Save();
         }
     }
 
@@ -69,7 +69,6 @@ public class ObjectPositioning : MonoBehaviour
                 currentCellBase.ResetBackToInitialState();
             }
         }
-
     }
 
     private void TryPlacingObject(Vector3 mouseWorldPosition, Vector3 objectRotation)
@@ -80,5 +79,6 @@ public class ObjectPositioning : MonoBehaviour
         }
         DeactivateCellObjectsOfCellBases(VectorHelper.GetRaycastHitsFromMousePosition(camera));
         LevelEditorManager.Instance.SetupObjectOnPosition(mouseWorldPosition, objectRotation);
+        SavingSystem.Save();
     }
 }

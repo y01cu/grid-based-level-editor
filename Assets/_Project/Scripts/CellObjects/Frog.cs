@@ -11,13 +11,14 @@ public class Frog : Clickable
 
     private OrderType orderType;
 
-    private WaitForSeconds initialDelayForClick = new(2f);
+    private WaitForSeconds initialDelayForClick = new(0.5f);
 
     protected IEnumerator Start()
     {
         isTweenable = false;
         yield return initialDelayForClick;
         isTweenable = true;
+        AssignNormalMaterial();
     }
 
     public override void OnClickedOverWithTargetScale(Vector3 targetScale)
@@ -55,6 +56,11 @@ public class Frog : Clickable
         return Mathf.RoundToInt(angle / 90) * 90;
     }
 
+    private void AssignNormalMaterial()
+    {
+        normalMaterial = skinnedMeshRenderer.material;
+    }
+
     public void SetOrderType(OrderType newOrderType)
     {
         orderType = newOrderType;
@@ -84,5 +90,11 @@ public class Frog : Clickable
             Quaternion finalRotation = transform.rotation * Quaternion.Euler(angle);
             transform.DORotate(finalRotation.eulerAngles, 0.2f).onComplete += () => isRotating = false;
         }
+    }
+
+    public override void ActivateIndicator()
+    {
+        indicatorObjectTransform = transform.Find("Cylinder");
+        indicatorObjectTransform.gameObject.SetActive(true);
     }
 }

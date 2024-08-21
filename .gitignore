@@ -28,7 +28,7 @@
 .vscode/
 
 # Saved files for editor
-Assets/Saves/
+/Assets/Saves/*
 
 # Gradle cache directory
 .gradle/

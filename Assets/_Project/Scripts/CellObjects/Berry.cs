@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
@@ -27,9 +28,17 @@ public class Berry : Clickable
         collisionHandler = new BerryCollisionHandler(this);
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         isTweenable = true;
+        yield return new WaitForSeconds(0.2f);
+        AssignNormalMaterial();
+
+    }
+
+    private void AssignNormalMaterial()
+    {
+        normalMaterial = meshRenderer.material;
     }
 
     private void Update()
@@ -154,5 +163,11 @@ public class Berry : Clickable
     public override void RotateByAngleInTheEditor(Vector3 angle)
     {
         // Berry won't rotate in the level editor
+    }
+
+    public override void ActivateIndicator()
+    {
+        indicatorObjectTransform = transform.Find("Cylinder");
+        indicatorObjectTransform.gameObject.SetActive(true);
     }
 }

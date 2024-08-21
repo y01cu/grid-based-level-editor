@@ -9,6 +9,8 @@ public abstract class CellObject : MonoBehaviour
     public ObjectTypeSO objectTypeSO;
     public Vector3 spawnRotation;
 
+    protected Transform indicatorObjectTransform;
+
     public int materialIndex;
 
     public bool IsInLevelEditor;
@@ -32,5 +34,7 @@ public abstract class CellObject : MonoBehaviour
     /// </summary>
     /// <param name="angle"></param>
     public abstract void RotateByAngleInTheEditor(Vector3 angle);
+
+    public abstract void ActivateIndicator();
 
 }

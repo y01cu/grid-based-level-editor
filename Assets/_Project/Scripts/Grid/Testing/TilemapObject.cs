@@ -11,6 +11,7 @@ using UnityEngine;
 public class TilemapObject
 {
     private GridSystem<TilemapObject> gridSystem;
+    private List<CellBase> cellBaseList;
     private List<ObjectTypeSO> objectTypeSOList;
     private List<Vector3> rotationList;
     private List<int> materialIndexList;
@@ -22,6 +23,7 @@ public class TilemapObject
         this.gridSystem = gridSystem;
         this.x = x;
         this.y = y;
+        cellBaseList = new List<CellBase>();
         objectTypeSOList = new List<ObjectTypeSO>();
         rotationList = new List<Vector3>();
         materialIndexList = new List<int>();
@@ -34,6 +36,11 @@ public class TilemapObject
     public List<Vector3> GetRotationList()
     {
         return rotationList;
+    }
+
+    public List<CellBase> GetCellBaseList()
+    {
+        return cellBaseList;
     }
 
     public List<ObjectTypeSO> GetObjectTypeSOList()
@@ -55,26 +62,44 @@ public class TilemapObject
         materialIndexList.Add(newMaterialIndex);
         objectTypeSOList.Add(newObjectTypeSO);
         rotationList.Add(newRotation);
+        var cellBase = ObjectGhost.Instance.SpawnAdjustAndGetPrefabOnPosition(newRotation, objectTypeSOList.Count);
+        cellBaseList.Add(cellBase);
         gridSystem.TriggerGridObjectChanged(x, y);
-
-        ObjectGhost.Instance.SpawnAndAdjustPrefabOnPosition(newRotation, objectTypeSOList.Count);
-
-        // Debug.Log($"total obj count in this tile: {}");
     }
 
     public void DeleteLastTilemapObject()
     {
-        materialIndexList.Remove(materialIndexList[materialIndexList.Count - 1]);
-        objectTypeSOList.Remove(objectTypeSOList[objectTypeSOList.Count - 1]);
-        rotationList.Remove(rotationList[rotationList.Count - 1]);
-        gridSystem.TriggerGridObjectChanged(x, y);
+        materialIndexList?.Remove(materialIndexList[materialIndexList.Count - 1]);
+        objectTypeSOList?.Remove(objectTypeSOList[objectTypeSOList.Count - 1]);
+        rotationList?.Remove(rotationList[rotationList.Count - 1]);
+        gridSystem?.TriggerGridObjectChanged(x, y);
+        cellBaseList?.Remove(cellBaseList[cellBaseList.Count - 1]);
     }
 
-    public void ClearSO()
+    public void ClearAllLists()
     {
         objectTypeSOList.Clear();
         rotationList.Clear();
         materialIndexList.Clear();
+        if (cellBaseList.Count != 0)
+        {
+            foreach (CellBase cellBase in cellBaseList)
+            {
+                if (cellBase != null)
+                {
+                    Debug.Log($"cell base {cellBase.name} is being destroyed soon");
+
+                }
+            }
+            foreach (CellBase cellBase in cellBaseList)
+            {
+                if (cellBase != null)
+                {
+                    UnityEngine.Object.Destroy(cellBase.gameObject);
+                }
+            }
+            cellBaseList.Clear();
+        }
         gridSystem.TriggerGridObjectChanged(x, y);
     }
 
@@ -89,6 +114,7 @@ public class TilemapObject
         public List<ObjectTypeSO> objectTypeSOList;
         public List<Vector3> rotationList;
         public List<int> materialIndexList;
+        public List<CellBase> cellBaseList;
         public int x;
         public int y;
     }
@@ -97,6 +123,7 @@ public class TilemapObject
     {
         return new SaveObject
         {
+            cellBaseList = cellBaseList,
             materialIndexList = materialIndexList,
             objectTypeSOList = objectTypeSOList,
             rotationList = rotationList,
@@ -107,6 +134,7 @@ public class TilemapObject
 
     public void Load(SaveObject saveObject)
     {
+        cellBaseList = saveObject.cellBaseList;
         materialIndexList = saveObject.materialIndexList;
         objectTypeSOList = saveObject.objectTypeSOList;
         rotationList = saveObject.rotationList;

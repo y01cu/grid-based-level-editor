@@ -28,6 +28,8 @@ public class CellBase : MonoBehaviour
     private bool isDeathOrderGiven;
     public bool isLoading;
 
+    public bool isEmpty;
+
     #endregion
 
     private void Start()
@@ -55,7 +57,7 @@ public class CellBase : MonoBehaviour
 
     private void TryDestroySelf()
     {
-        if (!VectorHelper.CheckRaycastUp(RayLength * 10f, transform, collisionLayers))
+        if (!VectorHelper.CheckRaycastUp(RayLength * 10f, transform, collisionLayers) && !isEmpty)
         {
             destructionTimer += Time.deltaTime;
             if (destructionTimer < DestructionDelay)
@@ -65,7 +67,8 @@ public class CellBase : MonoBehaviour
             isDeathOrderGiven = true;
             transform.DOScale(Vector3.zero, 1f).onComplete += () =>
             {
-                LevelManager.Instance.DecreaseActiveNonGrayCellCount();
+                LevelManager.Instance?.DecreaseActiveNonGrayCellCount();
+                Debug.Log("CellBase destroyed");
                 Destroy(gameObject);
             };
         }
@@ -118,5 +121,12 @@ public class CellBase : MonoBehaviour
         destructionTimer = 0;
         isObjectSpawned = false;
         isDeathOrderGiven = false;
+    }
+    private void OnDestroy()
+    {
+        if (cellObject != null)
+        {
+            Destroy(cellObject.gameObject);
+        }
     }
 }

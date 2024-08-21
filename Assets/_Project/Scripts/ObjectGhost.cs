@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -7,13 +8,9 @@ public class ObjectGhost : MonoBehaviour
 {
     public static ObjectGhost Instance { get; private set; }
     private bool isObjectReadyToBePlaced;
-
     public bool IsObjectReadyToBePlaced { get => isObjectReadyToBePlaced; }
-
     public GameObject prefab;
-
     public ObjectTypeSO objectTypeSO;
-
     [SerializeField] private Camera camera;
     private Transform spriteTransform;
     private GameObject activeGhostGameObject;
@@ -44,11 +41,12 @@ public class ObjectGhost : MonoBehaviour
     {
         const int initialMaterialAssignmentDelayForPrecision = 100; // milliseconds
         await Task.Delay(initialMaterialAssignmentDelayForPrecision);
-        // var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         activeGhostGameObject = Instantiate(objectTypeSO.prefab.gameObject, spriteTransform.position, objectTypeSO.prefab.rotation);
         activeGhostGameObject.transform.SetParent(spriteTransform);
         activeGhostGameObject.transform.localScale = objectTypeSO.prefab.localScale;
-        activeGhostGameObject.GetComponent<CellObject>().IsInLevelEditor = true;
+        var cellObject = activeGhostGameObject.GetComponent<CellObject>();
+        cellObject.IsInLevelEditor = true;
+        cellObject.ActivateIndicator();
         activeGhostGameObject.GetComponent<Renderer>().sharedMaterials[0] = objectTypeSO.normalMaterials[objectTypeSO.materialIndex];
 
     }
@@ -72,12 +70,18 @@ public class ObjectGhost : MonoBehaviour
 
     private void HideGhost(object sender, EventArgs e)
     {
-        spriteTransform.gameObject.SetActive(false);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(false);
+        }
     }
 
     private void ShowGhost(object sender, EventArgs e)
     {
-        spriteTransform.gameObject.SetActive(true);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(true);
+        }
     }
 
     private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)
@@ -85,11 +89,9 @@ public class ObjectGhost : MonoBehaviour
         // There was an audio clip playing here.
     }
 
-
     private void LateUpdate()
     {
         float cellSize = LevelEditorManager.Instance.cellSize;
-
         spriteTransform.position = LevelEditorManager.IsOnGrid ? Vector3.Lerp(spriteTransform.position, LevelEditorManager.tilemapGrid.gridSystem
         .GetGridPosition(camera.ScreenToWorldPoint(Input.mousePosition)).vector3With0Z * cellSize + new Vector3(cellSize / 2, cellSize / 2, 0), Time.deltaTime * 50)
             : UtilsBase.GetMouseWorldPosition3OnCamera(camera);
@@ -105,15 +107,16 @@ public class ObjectGhost : MonoBehaviour
         }
     }
 
-    public void SpawnAndAdjustPrefabOnPosition(Vector3 objectRotation, int objCountAfterPlacingThisOne)
+    public CellBase SpawnAdjustAndGetPrefabOnPosition(Vector3 objectRotation, int objCountAfterPlacingThisOne)
     {
         // divide it to cellsize
         float positionOffset = (objCountAfterPlacingThisOne - 1) / LevelEditorManager.Instance.cellSize;
 
         var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
         var initialAngleForCamera = Quaternion.Euler(270, 0, 0);
-
+        Debug.Log("positionOffset: " + positionOffset);
         var spawnedCell = Instantiate(baseCellSO.prefab, spriteTransform.position + new Vector3(0, positionOffset, -positionOffset), initialAngleForCamera);
+        // spawnedCell.transform.parent = LevelEditorManager.Instance.tileObjectParentTransform;
         var cellBase = spawnedCell.GetComponent<CellBase>();
         cellBase.isInLevelEditor = true;
         cellBase.objectTypeSO = objectTypeSO;
@@ -126,16 +129,26 @@ public class ObjectGhost : MonoBehaviour
         var materials = renderer.sharedMaterials;
         materials[0] = baseCellSO.normalMaterials[objectTypeSO.materialIndex];
         renderer.materials = materials;
+
+        spawnedCell.transform.SetParent(LevelEditorManager.Instance.parentOfCells.transform);
+
+        return cellBase;
     }
 
     private void Hide()
     {
-        spriteTransform.gameObject.SetActive(false);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(false);
+        }
     }
 
     private void Show()
     {
-        spriteTransform.gameObject.SetActive(true);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(true);
+        }
     }
 
     private void SetObjectTypeSO(ObjectTypeSO newObjectTypeSO)

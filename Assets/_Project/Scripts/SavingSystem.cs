@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class SavingSystem : MonoBehaviour
 {
-    public void Save()
+    public static void Save()
     {
-        LevelEditorManager.tilemapGrid.Save();
+        LevelEditorManager.tilemapGrid.SaveLevelWithIndex(LevelEditorManager.Instance.LevelIndex);
         Debug.Log("saved!");
     }
 
-    public void Load()
+    public static void Load()
     {
         LevelEditorManager.tilemapGrid.LoadForEditor();
         Debug.Log("loaded!");
+    }
+
+    public static void SaveTemplate()
+    {
+        LevelEditorManager.tilemapGrid.SaveLevelWithIndex(-1);
     }
 }

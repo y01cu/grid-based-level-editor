@@ -1,7 +1,5 @@
 using System;
-using CodeMonkey.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GridSystem<TGridObject>
 {
@@ -61,35 +59,6 @@ public class GridSystem<TGridObject>
 
             LineDrawer<TGridObject>.DrawHorizontalLine(this, gridArray.GetLength(0));
             LineDrawer<TGridObject>.DrawVerticalLine(this, gridArray.GetLength(1));
-        }
-
-        bool isDebugMode = false;
-        if (isDebugMode)
-        {
-            // TextMesh[,] debugTextArray = new TextMesh[width, height];
-            // for (int x = 0; x < gridArray.GetLength(0); x++)
-            // {
-            //     for (int y = 0; y < gridArray.GetLength(1); y++)
-            //     {
-
-            //         var newObject = GameObject.Instantiate(emptyObject, GetWorldPosition(x, y) + new Vector3(this.cellSize / 2, this.cellSize / 2, 0), Quaternion.identity);
-            //         newObject.AddComponent<MeshFilter>().mesh = UtilsClass.CreateWorldSpriteQuad(this.cellSize, Color.white);
-            //         newObject.AddComponent<MeshCollider>();
-            //         newObject.gameObject.name = "new obj";
-            //         newObject.transform.SetParent(GameObject.Find("Canvas Object Types").transform);
-            //         newObject.transform.Rotate(0, 180, 0);
-
-            //         // debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 9, Color.white, TextAnchor.MiddleCenter);
-            //         Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
-            //         Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
-            //     }
-            // }
-
-
-            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
-            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
-
-            // OnGridObjectChanged += (sender, args) => { debugTextArray[args.x, args.y].text = gridArray[args.x, args.y]?.ToString(); };
         }
     }
 

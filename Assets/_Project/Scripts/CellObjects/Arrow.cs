@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
 using QFSW.QC;
@@ -22,6 +23,17 @@ public class Arrow : CellObject
         meshRenderer.material = normalMaterial;
     }
 
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(0.2f);
+        AssignNormalMaterial();
+    }
+
+    private void AssignNormalMaterial()
+    {
+        normalMaterial = meshRenderer.material;
+    }
+
     public override void AdjustTransformForSetup()
     {
         int moddedRotationValue = (Convert.ToInt32(transform.rotation.eulerAngles.z) + 360) % 360;
@@ -43,5 +55,11 @@ public class Arrow : CellObject
             var properAngleForArrow = new Vector3(0, 0, angle.y);
             transform.DORotate(transform.rotation.eulerAngles + properAngleForArrow, 0.2f).onComplete += () => isRotating = false;
         }
+    }
+
+    public override void ActivateIndicator()
+    {
+        indicatorObjectTransform = transform.Find("Cylinder");
+        indicatorObjectTransform.gameObject.SetActive(true);
     }
 }

@@ -28,7 +28,7 @@ public class TilemapGrid
         tilemapVisual.SetGridSystem(tilemapGrid, gridSystem);
     }
 
-    public void Save()
+    public void SaveLevelWithIndex(int levelIndex)
     {
         List<TilemapObject.SaveObject> tilemapObjectSaveObjectList = new List<TilemapObject.SaveObject>();
         for (int x = 0; x < gridSystem.Width; x++)
@@ -38,18 +38,17 @@ public class TilemapGrid
                 TilemapObject tilemapObject = gridSystem.GetGridObjectOnCoordinates(x, y);
                 tilemapObjectSaveObjectList.Add(tilemapObject.Save());
                 Debug.Log($"object type so list count {tilemapObject.GetObjectTypeSOList().Count}");
-
             }
         }
 
         SaveObject saveObject = new SaveObject { tilemapObjectSaveObjectArray = tilemapObjectSaveObjectList.ToArray() };
 
-        SaveSystem.SaveObject(saveObject);
+        SaveSystem.SaveObject(saveObject, levelIndex);
     }
 
     public void LoadForEditor()
     {
-        SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
+        SaveObject saveObject = SaveSystem.LoadSaveObject<SaveObject>();
 
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
@@ -71,7 +70,7 @@ public class TilemapGrid
 
     public void LoadWithSO()
     {
-        SaveObject saveObject = SaveSystem.LoadMostRecentObject<SaveObject>();
+        SaveObject saveObject = SaveSystem.LoadSaveObject<SaveObject>();
         foreach (var tilemapObjectSaveObject in saveObject.tilemapObjectSaveObjectArray)
         {
             var tilemapObject = gridSystem.GetGridObjectOnCoordinates(tilemapObjectSaveObject.x, tilemapObjectSaveObject.y);
@@ -105,7 +104,7 @@ public class TilemapGrid
             var cellSizeAddition = LevelEditorManager.Instance.cellSize;
             var halfCellSize = cellSizeAddition / 2;
             var baseCellSO = Resources.Load<ObjectTypeSO>("Cell");
-            var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition * cellSizeAddition + new Vector3(0, i * 0.1f, -i * 0.1f) + new Vector3(halfCellSize, halfCellSize, halfCellSize), initialAngleForCamera);
+            var instantiatedCell = Object.Instantiate(baseCellSO.prefab, newPosition * cellSizeAddition + new Vector3(0, i * 0.1f * cellSizeAddition, -i * 0.1f * cellSizeAddition) + new Vector3(halfCellSize, halfCellSize, 0), initialAngleForCamera);
             var currentCellBase = instantiatedCell.GetComponent<CellBase>();
             currentCellBase.isInLevelEditor = true;
             currentCellBase.isLoading = true;
@@ -124,6 +123,7 @@ public class TilemapGrid
             materials[0] = baseCellSO.normalMaterials[tilemapObject.GetMaterialIndexList()[i]];
             renderer.sharedMaterials = materials;
 
+            instantiatedCell.transform.SetParent(LevelEditorManager.Instance.parentOfCells.transform);
         }
     }
 

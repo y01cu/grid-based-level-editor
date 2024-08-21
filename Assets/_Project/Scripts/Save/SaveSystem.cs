@@ -2,6 +2,8 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.SceneManagement;
 
 public class SaveSystem
 {
@@ -24,22 +26,16 @@ public class SaveSystem
         }
     }
 
+    public static void SaveTemplate(string fileName, string saveString)
+    {
+        Initiate();
+        File.WriteAllText(SAVE_FOLDER + fileName + "." + SAVE_EXTENSION, saveString);
+    }
 
-    public static void Save(string fileName, string saveString, bool overwrite)
+    public static void Save(string fileName, string saveString, bool overwrite, int levelIndex)
     {
         Initiate();
         string saveFileName = fileName;
-        if (!overwrite)
-        {
-            int saveNumber = 1;
-
-            while (File.Exists(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION))
-            {
-                saveNumber++;
-                saveFileName = fileName + "_" + saveNumber;
-            }
-        }
-
         File.WriteAllText(SAVE_FOLDER + saveFileName + "." + SAVE_EXTENSION, saveString);
     }
 
@@ -55,6 +51,30 @@ public class SaveSystem
         {
             return null;
         }
+    }
+    public static string LoadSpecificFile(string fileName)
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(SAVE_FOLDER);
+        FileInfo[] saveFiles = directoryInfo.GetFiles("*." + SAVE_EXTENSION);
+        string saveString = null;
+        foreach (var fileInfo in saveFiles)
+        {
+            if (fileInfo.Name == fileName)
+            {
+                saveString = File.ReadAllText(fileInfo.FullName);
+                return saveString;
+            }
+        }
+        Debug.Log($"Failed to find file with name {fileName}");
+        // then create a new one
+        string newFilePath = Path.Combine(SAVE_FOLDER, fileName);
+        using (FileStream fs = File.Create(newFilePath))
+        {
+
+        }
+        var baseSaveString = File.ReadAllText(SAVE_FOLDER + "save_-1.txt");
+        File.WriteAllText(SAVE_FOLDER + fileName, baseSaveString);
+        return baseSaveString;
     }
 
     public static string LoadMostRecentFile()
@@ -89,22 +109,64 @@ public class SaveSystem
         }
     }
 
-    public static void SaveObject(object saveObject)
+    public static int GetHighestLevel()
     {
-        SaveObject("save", saveObject, false);
+        DirectoryInfo directoryInfo = new DirectoryInfo(SAVE_FOLDER);
+        FileInfo[] saveFiles = directoryInfo.GetFiles("*." + SAVE_EXTENSION);
+        int highestLevel = 0;
+        foreach (var fileInfo in saveFiles)
+        {
+            string[] splitFileName = fileInfo.Name.Split('_');
+            if (splitFileName.Length > 1)
+            {
+                string secondPart = splitFileName[1];
+                int levelIndex = int.Parse(secondPart.Split('.')[0]);
+                if (levelIndex > highestLevel)
+                {
+                    highestLevel = levelIndex;
+                }
+                else
+                {
+                    Debug.LogWarning($"Failed to parse level index from file name: {fileInfo.Name}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Unexpected file name format: {fileInfo.Name}");
+            }
+        }
+        Debug.Log($"highest saved level is {highestLevel}");
+        return highestLevel;
     }
 
-    public static void SaveObject(string fileName, object saveObject, bool overwrite)
+    public static void SaveObject(object saveObject, int levelIndex)
+    {
+        SaveObject(saveObject, true, levelIndex);
+    }
+
+    public static void SaveObject(object saveObject, bool overwrite, int levelIndex)
     {
         Initiate();
         string json = JsonUtility.ToJson(saveObject);
-        Save(fileName, json, overwrite);
+        Save($"save_{levelIndex}", json, overwrite, levelIndex);
     }
 
-    public static TSaveObject LoadMostRecentObject<TSaveObject>()
+    public static TSaveObject LoadSaveObject<TSaveObject>()
     {
-        Initiate();
-        string saveString = LoadMostRecentFile();
+        int levelIndex;
+
+        if (LevelEditorManager.Instance == null)
+        {
+            string activeSceneName = SceneManager.GetActiveScene().name;
+            int.TryParse(activeSceneName[activeSceneName.Length - 1].ToString(), out int currentLevelIndex);
+            levelIndex = currentLevelIndex;
+        }
+        else
+        {
+            levelIndex = LevelEditorManager.Instance.LevelIndex;
+        }
+
+        string saveString = LoadSpecificFile($"save_{levelIndex}.txt");
         if (saveString != null)
         {
             TSaveObject saveObject = JsonUtility.FromJson<TSaveObject>(saveString);
@@ -113,7 +175,6 @@ public class SaveSystem
 
         return default;
     }
-
 
     public static TSaveObject LoadObect<TSaveObject>(string fileName)
     {
