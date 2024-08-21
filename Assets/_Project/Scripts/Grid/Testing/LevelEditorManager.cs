@@ -96,6 +96,7 @@ public class LevelEditorManager : MonoBehaviour
             }
         }
         SavingSystem.Save();
+        ClearAllTilesForNextLevel();
     }
 
     public void ChangeScene()

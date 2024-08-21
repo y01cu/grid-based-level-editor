@@ -70,12 +70,18 @@ public class ObjectGhost : MonoBehaviour
 
     private void HideGhost(object sender, EventArgs e)
     {
-        spriteTransform.gameObject.SetActive(false);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(false);
+        }
     }
 
     private void ShowGhost(object sender, EventArgs e)
     {
-        spriteTransform.gameObject.SetActive(true);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(true);
+        }
     }
 
     private void LevelEditorGridTesting_OnGridPositionChanged(object sender, EventArgs e)
@@ -131,12 +137,18 @@ public class ObjectGhost : MonoBehaviour
 
     private void Hide()
     {
-        spriteTransform.gameObject.SetActive(false);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(false);
+        }
     }
 
     private void Show()
     {
-        spriteTransform.gameObject.SetActive(true);
+        if (spriteTransform != null)
+        {
+            spriteTransform.gameObject.SetActive(true);
+        }
     }
 
     private void SetObjectTypeSO(ObjectTypeSO newObjectTypeSO)

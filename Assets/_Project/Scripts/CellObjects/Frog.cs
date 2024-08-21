@@ -11,8 +11,7 @@ public class Frog : Clickable
 
     private OrderType orderType;
 
-    private WaitForSeconds initialDelayForClick = new(2f);
-
+    private WaitForSeconds initialDelayForClick = new(0.5f);
 
     protected IEnumerator Start()
     {

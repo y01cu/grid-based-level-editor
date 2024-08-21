@@ -44,6 +44,10 @@ public class LevelManager : IRMBListener
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            LoadLevelEditorScene();
+        }
         if (isGameEnded)
         {
             return;
@@ -138,8 +142,15 @@ public class LevelManager : IRMBListener
         Application.Quit();
     }
 
+    public void LoadLevelEditorScene()
+    {
+        SceneManager.LoadScene("GridSystemTest");
+    }
+
+
     protected override void OnDestroy()
     {
         StopListeningRMBEvent();
     }
+
 }
