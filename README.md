@@ -26,3 +26,7 @@ Link of the game I've cloned as a case project: https://play.google.com/store/ap
 
 ![Image Sequence_005_0000](https://github.com/user-attachments/assets/8c1a8d35-c070-43b8-b1ce-602261cdc49a)
 
+## Resources
+
+Link to the main resource I used to build grid system is down below. I've build that grid system from scratch after watching every required tutorial connected with each other.
+https://www.youtube.com/playlist?list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722
