@@ -22,11 +22,14 @@ With this tool, I aimed to speed up the level design process.
 
 The game is about frogs collecting berries with their tongue. Frog throws its tongue when clicked, tongue moves straight forward. If any arrow with same color is hit by the tongue, tongue continues to move towards the direction arrow looks at. If tongue hits a object in with a different color, it stops moving and returns back without collecting any berry. When all berries are collected, game finishes.
 
-Link of the game I've cloned as a case project: https://play.google.com/store/apps/details?id=com.funrado.frogfeedorder 
+Link of the game I've cloned as a case project: 
+
+https://play.google.com/store/apps/details?id=com.funrado.frogfeedorder 
 
 ![Image Sequence_005_0000](https://github.com/user-attachments/assets/8c1a8d35-c070-43b8-b1ce-602261cdc49a)
 
 ## Resources
 
 Link to the main resource I used to build grid system is down below. I've build that grid system from scratch after watching every required tutorial connected with each other.
+
 https://www.youtube.com/playlist?list=PLzDRvYVwl53uhO8yhqxcyjDImRjO9W722
