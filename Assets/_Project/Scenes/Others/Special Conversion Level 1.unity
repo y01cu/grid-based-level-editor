@@ -888,6 +888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 971517874}
+  basicButtonClickSound: {fileID: 0}
 --- !u!82 &971517874
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1029,6 +1030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 303778330}
+  cursorTexture2D: {fileID: 0}
 --- !u!4 &1018096049
 Transform:
   m_ObjectHideFlags: 0
@@ -1777,88 +1779,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0487009a41ce4754790b8c7ca3e16e05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellOrders:
-  - cellColor: 0
-    frogIndex: 0
-    arrowIndex: 0
-    arrowDirection: 0
-    columnIndex: 0
-    rowIndex: 0
-    stepCount: 4
-    orderType: 0
-    finalBerryIndex: 0
-  - cellColor: 0
-    frogIndex: 0
-    arrowIndex: 0
-    arrowDirection: 0
-    columnIndex: 1
-    rowIndex: 0
-    stepCount: 4
-    orderType: 0
-    finalBerryIndex: 0
-  - cellColor: 0
-    frogIndex: 0
-    arrowIndex: 0
-    arrowDirection: 0
-    columnIndex: 2
-    rowIndex: 0
-    stepCount: 4
-    orderType: 0
-    finalBerryIndex: 0
-  - cellColor: 0
-    frogIndex: 0
-    arrowIndex: 0
-    arrowDirection: 0
-    columnIndex: 3
-    rowIndex: 0
-    stepCount: 4
-    orderType: 0
-    finalBerryIndex: 0
-  - cellColor: 1
-    frogIndex: 2
-    arrowIndex: 0
-    arrowDirection: 2
-    columnIndex: 2
-    rowIndex: 3
-    stepCount: 2
-    orderType: 1
-    finalBerryIndex: 1
-  - cellColor: 4
-    frogIndex: 2
-    arrowIndex: 0
-    arrowDirection: 1
-    columnIndex: 1
-    rowIndex: 1
-    stepCount: 3
-    orderType: 0
-    finalBerryIndex: 1
-  - cellColor: 2
-    frogIndex: 1
-    arrowIndex: 0
-    arrowDirection: 0
-    columnIndex: 3
-    rowIndex: 0
-    stepCount: 3
-    orderType: 0
-    finalBerryIndex: 2
-  - cellColor: 3
-    frogIndex: 2
-    arrowIndex: 0
-    arrowDirection: 0
-    columnIndex: 0
-    rowIndex: 0
-    stepCount: 4
-    orderType: 0
-    finalBerryIndex: 1
-  cellBases:
-  - {fileID: 3257195153420974243, guid: 2a328fd7f824fa94eb376a601ca850e8, type: 3}
-  - {fileID: 6218630723515409759, guid: 8df29ced29487e74285d80fc41397d88, type: 3}
-  - {fileID: 5513097400587629622, guid: a3436c7edc44f384eb123088ace4964b, type: 3}
-  - {fileID: -1059630805916366743, guid: 567dfbfa57696b7489deb087867e82dd, type: 3}
-  - {fileID: -9457170272729233, guid: 541b8dd9dc0112e42bb42e1994210e89, type: 3}
-  cellParentTransform: {fileID: 457691977}
-  width: 4
-  height: 4
+  cellWidth: 0
+  cellHeight: 0
 --- !u!4 &2001982932
 Transform:
   m_ObjectHideFlags: 0
